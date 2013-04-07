@@ -24,7 +24,6 @@ will result in: +02:40
 _
         },
     },
-    result_naked=>1,
 };
 sub calc_hours_minutes {
     my (%args) = @_;
@@ -61,7 +60,7 @@ sub calc_hours_minutes {
         $m -= 60;
     }
 
-    sprintf "+%02d:%02d", $h, $m;
+    [200, "OK", sprintf "+%02d:%02d", $h, $m];
 }
 
 Perinci::CmdLine->new(url => '/main/calc_hours_minutes')->run;
