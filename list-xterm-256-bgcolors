@@ -1,0 +1,38 @@
+#!/usr/bin/perl
+
+use 5.010;
+use strict;
+use warnings;
+use Getopt::Long;
+
+my %opts = (cols => 1, fg=>7);
+GetOptions(
+    'columns|c=i' => \$opts{cols},
+    'bg=i' => \$opts{bg},
+    'bold' => \$opts{bold},
+    'reverse|r' => \$opts{reverse},
+    'help|h' => sub {
+        print <<_;
+Usage:
+$_ --help
+$_ [opts]
+
+Options:
+  --cols N
+  --fg N
+  --bold
+  --reverse
+_
+        exit 0;
+    },
+);
+
+for (0..255) {
+    print "\x1b[38;5;$opts{fg}m";
+    print "\x1b[48;5;${_}m";
+    print "\x1b[1m" if $opts{bold};
+    print "\x1b[7m" if $opts{reverse};
+    printf "%-3s %03o x%02x  ", $_, $_, $_;
+    print "\x1b[0m";
+    print "\n" if ($_+1) % $opts{cols} == 0;
+}
