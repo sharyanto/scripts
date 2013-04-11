@@ -1,0 +1,79 @@
+#!/usr/bin/perl
+
+# run continuously, periodically (by default every minute) polls. try to kill
+# Locked thread if after 5 minutes in a row in a "suffocating" state (90%+ full,
+# 25%+ locked).
+
+use 5.010;
+use strict;
+use warnings;
+use Log::Any::App '$log';
+
+#use DateTime;
+use DBI;
+use Dir::Purge;
+use File::Slurp;
+use Proc::PID::File;
+
+# VARS
+my $DUMP_DIR = "/var/lib/statdump";
+my $PS_DUMP_DIR = "/var/lib/statdump/mysql-pslist";
+# END VARS
+
+our $IS_DAEMON = 0; # Log::Any::App mistook our using Proc::PID::File as being a daemon
+
+die "This script is meant to run as root" if $>;
+do { $log->trace("Program is already running, exiting"); exit 1 }
+    if Proc::PID::File->running(verify=>1);
+
+# get pass from ~/my.cnf
+my ($pass) = ~~read_file("$ENV{HOME}/.my.cnf") =~ /^password\s*=\s*(.+)/m;
+my $dbh = DBI->connect("DBI:mysql:database=mysql", "root", $pass);
+
+my $row;
+$row = $dbh->selectrow_hashref("SHOW VARIABLES WHERE Variable_name='max_connections'");
+my $maxconn = $row->{Value};
+$log->debugf("max_connections = %d", $maxconn);
+
+for ($DUMP_DIR, $PS_DUMP_DIR) { mkdir $_, 0700 unless (-d $_) }
+
+my $iter = 0;
+my $times_suffocating = 0;
+ITER:
+while (1) {
+    my @now = gmtime();
+
+    $log->tracef("Performing SHOW PROCESSLIST ...");
+    my @ps;
+    my $sth = $dbh->prepare("SHOW PROCESSLIST");
+    $sth->execute;
+    while (my @row = $sth->fetchrow_array) { push @ps, \@row }
+
+    if ($iter % 5 == 0) {
+        my $path = sprintf("%s/%04d-%02d-%02dT%02d:%02d:%02dZ", $PS_DUMP_DIR, $now[5]+1900, $now[4]+1, $now[3], $now[2], $now[1], $now[0]);
+        $log->infof("Dumping processlist to %s ...", $path);
+        write_file($path, join("", map {join("\t", map {$_//""} @$_)."\n"} @ps));
+        purgedir(1440, $PS_DUMP_DIR); # 1440 x 5 minute = 5 days, like in spanel
+    }
+
+    my $num_locked = 0; for (@ps) { $num_locked++ if (($_->[6]//"") eq 'Locked') }
+    my $pct_full   = @ps / $maxconn * 100;
+    my $pct_locked = $num_locked / $maxconn * 100;
+    $log->debugf("processes=%d (%.1f%% full), locked=%d (%.1f%%)", ~~@ps, $pct_full, $num_locked, $pct_locked);
+    if ($pct_full >= 90 && $pct_locked > 25 || $pct_full >= 97) {
+        $times_suffocating++;
+        $log->info("This is suffocating ...");
+    } else {
+        $times_suffocating = 0;
+    }
+
+    if ($times_suffocating >= 3) {
+        $log->warn("Has been suffocating several times in a row, killing locked processes ...");
+        $dbh->do("KILL $_->[0]") for grep { $_->[6] eq 'Locked' } @ps;
+        sleep 1;
+        redo ITER;
+    }
+
+    sleep 60;
+    $iter++;
+}
