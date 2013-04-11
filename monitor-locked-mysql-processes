@@ -47,7 +47,10 @@ while (1) {
     my @ps;
     my $sth = $dbh->prepare("SHOW PROCESSLIST");
     $sth->execute;
-    while (my @row = $sth->fetchrow_array) { push @ps, \@row }
+    while (my @row = $sth->fetchrow_array) {
+        $row[7] =~ s/[\t\r\n]+/ /g if $row[7];
+        push @ps, \@row;
+    }
 
     if ($iter % 5 == 0) {
         my $path = sprintf("%s/%04d-%02d-%02dT%02d:%02d:%02dZ", $PS_DUMP_DIR, $now[5]+1900, $now[4]+1, $now[3], $now[2], $now[1], $now[0]);
