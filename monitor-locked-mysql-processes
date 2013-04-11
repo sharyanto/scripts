@@ -11,7 +11,7 @@ use Log::Any::App '$log';
 
 BEGIN {
     our $IS_DAEMON = 0; # Log::Any::App mistook our using Proc::PID::File as being a daemon
-    our $File_Log_Level = 'trace';
+    our $File_Log_Level = 'debug';
 }
 
 #use DateTime;
