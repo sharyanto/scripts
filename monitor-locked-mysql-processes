@@ -9,6 +9,11 @@ use strict;
 use warnings;
 use Log::Any::App '$log';
 
+BEGIN {
+    our $IS_DAEMON = 0; # Log::Any::App mistook our using Proc::PID::File as being a daemon
+    our $File_Log_Level = 'trace';
+}
+
 #use DateTime;
 use DBI;
 use Dir::Purge;
@@ -19,8 +24,6 @@ use Proc::PID::File;
 my $DUMP_DIR = "/var/lib/statdump";
 my $PS_DUMP_DIR = "/var/lib/statdump/mysql-pslist";
 # END VARS
-
-our $IS_DAEMON = 0; # Log::Any::App mistook our using Proc::PID::File as being a daemon
 
 die "This script is meant to run as root" if $>;
 do { $log->trace("Program is already running, exiting"); exit 1 }
