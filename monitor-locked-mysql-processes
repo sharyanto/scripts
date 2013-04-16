@@ -47,9 +47,9 @@ ITER:
 while (1) {
     my @now = gmtime();
 
-    $log->tracef("Performing SHOW PROCESSLIST ...");
+    $log->tracef("Performing SHOW FULL PROCESSLIST ...");
     my @ps;
-    my $sth = $dbh->prepare("SHOW PROCESSLIST");
+    my $sth = $dbh->prepare("SHOW FULL PROCESSLIST");
     $sth->execute;
     while (my @row = $sth->fetchrow_array) {
         $row[7] =~ s/[\t\r\n]+/ /g if $row[7];
@@ -77,11 +77,15 @@ while (1) {
 
     if ($times_suffocating >= 3) {
         my @locked_pids = map { $_->[0] } grep { $_->[6] eq 'Locked' } @ps;
-        $log->warn("Has been suffocating several times in a row, killing locked processes (%s) ...", @locked_pids);
-        $dbh->do("KILL $_") for @locked_pids;
-        sleep 1;
-        $times_suffocating = 0;
-        redo ITER;
+        if (@locked_pids) {
+            $log->warn("Has been suffocating several times in a row, killing locked processes (%s) ...", @locked_pids);
+            $dbh->do("KILL $_") for @locked_pids;
+            sleep 1;
+            $times_suffocating = 0;
+            redo ITER;
+        } else {
+            $log->warn("There are no locked processes on the server");
+        }
     }
 
     sleep 60;
