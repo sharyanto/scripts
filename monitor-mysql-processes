@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 # run continuously, periodically (by default every minute) polls. try to kill
-# Locked thread if after 5 minutes in a row in a "suffocating" state (90%+ full,
+# Locked thread if after 3 minutes in a row in a "suffocating" state (90%+ full,
 # 25%+ locked).
 
 use 5.010;
@@ -24,6 +24,13 @@ use Proc::PID::File;
 # VARS
 my $DUMP_DIR = "/var/lib/statdump";
 my $PS_DUMP_DIR = "/var/lib/statdump/mysql-pslist";
+# XXX TO CONFIG. when suffocating, try to find queries to kill, in order. if
+# first element's queries are found, try killing that first and see how it goes.
+# if suffocates again, still try the first element's queries. if not found, then
+# try the second element's and so on.
+my @KILL_QUERY_REGEXES = (
+    qr/select \s+ count\(\*\) \s+ from \s+ tblhosting \s+ where \s+ server='\d+'/ix,
+);
 # END VARS
 
 die "This script is meant to run as root" if $>;
@@ -32,7 +39,7 @@ do { $log->trace("Program is already running, exiting"); exit 1 }
 
 # get pass from ~/my.cnf
 my ($pass) = ~~read_file("$ENV{HOME}/.my.cnf") =~ /^password\s*=\s*(.+)/m;
-my $dbh = DBI->connect("DBI:mysql:database=mysql", "root", $pass);
+my $dbh = DBI->connect("DBI:mysql:database=mysql", "root", $pass, {RaiseError=>1});
 
 my $row;
 $row = $dbh->selectrow_hashref("SHOW VARIABLES WHERE Variable_name='max_connections'");
@@ -76,15 +83,27 @@ while (1) {
     }
 
     if ($times_suffocating >= 3) {
+            $log->warn("Has been suffocating several times in a row, finding processes to kill");
         my @locked_pids = map { $_->[0] } grep { $_->[6] eq 'Locked' } @ps;
         if (@locked_pids) {
-            $log->warn("Has been suffocating several times in a row, killing locked processes (%s) ...", @locked_pids);
+            $log->warn("Killing locked processes (%s) ...", \@locked_pids);
             $dbh->do("KILL $_") for @locked_pids;
             sleep 1;
             $times_suffocating = 0;
             redo ITER;
         } else {
-            $log->warn("There are no locked processes on the server");
+            $log->debug("There are no locked processes on the server");
+            for my $re (@KILL_QUERY_REGEXES) {
+                my @query_pids = map { $_->[0] } grep { $_->[4] eq 'Query' && $_->[7] =~ /($re)/ } @ps;
+                if (@query_pids) {
+                    $log->info("Killing running queries matching %s (%s) ...", $re, \@query_pids);
+                    $dbh->do("KILL $_") for @locked_pids;
+                    sleep 1;
+                    $times_suffocating = 0;
+                    redo ITER;
+                }
+            }
+            $log->warn("Currently can't kill any more processes");
         }
     }
 
