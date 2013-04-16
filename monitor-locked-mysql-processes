@@ -76,9 +76,11 @@ while (1) {
     }
 
     if ($times_suffocating >= 3) {
-        $log->warn("Has been suffocating several times in a row, killing locked processes ...");
-        $dbh->do("KILL $_->[0]") for grep { $_->[6] eq 'Locked' } @ps;
+        my @locked_pids = map { $_->[0] } grep { $_->[6] eq 'Locked' } @ps;
+        $log->warn("Has been suffocating several times in a row, killing locked processes (%s) ...", @locked_pids);
+        $dbh->do("KILL $_") for @locked_pids;
         sleep 1;
+        $times_suffocating = 0;
         redo ITER;
     }
 
