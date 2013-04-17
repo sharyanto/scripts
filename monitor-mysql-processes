@@ -84,7 +84,7 @@ while (1) {
 
     if ($times_suffocating >= 3) {
             $log->warn("Has been suffocating several times in a row, finding processes to kill");
-        my @locked_pids = map { $_->[0] } grep { $_->[6] eq 'Locked' } @ps;
+        my @locked_pids = map { $_->[0] } grep { ($_->[6]//"") eq 'Locked' } @ps;
         if (@locked_pids) {
             $log->warnf("Killing locked processes (%s) ...", \@locked_pids);
             $dbh->do("KILL $_") for @locked_pids;
