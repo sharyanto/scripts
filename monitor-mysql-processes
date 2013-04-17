@@ -89,7 +89,7 @@ while (1) {
             my @query_pids = map { $_->[0] } grep { $_->[4] eq 'Query' && $_->[7] =~ /($re)/ } @ps;
             if (@query_pids) {
                 $log->infof("Killing running queries matching %s (%s) ...", $re, \@query_pids);
-                $dbh->do("KILL $_") for @locked_pids;
+                $dbh->do("KILL $_") for @query_pids;
                 sleep 1;
                 $times_suffocating = 0;
                 redo ITER;
