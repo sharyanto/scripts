@@ -86,7 +86,7 @@ while (1) {
             $log->warn("Has been suffocating several times in a row, finding processes to kill");
         my @locked_pids = map { $_->[0] } grep { $_->[6] eq 'Locked' } @ps;
         if (@locked_pids) {
-            $log->warn("Killing locked processes (%s) ...", \@locked_pids);
+            $log->warnf("Killing locked processes (%s) ...", \@locked_pids);
             $dbh->do("KILL $_") for @locked_pids;
             sleep 1;
             $times_suffocating = 0;
@@ -96,7 +96,7 @@ while (1) {
             for my $re (@KILL_QUERY_REGEXES) {
                 my @query_pids = map { $_->[0] } grep { $_->[4] eq 'Query' && $_->[7] =~ /($re)/ } @ps;
                 if (@query_pids) {
-                    $log->info("Killing running queries matching %s (%s) ...", $re, \@query_pids);
+                    $log->infof("Killing running queries matching %s (%s) ...", $re, \@query_pids);
                     $dbh->do("KILL $_") for @locked_pids;
                     sleep 1;
                     $times_suffocating = 0;
