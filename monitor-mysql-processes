@@ -28,8 +28,10 @@ my $PS_DUMP_DIR = "/var/lib/statdump/mysql-pslist";
 # first element's queries are found, try killing that first and see how it goes.
 # if suffocates again, still try the first element's queries. if not found, then
 # try the second element's and so on.
-my @KILL_QUERY_REGEXES = (
-    qr/select \s+ count\(\*\) \s+ from \s+ tblhosting \s+ where \s+ server='\d+'/ix,
+my @KILL_QUERY_CRITERIAS = (
+    {query => qr/select \s+ count\(\*\) \s+ from \s+ tblhosting \s+ where \s+ server='\d+'/ix},
+    {query => qr/select \s+ count\(\*\) \s+ from \s+ tbltickets \s+ where \s+ `?userid`?=/ix},
+    #{state => 'Locked'},
 );
 # END VARS
 
@@ -85,27 +87,30 @@ while (1) {
     if ($times_suffocating >= 3) {
         $log->warn("Has been suffocating several times in a row, finding processes to kill");
 
-        for my $re (@KILL_QUERY_REGEXES) {
-            my @query_pids = map { $_->[0] } grep { $_->[4] eq 'Query' && $_->[7] =~ /($re)/ } @ps;
-            if (@query_pids) {
-                $log->infof("Killing running queries matching %s (%s) ...", $re, \@query_pids);
-                $dbh->do("KILL $_") for @query_pids;
-                sleep 1;
-                $times_suffocating = 0;
-                redo ITER;
+        my @kill;
+        for my $crit (@KILL_QUERY_CRITERIAS) {
+            for (@ps) {
+                if ($crit->{query}) {
+                    next unless $_->[4] eq 'Query' && $_->[7] ~~ $crit->{query};
+                }
+                if ($crit->{state}) {
+                    next unless $_->[6] ~~ $crit->{state};
+                }
+                push @kill, $_;
             }
         }
 
-        my @locked_pids = map { $_->[0] } grep { ($_->[6]//"") eq 'Locked' } @ps;
-        if (@locked_pids) {
-            $log->warnf("Killing locked processes (%s) ...", \@locked_pids);
-            $dbh->do("KILL $_") for @locked_pids;
+        if (@kill) {
+            for (@kill) {
+                $log->infof("Killing query %s ...", $_);
+                $dbh->do("KILL $_->[0]");
+            }
             sleep 1;
             $times_suffocating = 0;
             redo ITER;
+        } else {
+            $log->warn("Currently can't kill any more processes");
         }
-
-        $log->warn("Currently can't kill any more processes");
     }
 
     sleep 60;
