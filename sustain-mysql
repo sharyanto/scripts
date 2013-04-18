@@ -1,8 +1,11 @@
 #!/usr/bin/perl
 
-# run continuously, periodically (by default every minute) polls. try to kill
-# Locked thread if after 3 minutes in a row in a "suffocating" state (90%+ full,
-# 25%+ locked).
+# this script connects to mysql and then run continuously, polling processlist
+# periodically (by default every minute). the goal is to help mysql keep
+# accepting connections and answering to queries. sometimes under high load
+# there will be lots of Locked queries etc and/or the number of processes are
+# nearing/reaching maximum. under that condition the script can be instructed to
+# kill some queries or restart mysql.
 
 use 5.010;
 use strict;
@@ -41,7 +44,11 @@ do { $log->trace("Program is already running, exiting"); exit 1 }
 
 # get pass from ~/my.cnf
 my ($pass) = ~~read_file("$ENV{HOME}/.my.cnf") =~ /^password\s*=\s*(.+)/m;
-my $dbh = DBI->connect("DBI:mysql:database=mysql", "root", $pass, {RaiseError=>1});
+
+sub _connect {
+    DBI->connect("DBI:mysql:database=mysql", "root", $pass, {RaiseError=>1});
+}
+my $dbh = _connect();
 
 my $row;
 $row = $dbh->selectrow_hashref("SHOW VARIABLES WHERE Variable_name='max_connections'");
@@ -85,6 +92,15 @@ while (1) {
     }
 
     if ($times_suffocating >= 3) {
+        $log->warn("Has been suffocating several times in a row, restarting MySQL ...");
+        system "/etc/init.d/mysql restart";
+        sleep 5;
+        $dbh = _connect();
+        $times_suffocating = 0;
+        redo ITER;
+    }
+
+    if ($times_suffocating >= 3 && 0) {
         $log->warn("Has been suffocating several times in a row, finding processes to kill");
 
         my @kill;
