@@ -102,7 +102,7 @@ while (1) {
         $times_suffocating = 0;
     }
 
-    if ($times_suffocating >= 3) {
+    if ($times_suffocating >= 5) {
         $log->warn("Has been suffocating several times in a row, restarting MySQL ...");
         system "/etc/init.d/mysql restart";
         sleep 5;
