@@ -14,8 +14,8 @@ GetOptions(
     'help|h' => sub {
         print <<_;
 Usage:
-$_ --help
-$_ [opts]
+$0 --help
+$0 [opts]
 
 Options:
   --cols N
