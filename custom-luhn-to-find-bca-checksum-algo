@@ -158,4 +158,6 @@ for my $d9 (1..9) {
 # - sampe 1.3mil kombinasi, belum ada yang >= 0.500
 
 # kesimpulan:
-# perlu ambil sampel norek random lagi biar lebih representatif
+# - perlu ambil sampel norek random lagi biar lebih representatif
+# - hitmiss percentage bisa dianalisis polanya
+# - belum gw jalanin, males nunggu seharian dengan cpu >= 100% terus
