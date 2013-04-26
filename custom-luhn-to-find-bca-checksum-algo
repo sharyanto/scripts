@@ -1,0 +1,161 @@
+#!/usr/bin/perl
+
+# 2013-04-26 - masih penasaran dengan checksum digit bca
+
+use 5.010;
+use strict;
+use warnings;
+
+use List::Util qw(sum);
+
+# calculate sum of digits, e.g. 3=3, 18=9, 541=10=1
+sub sumdig {
+    my $num = shift;
+    while (length($num) > 1) {
+        $num = sum(split //, $num);
+    }
+    $num;
+}
+
+# take the n'th digit of number
+sub dig {
+    my ($num, $n) = @_;
+    substr($num, $n-1, 1);
+}
+
+# calculate luhn of a 9-digit number
+sub luhn0 {
+    my $num = shift;
+
+    my $sum = sum(
+        -sumdig(dig($num, 1)*1),
+        sumdig(dig($num, 2)*9),
+        -sumdig(dig($num, 3)*8),
+        sumdig(dig($num, 4)*7),
+        -sumdig(dig($num, 5)*6),
+        sumdig(dig($num, 6)*5),
+        -sumdig(dig($num, 7)*4),
+        sumdig(dig($num, 8)*3),
+        -sumdig(dig($num, 9)*2),
+    );
+
+    #say $sum;
+    $sum*9 % 10;
+}
+
+my @M = qw(1 2 1 2 1 2 1 2 1);
+
+# slightly more optimized, for looping
+sub luhn {
+    my $num = shift;
+
+    my @d = split //,$num;
+
+    my $sum =
+        sumdig($d[0]*$M[0]) +
+        sumdig($d[1]*$M[1]) +
+        sumdig($d[2]*$M[2]) +
+        sumdig($d[3]*$M[3]) +
+        sumdig($d[4]*$M[4]) +
+        sumdig($d[5]*$M[5]) +
+        sumdig($d[6]*$M[6]) +
+        sumdig($d[7]*$M[7]) +
+        sumdig($d[8]*$M[8])
+    ;
+
+    #say $sum;
+    $sum*9 % 10;
+}
+
+# test sumdig()
+#use Test::More; my @tests=([3,3], [18,9], [541,1]); is(sumdig($_->[0]), $_->[1]) for @tests; done_testing;
+
+# test luhn()
+#use Test::More; my @tests=([7992739871,5]); is(luhn($_->[0]), $_->[1]) for @tests; done_testing;
+
+# test against bca numbers
+my @bca = qw(0851076432
+             0851076441
+             0851076459
+             0851076467
+             0851076475
+             0851076483
+             0851076491
+             2741221006
+             2741221065
+             2741221073
+             2741221081
+             2741221090
+             2741221111
+             2741221120
+             2741221138
+             2741221821
+             2741221871
+             2741221880
+             2741221898
+             2741221910
+             2741221928
+             2741221936
+             2741221944
+             2741221961
+        );
+#use Test::More; for (@bca) { is(luhn(substr($_,0,9)), substr($_,9,1)) }; done_testing;
+
+# show in a more horizontal manner
+#my ($got, $wanted); for (@bca) { $got .= luhn(substr($_,0,9)); $wanted .= substr($_,9,1) } say "got   : $got\nwanted: $wanted";
+
+# luhn x: 121212121
+# luhn +: +++++++++
+# wanted: 219753165310108110808641
+# got   : 432109804321765165409875
+
+# luhn x: 212121212
+# luhn +: +++++++++
+# wanted: 219753165310108110808641
+# got   : 085319729753975097519750
+
+# claculate percentage of hit/miss
+sub hitmiss {
+    my $hit=0; my $tot=0;
+    for (@bca) { $tot++; if (luhn(substr($_,0,9)) == substr($_,9,1)) { $hit++ } }
+    $hit/$tot;
+}
+
+#for my $d1 (1..9) {
+#    $M[8] = $d1;
+#    say @M, ": ", hitmiss();
+#}
+
+#121212121: 0.125
+#121212122: 0
+#121212123: 0
+#121212124: 0.0833333333333333
+#121212125: 0.0416666666666667
+#121212126: 0.125
+#121212127: 0.0833333333333333
+#121212128: 0.0833333333333333
+#121212129: 0.0416666666666667
+
+# perl version is slow but still waitable, +- 3.3k/sec (total 9**9 kombinasi,
+# butuh waktu 1.35 hari)
+for my $d1 (1..9) {
+for my $d2 (1..9) {
+for my $d3 (1..9) {
+for my $d4 (1..9) {
+for my $d5 (1..9) {
+for my $d6 (1..9) {
+for my $d7 (1..9) {
+for my $d8 (1..9) {
+for my $d9 (1..9) {
+    @M = ($d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9);
+    say @M, ": ", sprintf("%.3f", hitmiss());
+}}}}}}}}}
+
+# beberapa hasil yang tinggi
+#111111132: 0.417
+#111112952: 0.458
+# - semua yang di atas 0.400, digit belakangnya 2.
+# - sampe 1.3mil kombinasi, belum ada yang >= 0.500
+
+# kesimpulan:
+# perlu ambil sampel norek random lagi biar lebih representatif
