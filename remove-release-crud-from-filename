@@ -68,6 +68,7 @@ EOF
 $re_prefix = qr/(?:$re_prefix)/i;
 
 my $re_suffix = join("|", map {quotemeta} sort {length($b)<=>length($a)} grep {/\S/} split "\n", <<'EOF');
+ (www.LoMasRankiaO.com)
 (Dvdrip)(Dark_Stalker)(bonus)
 (Dvdrip Dark_Stalker)
 (Dvdrip)(Dark_Stalker)
