@@ -93,6 +93,7 @@ my @Responses = (
               "* [b]thanks[/b] -> ucapkan terima kasih pada bot\n",
               "* [b]exit[/b] / [b]quit[/b] -> bunuh proses bot\n",
               "* [b]avatars[/b] -> tampilkan avatar semua user aktif saat ini\n",
+              "* [b]users[/b] -> tampilkan daftar semua user aktif saat ini\n",
               "* [b]ekstrak gambar dari [/b][i]URL[/i] -> ambil dan tampilkan semua gambar dari halaman web\n",
               "* [i]katakunci[/i] [b]itu[/b] [i]fakta[/i] -> mengeset fakta terhadap sebuah kata kunci\n",
               "* [i]katakunci[/i] [b]itu juga[/b] [i]fakta[/i] -> menambah fakta terhadap sebuah kata kunci\n",
@@ -568,6 +569,14 @@ my @Responses = (
      handler => sub {
          my (%args) = @_;
          $Mech->get("$App::options{base_url}/utils.php?mode=avatars");
+         return $Mech->content;
+     }},
+
+    {pat => qr/^users$/i,
+     name => 'LIST_USERS',
+     handler => sub {
+         my (%args) = @_;
+         $Mech->get("$App::options{base_url}/utils.php?mode=users");
          return $Mech->content;
      }},
 
