@@ -576,7 +576,7 @@ my @Responses = (
      name => 'LIST_USERS',
      handler => sub {
          my (%args) = @_;
-         $Mech->get("$App::options{base_url}/utils.php?mode=users");
+         $Mech->get("$App::options{base_url}/utils.php?mode=list_users");
          return $Mech->content;
      }},
 
