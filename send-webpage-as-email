@@ -1,0 +1,74 @@
+#!/usr/bin/perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Perinci::CmdLine;
+
+our %SPEC;
+$SPEC{send_webpage_as_email} = {
+    v       => 1.1,
+    summary => 'Send webpage as HTML email',
+    args    => {
+        url => {
+            req => 1,
+            pos => 0,
+            schema => 'str*',
+        },
+        to => {
+            req => 1,
+            pos => 1,
+            schema => 'str*',
+        },
+        from => {
+            schema => 'str*',
+        },
+        subject => {
+            schema => 'str*',
+            description => <<'_',
+
+By default will use URL as subject.
+
+_
+        },
+        smtp_host => {
+            summary => 'If specified, send email using SMTP',
+            schema => 'str*',
+            description => <<'_',
+
+Otherwise, will be using sendmail.
+
+_
+        },
+    },
+};
+sub send_webpage_as_email {
+    require MIME::Lite::HTML;
+
+    my %args = @_;
+
+    my $url = $args{url} or return [400, "Please specify 'url'"];
+    my $subject = $args{subject} // $url;
+    my $from = $args{from} // "$ENV{USER}@$ENV{HOSTNAME}";
+    my $to = $args{to} or return [400, "Please specify 'to'"];
+
+    my $mail = MIME::Lite::HTML->new(
+        From    => $from,
+        To      => $to,
+        Subject => $subject,
+    );
+    my $mime = $mail->parse($url);
+
+    if ($args{smtp}) {
+        $mime->send_by_smtp($args{smtp});
+    } else {
+        $mime->send;
+    }
+
+    [200];
+}
+
+Perinci::CmdLine->new(
+    url => '/main/send_webpage_as_email',
+)->run;
