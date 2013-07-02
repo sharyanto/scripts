@@ -68,6 +68,8 @@ EOF
 $re_prefix = qr/(?:$re_prefix)/i;
 
 my $re_suffix = join("|", map {quotemeta} sort {length($b)<=>length($a)} grep {/\S/} split "\n", <<'EOF');
+.720p.HDTV.ReEnc-Max
+.HDTV.x264-LOL.[VTV]
  (www.LoMasRankiaO.com)
 (Dvdrip)(Dark_Stalker)(bonus)
 (Dvdrip Dark_Stalker)
