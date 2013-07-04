@@ -13,6 +13,8 @@ my $cpan = $ARGV[0] // '/cpan';
 
 $CWD = "$cpan/authors/id";
 
+$log->warn("Protip: You don't have to do this to minicpan BTW");
+
 for my $author (<*/*/**>) {
     $log->debug("Entering author dir $author ...");
     local $CWD = $author;
