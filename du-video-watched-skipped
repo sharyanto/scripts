@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # XXX doesn't yet support hardlinks, but it's not that important.
 

@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 $wget = (-x "/usr/bin/wget2") ? "/usr/bin/wget2" : "wget"; # support utk yg wget-nya diblokir
 $_ = `$wget -q -O- --no-cache 'http://www.klikbca.com'`;
 length($_) or die "Gagal mengambil halaman (kosong)\n";

@@ -1,4 +1,4 @@
-#!/usr/bin/perl -l
+#!/usr/bin/env perl -l
 #031024
 for (@ARGV) {
   if (/^(\d+)-(\d+)$/) { print "forget $_" for $1..$2 }

@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # jalankan skrip ini di direktori yg berisi album files.
 

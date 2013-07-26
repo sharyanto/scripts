@@ -1,4 +1,4 @@
-#!/usr/bin/perl -n
+#!/usr/bin/env perl -n
 
 while (/([0-9A-Fa-f]{2})/g) { printf "\\\\%03O", hex($1) }
 print "\n";

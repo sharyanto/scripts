@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # for more "correct" Maildir creation, including multilevel folders, proper
 # message filenames naming, etc, see

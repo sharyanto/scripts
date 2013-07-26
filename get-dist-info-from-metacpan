@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 use Data::Dump::Color;
 use MetaCPAN::API;

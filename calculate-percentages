@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # given lines that contain number and text, sort and calculate the
 # percentages and optionally only show N lines or until X% has been

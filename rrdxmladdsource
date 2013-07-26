@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl -w
 #
 # rrdaddsource  Adds a new data source to an RRD database.
 #

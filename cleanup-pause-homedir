@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # copy-pasted from WWW::PAUSE::CleanUpHomeDir's Synopsis, with hardcoded
 # password changed to using INI

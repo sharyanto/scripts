@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # versi yang menggunakan regex, terinspirasi posting blog Beautiful Perl:
 # http://transfixedbutnotdead.com/2010/07/16/beautiful-perl/

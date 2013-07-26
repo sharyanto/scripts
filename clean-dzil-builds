@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # "dzil build" creates build directory and tarballas in the project root dir.
 # this clutters things. run this to clean the build files.

@@ -1,4 +1,4 @@
-#!/usr/bin/perl -0 -pi
+#!/usr/bin/env perl -0 -pi
 #030125
 ($title) = m#<a href=[^>]+>(?:<img[^>]+>)?(.+?)</a>#i or $title = $ARGV; $title =~ s/^\s+//; $title =~ s/\s+$//;
 s|.*?<!--X-User-Header-End-->||s;

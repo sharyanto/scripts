@@ -1,4 +1,4 @@
-#!/usr/bin/perl -0777 -n
+#!/usr/bin/env perl -0777 -n
 
 use POSIX qw(strftime);
 

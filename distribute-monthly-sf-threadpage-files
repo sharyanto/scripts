@@ -1,4 +1,4 @@
-#!/usr/bin/perl -0
+#!/usr/bin/env perl -0
 #021128
 for (<*>) {
     open F,$_; $c=<F>; close F;

@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # DEPRECATED: gak perlu lagi. bash punya "$@" (as well as "$*"). dengan
 # "$@", tiap argumen udah diseparate dan diquote.

@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 @ARGV==1 or die "Usage: $0 <pid>\n";
 $pid = $ARGV[0];

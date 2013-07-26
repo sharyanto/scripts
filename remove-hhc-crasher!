@@ -1,4 +1,4 @@
-#!/usr/bin/perl -0 -pi
+#!/usr/bin/env perl -0 -pi
 
 # very long words
 s#[A-Za-z0-9]{256,}#[DELETED]#g;

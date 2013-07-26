@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 sub sec2hmsd{my $sec=shift;my $d=($sec-int($sec))*10;$sec=int($sec);my $s=$sec%60;my $m=int($sec/60)%60;my $h=int($sec/3600);sprintf"%d:%02d:%02d.%1d",$h,$m,$s,$d;}
 for(<>){
   /^(\d+):(\d+):(\d+)\.(\d+):(.*)/;$sec=3600*$1+60*$2+$3+0.1*$4;$t=$5;for($t){s/\|/ /g;s/  / /g;}push @f,[$sec,$t];

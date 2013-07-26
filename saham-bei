@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 $wget = (-x "/usr/bin/wget2") ? "/usr/bin/wget2" : "wget"; # support utk yg wget-nya diblokir
 $yfticker = $ARGV[0] ? "$ARGV[0].JK" : "^JKSE";
 $idticker = $ARGV[0] ? "$ARGV[0]" : "IHSG";

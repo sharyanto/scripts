@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # 2004-12-18, di debian indexer = /usr/bin/index++
 # 041017, add --delete-mbox-bz2. rename --delete-swish to --delete-index. remove --swish. comment out CHM report (we no longer have those).

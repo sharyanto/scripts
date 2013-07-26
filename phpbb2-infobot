@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl -w
 
 # this script logins to forum and repeatedly searches for new posts
 # mentioning itself, looking for commands, e.g.: "infobot, cariin

@@ -1,3 +1,3 @@
-#!/usr/bin/perl -ln
+#!/usr/bin/env perl -ln
 s/'/'"'"'/g;
 print "'$_'";

@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # this script connects to mysql and then run continuously, polling processlist
 # periodically (by default every minute). the goal is to help mysql keep

@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # 2005-04-07 - tambahin skip jika sudah guid
 # 031214

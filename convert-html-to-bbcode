@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # saat ini hanya simpel, hanya mendukung <font color> => [color] & <a
 # href>, <b><i><u> dan menghilangkan <br>. untuk mengconvert log chat

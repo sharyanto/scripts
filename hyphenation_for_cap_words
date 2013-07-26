@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 while (<>) {
 	do {print; next} if /#/ or not /\S/;

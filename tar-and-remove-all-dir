@@ -1,4 +1,4 @@
-#!/usr/bin/perl -l
+#!/usr/bin/env perl -l
 
 # 2004-08-13 - tar all dirs into DIRNAME.tar and remove the dirs.
 

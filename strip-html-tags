@@ -1,4 +1,4 @@
-#!/usr/bin/perl -0777 -p
+#!/usr/bin/env perl -0777 -p
 
 # can't handle nested yet, e.g. <foo bar="hey, > this is not the end">
 

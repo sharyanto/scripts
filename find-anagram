@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # supply it with a list of names, it will print you the anagrams
 

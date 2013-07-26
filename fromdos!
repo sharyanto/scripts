@@ -1,3 +1,3 @@
-#!/usr/bin/perl -pi~
+#!/usr/bin/env perl -pi~
 
 s/\r?\n/\n/;

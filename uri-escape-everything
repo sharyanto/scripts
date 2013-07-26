@@ -1,3 +1,3 @@
-#!/usr/bin/perl -lp
+#!/usr/bin/env perl -lp
 BEGIN { use URI::Escape; }
 $_ = uri_escape($_, "\0-\377");

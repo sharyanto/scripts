@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # feed it lines containing URLs in each, and it will extract search query logs
 

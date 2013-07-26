@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 $qmail_remote = "/usr/bin/qmail-remote.orig";
 $in_body = 0;
 

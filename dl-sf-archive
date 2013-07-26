@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 #20030228 - skr cukup supply forum name, forum id akan dicari sendiri
 #20021201

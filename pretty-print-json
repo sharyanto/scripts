@@ -1,4 +1,4 @@
-#!/usr/bin/perl -0777
+#!/usr/bin/env perl -0777
 
 use JSON;
 my $json = JSON->new->allow_nonref;

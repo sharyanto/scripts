@@ -1,4 +1,4 @@
-#!/usr/bin/perl -pi~ -0777
+#!/usr/bin/env perl -pi~ -0777
 
 # ambil content
 m{^(.+<br><br><br>\n)}mi and $_ = $1;

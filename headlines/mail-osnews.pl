@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 use Data::Dumper;
 use LWP::Simple;
 use Mail::Sendmail;

@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 use Module::CoreList;
 for (@ARGV) {
     my $v = Module::CoreList->first_release($_);

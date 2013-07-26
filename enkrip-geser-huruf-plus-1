@@ -1,2 +1,2 @@
-#!/usr/bin/perl -p
+#!/usr/bin/env perl -p
 tr/a-z/b-za/;

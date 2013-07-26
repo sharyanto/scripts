@@ -1,4 +1,4 @@
-#!/usr/bin/perl -0 -ni
+#!/usr/bin/env perl -0 -ni
 
 #021028 - craps eudora does to its "mbox":
 # - break out mime messages/attachments, but leave Content-Type: multipart...

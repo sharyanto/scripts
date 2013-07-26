@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # 030523. 64 bit distributed id. bisa dinyatakan angka 64 bit biasa atau
 # dalam 14 digit "special base 29" dalam format AAAAA-AAAA-AAAAA. digit2

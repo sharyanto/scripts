@@ -1,4 +1,4 @@
-#!/usr/bin/perl6
+#!/usr/bin/env perl6
 
 my Num $height = 12;
 

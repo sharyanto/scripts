@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # 030812 - ternyata format srt bisa memuat koordinat juga. note srtshift & srtscale belon difix.
 # 030412

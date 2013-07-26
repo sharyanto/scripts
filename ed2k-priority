@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # gak bisa? kebaca aja sama <>
 #if (@ARGV != 1) {

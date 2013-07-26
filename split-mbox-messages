@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # split mbox into smaller mboxes (with each containing a max of N
 # messages) or individual messages (if N=1). will output to 1.mbox,

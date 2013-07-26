@@ -1,4 +1,4 @@
-#!/usr/bin/perl -l
+#!/usr/bin/env perl -l
 
 # 2004-12-12 - ssh but find auth sock when SSH_AUTH_SOCK is not defined
 

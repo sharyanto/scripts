@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # if given a url, then download it to imdb.url and imdb.html. else, find
 # imdb.url and download that url to imdb.html.

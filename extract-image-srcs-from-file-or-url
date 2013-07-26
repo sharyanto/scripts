@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # 990928, pas waktu mo nge-print manual PostgreSQL
 # 000710, nambah biar bisa get document dari URL. BASE HREF aware.

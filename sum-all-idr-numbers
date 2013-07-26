@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # dipakai utk menerima hasil copy paste transaksi dari ledger, lalu menjumlah
 # semua angka yang ada di depan IDR.

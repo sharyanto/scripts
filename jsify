@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # turns html into js that will reconstruct the html, e.g.: "<b>hi</b>" -> "<script>document.write('<b>hi</b>');</script>"
 # 030111 - sh

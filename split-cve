@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # split CVE single big list file into per-item file, categorized by
 # year.

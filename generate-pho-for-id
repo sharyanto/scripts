@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl -w
 
 # hasilnya masih jauh dari memuaskan. perlu timing yg lebih detil/spesifik
 

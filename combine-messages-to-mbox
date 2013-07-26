@@ -1,4 +1,4 @@
-#!/usr/bin/perl -0
+#!/usr/bin/env perl -0
 
 #021124 - terutama dipake untuk mengconvert message yang dikirim oleh ezmlm
 #menjadi mbox. message ini tidak mengandung From_ line, /^From / masih harus

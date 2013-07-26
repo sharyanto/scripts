@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 use File::Which;
 die "Usage: $0 <perl-script-name>\n" unless @ARGV;

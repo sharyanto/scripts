@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 use LWP::Simple;
 use Mail::Sendmail;
 use HTML::Entities 'decode_entities';

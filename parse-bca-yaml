@@ -1,4 +1,4 @@
-#!/usr/bin/perl -0777 -w
+#!/usr/bin/env perl -0777 -w
 
 use strict;
 use YAML::XS;

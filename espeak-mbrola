@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # espeak multilingual tapi suaranya jelek. kita pake diphone voice database dari
 # proyek mbrola utk menghasilkan suara yg lebih bagus.

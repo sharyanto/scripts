@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # 20040807 - extract informasi dari hasil download
 # http://www.calle.com/world/<2lettercountry>/. jalankan skrip ini dari

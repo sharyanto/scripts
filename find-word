@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # TODO: some letters in find letters MUST be found, maybe using
 # notation: --find-letters abcDE where D,E must be found and a,b,c are

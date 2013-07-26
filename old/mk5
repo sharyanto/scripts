@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl -w
 # mk5 - "Masuk kuping kiri, keluar kuping kanan"
 # Program TCP forwarder multiuser dengan select
 # dimodifikasi dari program 'nonforker' oleh Tom Christiansen

@@ -1,4 +1,4 @@
-#!/usr/bin/perl -pi
+#!/usr/bin/env perl -pi
 #000605. i've perhaps recreated this script ten times or so.
 #000817. inplace version.
 $. = 1 if $ARGV ne $old_argv;

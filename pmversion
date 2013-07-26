@@ -1,1 +1,27 @@
-pminfo
+#!/usr/bin/env perl
+
+use 5.010;
+
+for my $mod (@ARGV) {
+    # allow Foo-Bar to mean Foo::Bar
+    $mod =~ s/-/::/g;
+
+    print "$mod:";
+    unless ($mod =~ /\A(\w+::)*\w+\z/) {
+        print " (invalid syntax, skipped)\n";
+        next;
+    }
+    my $modp = $mod; $modp =~ s!::!/!g; $modp .= ".pm";
+
+    if (eval qq(require $mod; 1)) {
+        #print " (loaded successfully)";
+    } else {
+        print " (can't load, skipped)\n";
+        next;
+    }
+    print " version: ", ${"$mod\::VERSION"} // "(no version)";
+
+    print "   path: $INC{$modp}";
+
+    print "\n";
+}

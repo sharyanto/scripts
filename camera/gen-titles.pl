@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 $|++;
 for $year (grep {(-d) and /^(19|20)\d\d$/} <*>) {

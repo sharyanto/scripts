@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # created 2008-12-22 - 1 cd dipilah2x jadi sub- (dan sub-sub) folder,
 # capek juga masuk dan keluar foldernya, maka gw buat skrip ini agar

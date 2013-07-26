@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 die "Usage: $0 <string> ...\n" unless @ARGV;
 

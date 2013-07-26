@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # plots CPAN author(s)'s number of dists over time
 

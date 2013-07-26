@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # double-shell-quote-lines masih kurang dikit, kita perlu membuang quote terluarnya
 

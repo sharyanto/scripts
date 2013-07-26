@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 $|++;
 # 021230 - buat motong2 audio book "the gunslinger", stephen king (6,5 jam bo! dan compo gue gak bisa fast forward within a track, so we need to cut the track into 5-min pieces)

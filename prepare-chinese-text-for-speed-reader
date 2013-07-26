@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # this script will segment (insert spaces into) chinese text into words (e.g. '我
 # 好想病' -> '我 好想 病'). also will convert punctuations into latin ones

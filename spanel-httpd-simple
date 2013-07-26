@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # used to run Spanel web interface (for development only!) on my PC without
 # installing the whole Spanel. Currently also need these tricks to run:

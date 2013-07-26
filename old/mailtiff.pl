@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 #001020
 #mo ngirim TIFF image ke TPC buat difax

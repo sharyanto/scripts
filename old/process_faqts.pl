@@ -1,4 +1,4 @@
-#!/usr/bin/perl -0
+#!/usr/bin/env perl -0
 
 # first written 011105 for mwmag edisi 2
 # rewritten 031130 buat buku resep php

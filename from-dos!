@@ -1,2 +1,2 @@
-#!/usr/bin/perl -0777 -pi
+#!/usr/bin/env perl -0777 -pi
 s/\r//;

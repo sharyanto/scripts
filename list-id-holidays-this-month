@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 ($year, $mon) = (localtime)[5, 4];
 $year += 1900; $mon++;

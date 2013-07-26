@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 use 5.010;
 use Lingua::FR::Numbers qw(number_to_fr ordinate_to_fr);

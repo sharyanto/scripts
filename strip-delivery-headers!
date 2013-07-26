@@ -1,4 +1,4 @@
-#!/usr/bin/perl -0 -pi
+#!/usr/bin/env perl -0 -pi
 s/(^From .+?\015?\012\015?\012)/rep($1)/semg;
 sub rep {
   local $_=shift;

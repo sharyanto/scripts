@@ -1,4 +1,4 @@
-#!/usr/bin/perl -0 -ni
+#!/usr/bin/env perl -0 -ni
 use Mail::Sendmail '$address_rx';
 while (m#(<!--.+?-->|<script.+?</script>|<style.+?</style>)|(<[^>]+>)|([^<]+)#sig) {
     if ($1) { # comment/blocks

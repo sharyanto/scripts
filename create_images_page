@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 print "<center>\n";
 for(sort grep { /\.(gif|jpe?g?|png)$/i } <*>) {

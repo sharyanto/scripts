@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # 20040403 - for demix, allow more than 1 mixture file
 # 20040223 - add -k option
