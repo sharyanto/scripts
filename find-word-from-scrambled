@@ -1,4 +1,4 @@
-#!/usr/bin/env perl -w
+#!/usr/bin/env dummy= perl -w
 
 # specify a scrambled word in ARGV[0], feed it a list of words in
 # stdin, script will find it in list.

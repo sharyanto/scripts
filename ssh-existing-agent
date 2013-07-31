@@ -1,4 +1,4 @@
-#!/usr/bin/env perl -l
+#!/usr/bin/env dummy= perl -l
 
 # 031011
 # 040414 - add -q (quiet) option

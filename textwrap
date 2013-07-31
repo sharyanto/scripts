@@ -1,4 +1,4 @@
-#!/usr/bin/env perl -w
+#!/usr/bin/env dummy= perl -w
 
 # XXX TODO: user-configurable first line indent, subsequent line
 # indent, line after para

@@ -1,4 +1,4 @@
-#!/usr/bin/env perl -0 -pi
+#!/usr/bin/env dummy= perl -0 -pi
 #021117
 s#.+<sub>Dec</sub>.+?<TABLE#<TABLE#s;
 s#(.+</pre>.+?</TABLE>).+#$1#s;

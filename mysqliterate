@@ -1,4 +1,4 @@
-#!/usr/bin/env perl -w
+#!/usr/bin/env dummy= perl -w
 
 my $VERSION = '0.011';
 my $NAME = "mysqliterate";

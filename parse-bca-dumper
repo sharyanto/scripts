@@ -1,4 +1,4 @@
-#!/usr/bin/env perl -0777 -w
+#!/usr/bin/env dummy= perl -0777 -w
 
 use strict;
 use Data::Dumper;

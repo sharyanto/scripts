@@ -1,4 +1,4 @@
-#!/usr/bin/env perl -0 -n
+#!/usr/bin/env dummy= perl -0 -n
 
 # 040229, to be run in .qmail. exit 1 if mail contains suspicious
 # attachment, 0 if not.

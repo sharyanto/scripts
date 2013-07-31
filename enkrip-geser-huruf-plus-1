@@ -1,2 +1,2 @@
-#!/usr/bin/env perl -p
+#!/usr/bin/env dummy= perl -p
 tr/a-z/b-za/;

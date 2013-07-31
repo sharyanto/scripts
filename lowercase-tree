@@ -1,4 +1,4 @@
-#!/usr/bin/env perl -l
+#!/usr/bin/env dummy= perl -l
 
 use File::Find;
 

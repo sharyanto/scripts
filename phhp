@@ -1,4 +1,4 @@
-#!/usr/bin/env perl -0
+#!/usr/bin/env dummy= perl -0
 
 $|++;
 require "/home/steven/bin/func-contrive-subject.pl";

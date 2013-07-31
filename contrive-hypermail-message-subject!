@@ -1,4 +1,4 @@
-#!/usr/bin/env perl -0 -pi
+#!/usr/bin/env dummy= perl -0 -pi
 use FindBin qw($Bin);
 require "$Bin/func-contrive-subject.pl";
 #print STDERR "$ARGV\n";

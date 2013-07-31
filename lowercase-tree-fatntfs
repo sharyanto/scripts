@@ -1,4 +1,4 @@
-#!/usr/bin/env perl -l
+#!/usr/bin/env dummy= perl -l
 
 # 021125. rename"A","a" doesn't work. musti pake trik rename dulu ke some
 # other name, baru balikin lagi

@@ -1,4 +1,4 @@
-#!/usr/bin/env perl -w
+#!/usr/bin/env dummy= perl -w
 
 # v2 - pake 3 buat "frame" horizontal di mana yang kiri adalah link
 # teks, yang kedua versi thumbnail, dan yang kanan adalah versi

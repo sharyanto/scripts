@@ -1,4 +1,4 @@
-#!/usr/bin/env perl -0777 -ln
+#!/usr/bin/env dummy= perl -0777 -ln
 
 use URI::Find;
 

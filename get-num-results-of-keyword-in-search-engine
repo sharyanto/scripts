@@ -1,4 +1,4 @@
-#!/usr/bin/env perl -w
+#!/usr/bin/env dummy= perl -w
 
 use strict;
 require LWP::UserAgent;

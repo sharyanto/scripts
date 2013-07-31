@@ -1,4 +1,4 @@
-#!/usr/bin/env perl -n
+#!/usr/bin/env dummy= perl -n
 
 # tiap gw download gw catat/log dalam file. dulu bikin format sendiri
 # tapi belakangan pake format ls -l (atau du -sm / du -sh).

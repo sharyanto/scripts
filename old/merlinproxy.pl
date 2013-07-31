@@ -1,4 +1,4 @@
-#!/usr/bin/env perl -Tw
+#!/usr/bin/env dummy= perl -Tw
 use strict;
 $ENV{PATH} = join ":", qw(/usr/ucb /bin /usr/bin);
 $|++;
