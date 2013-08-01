@@ -1,4 +1,4 @@
-#!/usr/bin/env dummy= perl -n
+#!/usr/bin/perl -n
 s/\s*#.*//;
 next unless /\S/;
 print;

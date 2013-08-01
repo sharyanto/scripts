@@ -1,9 +1,10 @@
-#!/usr/bin/env dummy= perl -w
+#!/usr/bin/env perl
 
+use autodie;
 use strict;
+use warnings;
 use Data::Dumper;
 use List::MoreUtils qw/uniq/;
-use autodie;
 
 my $to_id = $0 =~ /su_id$/;
 my %entries;

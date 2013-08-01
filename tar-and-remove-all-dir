@@ -1,6 +1,8 @@
-#!/usr/bin/env dummy= perl -l
+#!/usr/bin/env perl
 
 # 2004-08-13 - tar all dirs into DIRNAME.tar and remove the dirs.
+
+use 5.010;
 
 my @ents;
 if (@ARGV) {
@@ -11,7 +13,7 @@ if (@ARGV) {
 
 for (grep {-d} @ents) {
   if (-f "$_.tar") {
-    print "WARNING: $_.tar exists, skipped";
+    say "WARNING: $_.tar exists, skipped";
   }
   $esc = esc($_);
   $cmd = "tar cf $esc.tar $esc && rm -r $esc";

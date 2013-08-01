@@ -1,10 +1,11 @@
-#!/usr/bin/env dummy= perl -w
+#!/usr/bin/env perl
 
 # v2 - pake 3 buat "frame" horizontal di mana yang kiri adalah link
 # teks, yang kedua versi thumbnail, dan yang kanan adalah versi
 # besarnya. makin mempermudah quick browsing.
 
 use strict;
+use warnings;
 use File::Find;
 #use HTML::Entities;
 #use URI::Escape;

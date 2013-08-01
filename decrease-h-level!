@@ -1,2 +1,2 @@
-#!/usr/bin/env dummy= perl -0 -pi
+#!/usr/bin/perl -0 -pi
 s#(</?[Hh])(\d+)#$1 . ($2+1)#eg;

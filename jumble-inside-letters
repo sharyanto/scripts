@@ -1,4 +1,4 @@
-#!/usr/bin/env dummy= perl -lp
+#!/usr/bin/perl -lp
 
 # 030920
 

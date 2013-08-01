@@ -1,6 +1,7 @@
-#!/usr/bin/env dummy= perl -w
+#!/usr/bin/env perl 
 
 use strict;
+use warnings;
 use Data::Dumper;
 use List::MoreUtils qw/uniq/;
 use autodie;

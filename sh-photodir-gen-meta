@@ -1,7 +1,8 @@
-#!/usr/bin/env dummy= perl -w
+#!/usr/bin/env perl
 
 use autodie;
 use strict;
+use warnings;
 use Cwd;
 use DateTime;
 use Log::Log4perl qw(:easy);

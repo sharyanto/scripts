@@ -1,8 +1,9 @@
-#!/usr/bin/env dummy= perl -l
+#!/usr/bin/env perl
 
 # 021125. rename"A","a" doesn't work. musti pake trik rename dulu ke some
 # other name, baru balikin lagi
 
+use 5.010;
 use File::Find;
 
 @ARGV = "." unless @ARGV;
@@ -14,6 +15,6 @@ finddepth sub {
     do {
         $counter=2; $counter++ while (-e "$lc$counter");
         (rename $_,"$lc$counter" and rename "$lc$counter",$lc) 
-        and print "$_ => $lc"
+        and say "$_ => $lc"
     }
 }, @ARGV;

@@ -1,6 +1,8 @@
-#!/usr/bin/env dummy= perl -l
+#!/usr/bin/env perl
 
+use 5.010;
 use strict;
+use warnings;
 use Getopt::Long;
 
 my %Opt = (
@@ -35,11 +37,11 @@ if (@ARGV) {
 
 for my $f (@files) {
   if (-f "$f.ogg") {
-    print "WARNING: $f.ogg exists, skipped";
+    say "WARNING: $f.ogg exists, skipped";
   }
   my $esc = esc($f);
   my $cmd = "ffmpeg -i $esc -ar $Opt{samprate} -ab $Opt{bitrate} $esc.ogg";
-  print $cmd;
+  say $cmd;
   system $cmd;
 }
 

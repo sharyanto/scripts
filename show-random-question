@@ -1,8 +1,9 @@
-#!/usr/bin/env dummy= perl -w
+#!/usr/bin/env perl
 
 use 5.010;
 use autodie;
 use strict;
+use warnings;
 use App::Options (
     option => {
         file => { type => 'string', required => 0, default => "$ENV{HOME}/notes/questions.txt", },

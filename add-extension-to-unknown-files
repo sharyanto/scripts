@@ -1,9 +1,10 @@
-#!/usr/bin/env dummy= perl -w
+#!/usr/bin/env perl 
 
 # 2004-08-16 - unfinished
 # 2009-07-15 - iseng finish first draft
 
 use strict;
+use warnings;
 use Log::Log4perl qw(:easy);
 
 sub esc {

@@ -1,12 +1,13 @@
-#!/usr/bin/env dummy= perl -l
+#!/usr/bin/env perl
 
+use 5.010;
 use lib '/home/steven/proj/spanel/lib/perl';
-use Spanel::API::Plan;
+use spanel::api::plan;
 use YAML::XS;
 
 if (@ARGV) {
-    print Dump(Spanel::API::Plan::parse($ARGV[0]));
+    say Dump(spanel::api::plan::_parse($ARGV[0]));
 } else {
-    print "Usage: $0 <nama-file-yaml>";
+    say "Usage: $0 <nama-file-yaml>";
     exit 1;
 }

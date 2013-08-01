@@ -1,4 +1,4 @@
-#!/usr/bin/env dummy= perl -n
+#!/usr/bin/perl -n
 
 # just like uniq, but can detect non-consecutive duplicates, e.g. 1,
 # 2, 3, 1, 2, 4 becomes 1, 2, 3, 4.

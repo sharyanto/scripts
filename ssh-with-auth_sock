@@ -1,11 +1,13 @@
-#!/usr/bin/env dummy= perl -l
+#!/usr/bin/env perl
+
+use 5.010;
 
 # 2004-12-12 - ssh but find auth sock when SSH_AUTH_SOCK is not defined
 
 $SSH = "/usr/bin/ssh";
 
 unless (@socks = grep {-r} </tmp/ssh-*/agent.[0-9]*>) {
-  print "$0: WARN: No auth socks found\n";
+  say "$0: WARN: No auth socks found";
 }
 
 @socks = sort {(-M $a) <=> (-M $b)} @socks;

@@ -1,9 +1,10 @@
-#!/usr/bin/env dummy= perl -w
+#!/usr/bin/env perl
 
 my $VERSION = '0.011';
 my $NAME = "mysqliterate";
 
 use strict;
+use warnings;
 use DBI;
 use Getopt::Long;
 

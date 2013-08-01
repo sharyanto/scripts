@@ -1,4 +1,4 @@
-#!/usr/bin/env dummy= perl -0
+#!/usr/bin/perl -0
 #030526
 
 %months = qw(Jan 01 Feb 02 Mar 03 Apr 04 May 05 Jun 06

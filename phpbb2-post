@@ -1,4 +1,4 @@
-#!/usr/bin/env dummy= perl -w
+#!/usr/bin/env perl
 
 # this script accepts input in the form of email and post it to a phpbb2 forum
 # website. the post subject will be taken from email header Subject.
@@ -15,6 +15,7 @@
 BEGIN { $ENV{PERL_LWP_SSL_VERIFY_HOSTNAME} = 0 }
 
 use strict;
+use warnings;
 use Cwd;
 use File::Slurp;
 use Log::Log4perl qw(:easy);

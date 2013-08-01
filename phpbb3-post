@@ -1,4 +1,4 @@
-#!/usr/bin/env dummy= perl -w
+#!/usr/bin/env perl
 
 # this script accepts input in the form of email and post it to a phpbb3 forum
 # website. the post subject will be taken from email header Subject.
@@ -9,6 +9,7 @@
 # options can be put in config file or specified on the command line.
 
 use strict;
+use warnings;
 use Cwd;
 use File::Slurp;
 use Log::Log4perl qw(:easy);

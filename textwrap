@@ -1,9 +1,10 @@
-#!/usr/bin/env dummy= perl -w
+#!/usr/bin/env perl
 
 # XXX TODO: user-configurable first line indent, subsequent line
 # indent, line after para
 
 use strict;
+use warnings;
 use Text::Wrap;
 
 $Text::Wrap::columns = 80;

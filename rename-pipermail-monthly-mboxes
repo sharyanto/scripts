@@ -1,4 +1,6 @@
-#!/usr/bin/env dummy= perl -l
+#!/usr/bin/env perl 
+
+use 5.010;
 
 #021002
 
@@ -26,7 +28,7 @@ for(<*>) {
             $year = ($year > 37 ? "19":"20") . $month;
         }
         $new = "$year$months{$month}.mbox";
-        print "$old -> $new";
+        say "$old -> $new";
         rename $old, $new;
     }
 }

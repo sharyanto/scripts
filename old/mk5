@@ -1,9 +1,10 @@
-#!/usr/bin/env dummy= perl -w
+#!/usr/bin/env perl
 # mk5 - "Masuk kuping kiri, keluar kuping kanan"
 # Program TCP forwarder multiuser dengan select
 # dimodifikasi dari program 'nonforker' oleh Tom Christiansen
 # (Perl Cookbook)
 
+use warnings;
 use Carp qw(verbose);
 use POSIX;
 use IO::Socket;

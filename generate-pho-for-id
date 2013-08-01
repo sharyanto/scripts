@@ -1,8 +1,9 @@
-#!/usr/bin/env dummy= perl -w
+#!/usr/bin/env perl 
 
 # hasilnya masih jauh dari memuaskan. perlu timing yg lebih detil/spesifik
 
 use strict;
+use warnings;
 
 my %Phonemes = (
     # patS = start of word, patM = middle of word, patE = end of word

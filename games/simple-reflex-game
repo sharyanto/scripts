@@ -1,6 +1,7 @@
-#!/usr/bin/env dummy= perl -w
+#!/usr/bin/env perl
 
 use strict;
+use warnings;
 use Time::HiRes qw(usleep gettimeofday tv_interval);
 
 my $total_time = 0;

@@ -1,4 +1,4 @@
-#!/usr/bin/env dummy= perl -n -0777
+#!/usr/bin/perl -n -0777
 
 use 5.010;
 use strict;

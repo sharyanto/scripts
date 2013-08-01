@@ -1,9 +1,10 @@
-#!/usr/bin/env dummy= perl -w
+#!/usr/bin/env perl
 
 # this script performs action on multiple pages. pages are retrieved
 # from the Speciall:Allpages. languages id and en are supported.
 
 use strict;
+use warnings;
 use Log::Log4perl qw(:easy);
 use WWW::Mechanize;
 #use URI::Escape;

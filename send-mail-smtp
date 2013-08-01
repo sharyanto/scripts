@@ -1,6 +1,7 @@
-#!/usr/bin/env dummy= perl -w
+#!/usr/bin/env perl 
 
 use strict;
+use warnings;
 
 # created: 2004-01-21
 our $VERSION = "2010-11-04";

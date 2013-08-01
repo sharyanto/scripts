@@ -1,10 +1,12 @@
-#!/usr/bin/env dummy= perl -0
+#!/usr/bin/env perl
 
 # first written 011105 for mwmag edisi 2
 # rewritten 031130 buat buku resep php
 
 use File::Find;
 use URI::Escape;
+
+local $/;
 
 %fids = (); %aids = ();
 

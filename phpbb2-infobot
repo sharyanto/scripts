@@ -1,4 +1,4 @@
-#!/usr/bin/env dummy= perl -w
+#!/usr/bin/env perl
 
 # this script logins to forum and repeatedly searches for new posts
 # mentioning itself, looking for commands, e.g.: "infobot, cariin
@@ -12,6 +12,7 @@
 
 use 5.010;
 use strict;
+use warnings;
 use Log::Any::App '$log',
     -screen=>{pattern_style=>'script_long'};
 

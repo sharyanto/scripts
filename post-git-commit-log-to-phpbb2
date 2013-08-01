@@ -1,8 +1,9 @@
-#!/usr/bin/env dummy= perl -w
+#!/usr/bin/perl
 
 use 5.010;
 use autodie;
 use strict;
+use warnings;
 use App::Options (
     option => {
         memory_path => { type => 'string' },

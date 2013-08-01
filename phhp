@@ -1,5 +1,6 @@
-#!/usr/bin/env dummy= perl -0
+#!/usr/bin/env perl
 
+local $/;
 $|++;
 require "/home/steven/bin/func-contrive-subject.pl";
 use Getopt::Long;

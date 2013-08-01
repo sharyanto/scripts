@@ -1,4 +1,4 @@
-#!/usr/bin/env dummy= perl -w
+#!/usr/bin/env perl
 
 # todo:
 
@@ -9,6 +9,7 @@
 use autodie;
 use feature 'state';
 use strict;
+use warnings;
 
 #use Carp::Always;
 use Cwd qw(abs_path);

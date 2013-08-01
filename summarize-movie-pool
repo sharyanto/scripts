@@ -1,4 +1,4 @@
-#!/usr/bin/env dummy= perl -0777 -l
+#!/usr/bin/perl -0777 -l
 
 @ARGV = <*/imdb.html>;
 

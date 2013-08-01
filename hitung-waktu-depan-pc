@@ -1,4 +1,4 @@
-#!/usr/bin/env dummy= perl -ln
+#!/usr/bin/perl -ln
 
 BEGIN {
   use POSIX qw(floor);

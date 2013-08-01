@@ -1,4 +1,6 @@
-#!/usr/bin/env dummy= perl -w
+#!/usr/bin/env perl 
+
+use warnings;
 
 # buat/update arsip web dari archive ezmlm -- sh, 011223
 # archive is a 2-level directory structures. each posting is in a separate file: 0/00, 0/01, ..., 0/100, 1/00, 1/01, ...

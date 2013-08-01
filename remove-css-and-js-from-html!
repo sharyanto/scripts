@@ -1,4 +1,4 @@
-#!/usr/bin/env dummy= perl -0777 -pi~
+#!/usr/bin/perl -0777 -pi~
 
 s!<style[^>]*>.+?</style>\s*!!sig;
 s!<link[^>]*rel="?stylesheet"?[^>]*\s+/>!!sig;

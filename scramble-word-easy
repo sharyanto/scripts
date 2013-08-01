@@ -1,8 +1,9 @@
-#!/usr/bin/env dummy= perl -w
+#!/usr/bin/env perl 
 
 # scramble word, with easiness level.
 
 use strict;
+use warnings;
 use POSIX qw/ceil/;
 use App::Options (
     option => {

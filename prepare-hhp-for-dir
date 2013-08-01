@@ -1,4 +1,4 @@
-#!/usr/bin/env dummy= perl -0
+#!/usr/bin/perl -0
 
 # 031121
 # - add verbose option

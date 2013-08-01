@@ -1,9 +1,10 @@
-#!/usr/bin/env dummy= perl -w
+#!/usr/bin/env perl 
 
 # specify a scrambled word in ARGV[0], feed it a list of words in
 # stdin, script will find it in list.
 
 use strict;
+use warnings;
 
 my $word;
 unless ($word = $ARGV[0]) {

@@ -1,4 +1,4 @@
-#!/usr/bin/env dummy= perl -n -0777
+#!/usr/bin/env perl
 
 use 5.010;
 use strict;
@@ -9,6 +9,6 @@ use Markdent::Simple::Document;
 my $parser = Markdent::Simple::Document->new();
 my $html   = $parser->markdown_to_html(
     title    => 'My Document',
-    markdown => $_,
+    markdown => join("", <>),
 );
 print $html;

@@ -1,9 +1,10 @@
-#!/usr/bin/env dummy= perl -w
+#!/usr/bin/env perl 
 
 use Email::Address;
 use File::Slurp;
 use LWP::Simple;
 use strict;
+use warnings;
 
 my %memory;
 

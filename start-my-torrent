@@ -1,4 +1,4 @@
-#!/usr/bin/env dummy= perl -w
+#!/usr/bin/env perl
 
 # tujuan skrip ini adalah supaya direktori spt ini:
 #
@@ -32,6 +32,7 @@
 # jalankan skrip ini di direktori yang mengandung .t/
 
 use strict;
+use warnings;
 use File::Find;
 use Data::Dumper;
 use Proc::Reliable;

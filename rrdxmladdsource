@@ -1,4 +1,4 @@
-#!/usr/bin/env dummy= perl -w
+#!/usr/bin/env perl 
 #
 # rrdaddsource  Adds a new data source to an RRD database.
 #
@@ -22,6 +22,7 @@
 # See the complete licence at http://dev.bateauknowledge.nl/svn/COPYING
 
 use strict;
+use warnings;
 
 my $rrdtool = '/usr/bin/rrdtool';
 

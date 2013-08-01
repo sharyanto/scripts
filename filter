@@ -1,5 +1,6 @@
-#!/usr/bin/env dummy= perl -l
+#!/usr/bin/env perl 
 
+use 5.010;
 use strict;
 use Getopt::Long;
 use Data::Dumper;
@@ -28,6 +29,7 @@ my %whitelists = (); # key = hostname or ip, value = [regex, ...]
 
 # read filter list
 while (<DATA>) {
+    chomp;
     s/\s{2,}/ /g;
     s/^\s+//; s/\s+$//s;
     next unless /\S/;
@@ -70,8 +72,8 @@ GetOptions(
 );
 
 if ($TEST) {
-    print "%filters: ", Dumper(\%filters);
-    print "%whitelist: ",Dumper(\%whitelists);
+    say "%filters: ", Dumper(\%filters);
+    say "%whitelist: ",Dumper(\%whitelists);
     exit 0;
 }
 
@@ -82,6 +84,7 @@ if ($LOGLEVEL > 0) {
 _log(1, "started");
 
 while (<>) {
+    chomp;
     _log(5, "input = $_");
 
     my ($url, $ip) = m#^(\S+) ([^/]+)/#;
@@ -152,9 +155,9 @@ while (<>) {
             }
         }
         _log($type eq 'WHITELIST' ? 4:3, "new url = $new_url");
-        print $new_url;
+        say $new_url;
     } else {
-        print;
+        say;
     }
 }
 
