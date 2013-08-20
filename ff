@@ -1,2 +1,2 @@
-#!/bin/sh
+#!/bin/bash
 exec /opt/firefox-3.0/firefox

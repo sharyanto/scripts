@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # satu subdir chinese dan di dalamnya ada beberapa file chinese. kita ingin
 # ambil yang dari subdir tersebut dan buang chinesenya.

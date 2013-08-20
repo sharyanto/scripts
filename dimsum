@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 JAVABIN=/usr/lib/j2re1.5-sun/bin/java
 source set-zh
 exec $JAVABIN -jar /u/archive/public/fsw/d/dimsum/20051013/linux-java/DimSum.jar

@@ -1,2 +1,2 @@
-#!/bin/sh
+#!/bin/bash
 mount /cdrom || ( sleep 13; mount /cdrom )

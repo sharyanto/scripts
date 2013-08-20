@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # pertama ambil dulu merck.com-nya
 wgetr www.merck.com/mrkshared/mmanual/sections.jsp

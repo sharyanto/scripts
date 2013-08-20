@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 perlrename -e's/^That_70_s_Show_-_(\d+)-(\d+)_-_/t70s.fr - $1$2 - /' *
 perlrename -e's/^That_70s_Show(?:\.fr)?_-_(\d+)x0(\d+)_-_/t70s.fr - $1$2 - /' *

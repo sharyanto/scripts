@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # 2005-10-03 - svn propset sucks deh. "-F -" gak mau. terima "\n" gak
 # diinterpret. padahal svn:ignore butuh newline-separated. rese.

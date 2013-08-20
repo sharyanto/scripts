@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 perlrename -e's/^sabrina (?:TTW |the teenage witch - )0?(\d)x(\d+)/sabrina - $1$2/i' *
 perlrename -e's/^sabrina_the_teenage_witch_0?(\d)x(\d+)_/sabrina - $1$2 - /i' *

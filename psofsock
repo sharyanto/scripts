@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # 000301
 
 pidofsock_param=$1; shift; ps_param=$*
