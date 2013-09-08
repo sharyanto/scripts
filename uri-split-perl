@@ -1,0 +1,17 @@
+#!/usr/bin/perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use URI::Split qw(uri_split);
+
+die "Usage: $0 <url>\n" unless @ARGV == 1;
+
+my ($scheme, $auth, $path, $query, $frag) = uri_split($ARGV[0]);
+
+say "scheme: ", $scheme // "<undef>";
+say "auth  : ", $auth   // "<undef>";
+say "path  : ", $path   // "<undef>";
+say "query : ", $query  // "<undef>";
+say "frag  : ", $frag   // "<undef>";
