@@ -84,7 +84,8 @@ sub archive_perl_release {
         or return [412, "State directory does not exist under archive/target: ".
                        "$dir"];
 
-    my $cur_year = POSIX::strftime("%Y", localtime);
+    my $cur_date = POSIX::strftime("%Y-%m-%d", localtime);
+    my ($cur_year, $cur_mon, $cur_day) = $cur_date =~ /(.+)-(.+)-(.+)/;
     if ($state eq 'published') {
         $dir .= "/$cur_year";
         mkdir $dir unless (-d $dir);
@@ -92,6 +93,18 @@ sub archive_perl_release {
 
     system "cp", "-av", $tarball, $dir;
     return [500, "Can't copy: $! ($?)"] if $?;
+
+    {
+        my $logfh;
+        my $logf = "$archive_dir/log.txt";
+        unless (open $logfh, ">>", $logf) {
+            warn "Can't open log file $logf: $!, skipped";
+            last;
+        }
+        print $logfh sprintf("[%04d-%02d-%02d] archived '%s'\n",
+                             $cur_year, $cur_mon, $cur_day, "$dir/$tarball");
+        close $logfh;
+    }
 
     [200, "OK"];
 }
