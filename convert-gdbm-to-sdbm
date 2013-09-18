@@ -1,0 +1,24 @@
+#!/usr/bin/perl
+
+use Fcntl;
+use GDBM_File;
+
+# creates foo.dir and foo.pag
+use SDBM_File;
+
+# can't use this, tie always failed, so what's my alternatives???
+#use NDBM_File;
+
+unless (@ARGV == 2) {
+    die "Usage: $0 <gdbm-input-file> <sdbm-output-file>\n";
+}
+
+tie(%in , 'GDBM_File', $ARGV[0], &GDBM_READER, 0666)   or die "Couldn't tie GDBM file '$ARGV[0]': $!";
+tie(%out, 'SDBM_File', $ARGV[1], O_RDWR|O_CREAT, 0666) or die "Couldn't tie SDBM file '$ARGV[1]': $!";
+
+for (keys %in) {
+    $out{$_} = $in{$_};
+    #print "$_ = $in{$_}\n";
+}
+
+#untie %out;
