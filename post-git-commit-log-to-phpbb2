@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 use 5.010;
 use autodie;
@@ -23,9 +23,10 @@ use App::Options (
     },
 );
 use Cwd qw(getcwd);
+use Fcntl;
 use File::Slurp::Shortcuts qw(slurp_cq);
 use File::Which;
-use GDBM_File;
+use SDBM_File;
 use Log::Any::App '$log';
 
 my $output;
@@ -48,7 +49,7 @@ my $memory_path = $App::options{memory_path} //
     "$ENV{HOME}/.app/$prog_name.memory.$repo_name.$branch.db";
 $log->debug("memory_path = $memory_path");
 my %memory;
-tie %memory, 'GDBM_File', $memory_path, &GDBM_WRCREAT, 0640;
+tie %memory, 'SDBM_File', $memory_path, &O_RDWR|&O_CREAT, 0640;
 
 if ($App::options{skip_commit_id}) {
     for my $cid ($App::options{skip_commit_id}) {
