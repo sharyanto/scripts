@@ -15,7 +15,8 @@ use App::Options (
     option => {
         profile => { type => 'string', required => 0, default => 'default' },
         forum_url => { type => 'string', required => 1 },
-        rss_url => { type => 'string', required => 1 },
+        rss_url => { type => 'string' },
+        command => { type => 'string' }, # alternative to rss_url
         db_path => { type => 'string', required => 1 }, # utk menyimpan ingatan rss mana yg sudah diposting
         forum_id => { type => 'int', required => 1 },
         topic_id => { type => 'int', required => 0, default => 0 },
@@ -54,8 +55,15 @@ if (open F, $App::options{db_path}) {
     $latest_time = (scalar <F>) || 0;
 }
 
-my $content = get $App::options{rss_url};
-LOGDIE "Can't get RSS: $App::options{rss_url}. Aborting." unless $content;
+my $content;
+if ($App::options{rss_url}) {
+    $content = get $App::options{rss_url};
+    LOGDIE "Can't get RSS: $App::options{rss_url}. Aborting." unless $content;
+} elsif ($App::options{command}) {
+    $content = `$App::options{command}`;
+} else {
+    LOGDIE "Please specify either rss_url or command";
+}
 
 # naive XML::RSSLite can't parse CDATA
 $content =~ s{<!\[CDATA\[(.+?)\]\]>}{$1}sg;
