@@ -3,4 +3,5 @@
 ($year, $mon) = (localtime)[5, 4];
 $year += 1900; $mon++;
 
-system "list-id-holidays --fields '[date, ind_name]' --year $year";
+system "list-id-holidays", "--fields", "date", "--fields", "ind_name",
+    "--year", $year;
