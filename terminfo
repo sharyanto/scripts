@@ -1,0 +1,48 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Perinci::CmdLine;
+use String::Escape qw(printable);
+use Term::Terminfo;
+
+our %SPEC;
+
+$SPEC{dump_terminfo} = {
+    v => 1.1,
+    args => {
+        detail => {schema=>'bool'},
+        raw    => {schema=>'bool'},
+    },
+};
+sub dump_terminfo {
+    my %args = @_;
+
+    my $ti = Term::Terminfo->new;
+
+    my @res;
+    for ($ti->flag_varnames) {
+        push @res, {type=>'flag', var=>$_, value=>$ti->flag_by_varname($_)};
+    }
+    for ($ti->num_varnames) {
+        push @res, {type=>'num', var=>$_, value=>$ti->num_by_varname($_)};
+    }
+    for ($ti->str_varnames) {
+        push @res, {type=>'str', var=>$_, value=>$ti->str_by_varname($_)};
+    }
+
+    unless ($args{raw}) {
+        for (@res) { $_->{value} = printable($_->{value}) }
+    }
+    unless ($args{detail}) {
+        @res = map {$_->{var}} @res;
+    }
+
+    my %rfo = (table_column_orders=>[[qw/var type value/]]);
+    [200, "OK", \@res,
+     {result_format_options=>{text=>\%rfo, "text-pretty"=>\%rfo}}];
+}
+
+Perinci::CmdLine->new(url => '/main/dump_terminfo')->run;
