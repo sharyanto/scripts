@@ -1,0 +1,5 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use Term::Encoding;
+say Term::Encoding::get_encoding;
