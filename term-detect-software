@@ -1,0 +1,7 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use Term::Detect::Software qw(detect_terminal);
+use Data::Dump;
+
+dd detect_terminal();
