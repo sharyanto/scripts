@@ -21,7 +21,7 @@ loop do
 DESCRIPTION
 
   Line oriented file operation.
-  
+
 USAGE
 
   fileop -h
@@ -35,9 +35,12 @@ OPTIONS
   -s, --subtract   Subtraction (show lines in first file not in the rest)
 _
 
-    when "-u": mode = :union
-    when "-i": mode = :intersect
-    when "-s": mode = :subtract
+    when "-u"
+      mode = :union
+    when "-i"
+      mode = :intersect
+    when "-s"
+      mode = :subtract
   end
 end
 
