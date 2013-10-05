@@ -1,0 +1,107 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use FileHandle;
+use Perinci::CmdLine;
+use Perinci::Sub::Gen::AccessTable qw(gen_read_table_func);
+
+our %SPEC;
+my $data = [];
+
+my $res = gen_read_table_func(
+    name => 'list_perl_releases',
+    table_data => $data,
+    table_spec => {
+        fields => {
+            file => {
+                schema => 'str*',
+                index  => 0,
+            },
+            repo => {
+                schema => 'str*',
+                index  => 1,
+            },
+            date => {
+                schema => 'str*',
+                index  => 2,
+            },
+            ver => {
+                schema => 'str*',
+                index  => 3,
+            },
+            size => {
+                schema => 'int*',
+                index  => 4,
+            },
+        },
+        pk => 'file',
+    },
+    hooks => {
+        before_parse_query => sub {
+            my %args = @_;
+            my $fargs = $args{_func_args};
+
+            # read data from releases.txt
+            my $archive_dir = $args{archive_dir} //
+                "$ENV{HOME}/proj/perl/releases";
+            splice @$data, 0;
+            my $fh = FileHandle->new("$archive_dir/releases.txt", "r") or
+                return [400, "Can't open releases.txt in $archive_dir: $!"];
+            while (my $line = $fh->getline) {
+                push @$data, { map {/(\w+):(.*)/;($1,$2)} split /\t/, $line };
+            }
+
+            # convert year to date args
+            if (defined(my $y = $args{year})) {
+                $fargs->{'date.min'} = sprintf("%04d-01-01", $y);
+                $fargs->{'date.max'} = sprintf("%04d-12-31", $y);
+                delete $args{year};
+            }
+
+            # convert month to date args
+            if (defined(my $m = $args{month})) {
+                $fargs->{'date.contains'} = sprintf("-%02d-", $m);
+                delete $args{month};
+            }
+
+            # convert day to day args, doesn't work if there's no ends_with
+            #if (defined(my $d = $args{day})) {
+            #    $fargs->{'date.ends_with'} = sprintf("-%02d", $d);
+            #    delete $args{day};
+            #}
+
+            return;
+        },
+    },
+);
+die "Can't generate func: $res->[0] - $res->[1]" unless $res->[0] == 200;
+$SPEC{list_perl_releases}{args}{archive_dir} = {
+    summary => 'Where to find releases.txt',
+    schema => 'str*',
+    description => <<'_',
+
+Defaults to ~/proj/perl/releases.
+
+_
+};
+
+# WORKAROUND until perigen-acctbl has support for dates, e.g. generating filter
+# fields like DATE.day (and DATE.day.{min,max}, etc), DATE.month, etc.
+
+$SPEC{list_perl_releases}{args}{year} = {
+    summary => 'Filter year',
+    schema => 'int*',
+};
+$SPEC{list_perl_releases}{args}{month} = {
+    summary => 'Filter month',
+    schema => 'int*',
+};
+#$SPEC{list_perl_releases}{args}{day} = {
+#    summary => 'Filter day',
+#    schema => 'int*',
+#};
+
+Perinci::CmdLine->new(url => '/main/list_perl_releases')->run;
