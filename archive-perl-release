@@ -65,6 +65,8 @@ sub archive_perl_release {
     (-f $tarball)
         or return [412, "Tarball files does not exist or is not a file: ".
                        "$tarball"];
+    my ($ver) = $tarball =~ /.+-(\d.*)\.(?:tar(?:\.\w+)?|zip)$/
+        or return [400, "Can't parse version from tarball name"];
 
     my $archive_dir = $args{archive_dir} // "$ENV{HOME}/proj/perl/releases";
     (-d $archive_dir)
@@ -96,13 +98,20 @@ sub archive_perl_release {
 
     {
         my $logfh;
-        my $logf = "$archive_dir/log.txt";
+        my $logf = "$archive_dir/releases.txt";
         unless (open $logfh, ">>", $logf) {
             warn "Can't open log file $logf: $!, skipped";
             last;
         }
-        print $logfh sprintf("[%04d-%02d-%02d] archived '%s'\n",
-                             $cur_year, $cur_mon, $cur_day, "$dir/$tarball");
+        # try out LTSV format
+        print $logfh join(
+            "\t",
+            sprintf("date:%04d-%02d-%02d", $cur_year, $cur_mon, $cur_day),
+            "repo:$target",
+            "file:$tarball",
+            "ver:$ver",
+            "size:".(-s $tarball),
+        ), "\n";
         close $logfh;
     }
 
