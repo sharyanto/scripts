@@ -1,0 +1,5 @@
+#!/usr/bin/env perl
+
+use DateTime;
+my $today = DateTime->today(time_zone => $ENV{TZ});
+system "list-perl-releases", "--date", $today->ymd, @ARGV;
