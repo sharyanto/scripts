@@ -3,11 +3,15 @@
 use 5.010;
 use strict;
 use warnings;
+use experimental 'smartmatch';
 
 use Module::CoreList 2.99;
 use Module::List qw(list_modules);
 
+my @coremods = Module::CoreList->find_modules();
 my $mods = list_modules("", {list_modules=>1, recurse=>1});
 for my $m (sort keys %$mods) {
-    say $m unless Module::CoreList::is_core($m);
+    # too slow
+    #say $m unless Module::CoreList::is_core($m);
+    say $m unless $m ~~ @coremods;
 }
