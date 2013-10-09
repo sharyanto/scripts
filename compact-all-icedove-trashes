@@ -1,0 +1,42 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+use Log::Any::App '$log';
+
+use File::chdir;
+
+BEGIN { our $Log_Level = 'info' }
+
+my @dir = glob("$ENV{HOME}/.icedove/*.default")
+    or die "Can't find ~/.icedove/*.default dir\n";
+my $profdir = $dir[0];
+$log->debugf("icedove profile dir: %s", $profdir);
+$CWD = $profdir;
+
+my $bytes_saved = 0;
+my $doit = sub {
+    if (-s "Trash") {
+        for ("Trash", "Trash.msf") {
+            $log->infof("  Compacting %s (%d bytes) ...", $_, (-s $_));
+            $bytes_saved += (-s $_);
+            truncate($_, 0) or die "Can't truncate $_: $!";
+        }
+    }
+};
+
+for my $mdir (grep {-d} <Mail/*>, <ImapMail/*>) {
+    $log->infof("Processing mail dir %s ...", $mdir);
+    local $CWD = $mdir;
+    $doit->();
+    for ("INBOX.sbd") {
+        if (-d $_) {
+            $log->info("Entering $_ ...");
+            local $CWD = $_;
+            $doit->();
+        }
+    }
+}
+
+$log->infof("Bytes saved: %d", $bytes_saved) if $bytes_saved;
