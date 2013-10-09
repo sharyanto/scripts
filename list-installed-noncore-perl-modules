@@ -1,0 +1,13 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Module::CoreList 2.99;
+use Module::List qw(list_modules);
+
+my $mods = list_modules("", {list_modules=>1, recurse=>1});
+for my $m (sort keys %$mods) {
+    say $m unless Module::CoreList::is_core($m);
+}
