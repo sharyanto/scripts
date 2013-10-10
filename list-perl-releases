@@ -48,6 +48,9 @@ my $res = gen_read_table_func(
             my %args = @_;
             #my $fargs = $args{_func_args};
 
+            $args{include_renamed} //= 0 if $args{new};
+            use Data::Dump; dd \%args;
+
             my %seen;
 
             # read data from releases.txt
@@ -69,9 +72,12 @@ my $res = gen_read_table_func(
                 }
                 my $name = $row->{file}; $name =~ s/-\d.+//;
                 $seen{$name}++;
-                my $is_new = $seen{$name} == 1 && !$row->{oldname};
+                my $is_new = $seen{$name} == 1;
                 next if $args{new} && !$is_new;
                 next if defined($args{new}) && !$args{new} && $is_new;
+
+                next if defined($args{include_renamed}) &&
+                    !$args{include_renamed} && $row->{oldname};
 
                 push @$data, $row;
             }
@@ -90,15 +96,27 @@ Defaults to ~/proj/perl/releases.
 _
 };
 
-# shortcut
 $SPEC{list_perl_releases}{args}{new} = {
     summary => 'Show only the the first release of a dist/module',
     schema => 'bool',
     description => <<'_',
 
-This also excludes first release of a renamed dist (where oldname field is set).
+This also implies --noinclude-renamed, unless --include-renamed has been
+explicitly issued.
 
 _
+    tags => [qw/filter/],
+};
+
+$SPEC{list_perl_releases}{args}{include_renamed} = {
+    summary => 'Whether to include new dist that is a rename of old dist',
+    schema => 'bool',
+    description => <<'_',
+
+Marked by its field `oldname` being set.
+
+_
+    tags => [qw/filter/],
 };
 
 # WORKAROUND until perigen-acctbl has support for dates, e.g. generating filter
@@ -107,14 +125,17 @@ _
 $SPEC{list_perl_releases}{args}{year} = {
     summary => 'Filter year',
     schema => 'int*',
+    tags => [qw/filter/],
 };
 $SPEC{list_perl_releases}{args}{month} = {
     summary => 'Filter month',
     schema => 'int*',
+    tags => [qw/filter/],
 };
 $SPEC{list_perl_releases}{args}{day} = {
     summary => 'Filter day',
     schema => 'int*',
+    tags => [qw/filter/],
 };
 
 Perinci::CmdLine->new(url => '/main/list_perl_releases')->run;
