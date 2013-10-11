@@ -49,7 +49,6 @@ my $res = gen_read_table_func(
             #my $fargs = $args{_func_args};
 
             $args{include_renamed} //= 0 if $args{new};
-            use Data::Dump; dd \%args;
 
             my %seen;
 
