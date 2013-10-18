@@ -59,7 +59,15 @@ my $res = gen_read_table_func(
             my $fh = FileHandle->new("$archive_dir/releases.txt", "r") or
                 return [400, "Can't open releases.txt in $archive_dir: $!"];
             while (my $line = $fh->getline) {
+
                 my $row = { map {/(\w+):(.*)/;($1,$2)} split /\t/, $line };
+                my $dist = $row->{file}; $dist =~ s/-\d.+//;
+
+                $seen_dists{$dist}++;
+                my $is_new = $seen_dists{$dist} == 1;
+                next if $args{new} && !$is_new;
+                next if defined($args{new}) && !$args{new} && $is_new;
+
                 if (defined(my $y = $args{year})) {
                     next unless substr($row->{date},0,4) eq sprintf("%04d",$y);
                 }
@@ -69,20 +77,15 @@ my $res = gen_read_table_func(
                 if (defined(my $d = $args{day})) {
                     next unless substr($row->{date},8,2) eq sprintf("%02d",$d);
                 }
-                my $dist = $row->{file}; $dist =~ s/-\d.+//;
                 if (defined(my $d = $args{dist})) {
                     next unless $d eq $dist;
                 }
-
-                $seen_dists{$dist}++;
-                my $is_new = $seen_dists{$dist} == 1;
-                next if $args{new} && !$is_new;
-                next if defined($args{new}) && !$args{new} && $is_new;
 
                 next if defined($args{include_renamed}) &&
                     !$args{include_renamed} && $row->{oldname};
 
                 push @$data, $row;
+
             }
             return;
         },
