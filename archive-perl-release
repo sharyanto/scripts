@@ -67,11 +67,12 @@ sub archive_perl_release {
 
     my $cwd = getcwd;
     my $repo_name = $cwd; $repo_name =~ s!.+/!!;
-    my $is_private = $repo_name =~ /^priv-/;
-    my @proj = glob ".tag-proj-*";
-    for (@proj) { s/^\.tag-proj-// }
-    my $repo = @proj ? ($is_private ? "priv-$proj[0]" : $proj[0]) :
-        ($is_private ? "PRIVATE_NOPROJ": "cpan");
+    my @relchs = glob ".tag-release-channel-*";
+    my $relch = "";
+    if (@relchs) { $relch = $relchs[0]; $relch =~ s/^\.tag-release-channel-// }
+    my @projs = glob ".tag-proj-*";
+    for (@projs) { s/^\.tag-proj-// }
+    my $repo = @projs ? ($relch ? "$projs[0]-relch" : $projs[0]) : "cpan";
     (-d "$archive_dir/$repo")
         or return [412, "Repo directory does not exist under archive: ".
                        "$archive_dir/$repo"];
