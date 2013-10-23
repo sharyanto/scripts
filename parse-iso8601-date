@@ -1,0 +1,9 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use DateTime::Format::ISO8601;
+
+for (@ARGV) {
+    my $dt = DateTime::Format::ISO8601->parse_datetime($_);
+    say "$dt";
+}
