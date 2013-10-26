@@ -74,7 +74,7 @@ for my $murl (reverse @month_urls) {
     for my $e ($dom->find('.entry-title a')->each) {
         push @post_urls, $e->{href};
     }
-    $log->infof("Downloading month's posts: %s", \@post_urls);
+    $log->infof("Downloading posts: %s", [$murl, @post_urls]);
     system "wget", "-k", "-p", "-c",
-        (("-q") x !$log->is_debug), @post_urls;
+        (("-q") x !$log->is_debug), $murl, @post_urls;
 }
