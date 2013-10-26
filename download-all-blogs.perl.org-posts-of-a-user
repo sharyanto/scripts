@@ -15,10 +15,17 @@ use LWP::UserAgent;
 use Mojo::DOM;
 
 my $start_period;
+my $end_period;
 GetOptions(
     'start-period=s' => sub {
-        $_[1] =~ /^\d{4}-\d{2}$/ or die "Invalid period $_[1], please use YYYY-MM\n";
+        $_[1] =~ /^\d{4}-\d{2}$/
+            or die "Invalid start period $_[1], please use YYYY-MM\n";
         $start_period = $_[1];
+    },
+    'end-period=s' => sub {
+        $_[1] =~ /^\d{4}-\d{2}$/
+            or die "Invalid end period $_[1], please use YYYY-MM\n";
+        $end_period = $_[1];
     },
     'help' => sub {
         print <<_;
@@ -27,6 +34,8 @@ Usage:
 Options:
   --start-period=YYYY-MM
     Only download from this period.
+  --end-period=YYYY-MM
+    Only download until this period.
 _
     },
 );
@@ -59,6 +68,11 @@ my @month_urls;
         if ($start_period && $period lt $start_period) {
             $log->debug("Skipping $e->{href} because it's ".
                             "earlier than start period ($start_period)");
+            next;
+        }
+        if ($end_period && $period gt $end_period) {
+            $log->debug("Skipping $e->{href} because it's ".
+                            "later than end period ($end_period)");
             next;
         }
         push @month_urls, $e->{href};
