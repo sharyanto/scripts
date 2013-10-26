@@ -1,0 +1,55 @@
+#!/usr/bin/env perl
+
+# to see info messages, run with VERBOSE=1. there are also DEBUG=1 or TRACE=1 if
+# you want to see more stuffs.
+
+use 5.010;
+use strict;
+use warnings;
+
+use File::Which;
+use Log::Any::App '$log';
+use Log::Any::For::Builtins 'system';
+use LWP::UserAgent;
+use Mojo::DOM;
+
+sub get {
+    state $ua = LWP::UserAgent->new;
+    my $res = $ua->get($_[0]);
+    die "Can't get $_[0]: " . $res->code . " - " . $res->message . "\n"
+        unless $res->is_success;
+    $res->content;
+}
+
+die "wget is needed to download the articles (+images +convert links)\n"
+    unless which("wget");
+
+die "Usage: $0 <username>\n" unless @ARGV == 1;
+my $user = $ARGV[0];
+
+my $site_url = "http://blogs.perl.org";
+my $dom;
+
+$log->info('Getting the monthly archives page ...');
+my @month_urls;
+{
+    my $url = "$site_url/users/$user/archives.html";
+    $dom = Mojo::DOM->new(get $url);
+    for my $e ($dom->find('.archive-content li a')->each) {
+        push @month_urls, $e->{href};
+    }
+}
+$log->infof('There are %d month(s) with blog entries', ~~@month_urls);
+
+for my $murl (reverse @month_urls) {
+    # i hope a monthly page does not have <next> links?
+    $log->infof('Getting the monthly page %s ...', $murl);
+    $dom = Mojo::DOM->new(get $murl);
+    my @post_urls;
+    for my $e ($dom->find('.entry-title a')->each) {
+        push @post_urls, $e->{href};
+    }
+    $log->infof("Downloading month's posts: %s", \@post_urls);
+    system "wget", "-k", "-p", "-c",
+        (("-q") x !$log->is_debug), @post_urls;
+}
