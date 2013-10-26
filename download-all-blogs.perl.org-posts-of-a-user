@@ -8,10 +8,28 @@ use strict;
 use warnings;
 
 use File::Which;
+use Getopt::Long;
 use Log::Any::App '$log';
 use Log::Any::For::Builtins 'system';
 use LWP::UserAgent;
 use Mojo::DOM;
+
+my $start_period;
+GetOptions(
+    'start-period=s' => sub {
+        $_[1] =~ /^\d{4}-\d{2}$/ or die "Invalid period $_[1], please use YYYY-MM\n";
+        $start_period = $_[1];
+    },
+    'help' => sub {
+        print <<_;
+Usage:
+  $0 [options] <username>
+Options:
+  --start-period=YYYY-MM
+    Only download from this period.
+_
+    },
+);
 
 sub get {
     state $ua = LWP::UserAgent->new;
@@ -24,7 +42,7 @@ sub get {
 die "wget is needed to download the articles (+images +convert links)\n"
     unless which("wget");
 
-die "Usage: $0 <username>\n" unless @ARGV == 1;
+die "Usage: $0 [options] <username>\n" unless @ARGV == 1;
 my $user = $ARGV[0];
 
 my $site_url = "http://blogs.perl.org";
@@ -36,6 +54,13 @@ my @month_urls;
     my $url = "$site_url/users/$user/archives.html";
     $dom = Mojo::DOM->new(get $url);
     for my $e ($dom->find('.archive-content li a')->each) {
+        $e->{href} =~ m!(\d{4})/(\d{2})!;
+        my $period = "$1-$2";
+        if ($start_period && $period lt $start_period) {
+            $log->debug("Skipping $e->{href} because it's ".
+                            "earlier than start period ($start_period)");
+            next;
+        }
         push @month_urls, $e->{href};
     }
 }
