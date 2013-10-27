@@ -7,10 +7,14 @@ use warnings;
 use Module::List qw(list_modules);
 
 if (!@ARGV) {
-    die "Usage: $0 <pat>\n";
+    die "Usage: $0 [prefix]\n";
 }
 
-my $res = list_modules($ARGV[0], {list_modules=>1, recurse=>1});
+my $prefix = $ARGV[0];
+if (defined $prefix) {
+    $prefix .= "::" unless !length($prefix) || $prefix =~ /::$/;
+}
+my $res = list_modules($prefix, {list_modules=>1, recurse=>1});
 for my $k (sort keys %$res) {
     print "$k\n";
 }
