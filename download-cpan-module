@@ -24,6 +24,8 @@ my $mcpan = MetaCPAN::API->new;
 
 MOD:
 for my $mod (@ARGV) {
+    $mod =~ s/-/::/g;
+
     $log->infof("Querying MetaCPAN for module %s ...", $mod);
     my $modinfo = $mcpan->module($mod);
     #$modinfo->{author} =~ /(.)(.)/;
