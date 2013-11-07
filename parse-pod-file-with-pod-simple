@@ -1,0 +1,29 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+#use Data::Clean::JSON;
+use Data::Dump;
+use Pod::Simple;
+
+unless (@ARGV) {
+    die "Usage: $0 <file> ...\n";
+}
+
+say "Pod::Simple version is $Pod::Simple::VERSION";
+
+#my $cleanser = Data::Clean::JSON->get_cleanser;
+
+for my $f (@ARGV) {
+    my $parser = Pod::Simple->new;
+    $parser->parse_file($f);
+    if ($parser->{errata}) {
+        say "$f has errors:";
+        dd $parser->{errata};
+        exit 1;
+    } else {
+        say "$f has no errors";
+    }
+}
