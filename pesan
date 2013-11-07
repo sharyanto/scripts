@@ -1,5 +1,8 @@
 #!/usr/bin/env perl
 
+# original script is in Turbo Pascal, probably created in 1994 or earlier.
+# converted to Perl in probably 1999?
+
 $debug = $ENV{DEBUG};
 $stdout_instead = 1;
 #($day_now,$mon_now,$year_now)=(29,3,2003);
