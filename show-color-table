@@ -46,7 +46,7 @@ for my $cname (sort keys %$colors) {
     my $text = ($bg ? ansibg($rgb) : ansifg($rgb)) .
         ($blktext ? ansifg("000000") : "") .
             sprintf(" %-30s ", $cname) . "\e[0m";
-    $t->add_row([$text, "#$rgb"]);
+    $t->add_row([$text, "$rgb"]);
 }
 binmode(STDOUT, ":utf8");
 print $t->draw;
