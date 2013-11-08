@@ -1,0 +1,52 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Color::ANSI::Util qw(ansifg ansibg);
+use Getopt::Long;
+use Text::ANSITable;
+
+my $bg = 0;
+my $blktext = 0;
+GetOptions(
+    'bg' => \$bg,
+    'black-text' => \$blktext,
+);
+
+my $t = Text::ANSITable->new;
+$t->columns([qw/name rgb/]);
+
+my $colors;
+if ($0 =~ /-ie/) {
+    require Graphics::ColorNames::IE;
+    $colors = Graphics::ColorNames::IE::NamesRgbTable();
+} elsif ($0 =~ /-windows/) {
+    require Graphics::ColorNames::Windows;
+    $colors = Graphics::ColorNames::Windows::NamesRgbTable();
+} elsif ($0 =~ /-x/) {
+    require Graphics::ColorNames::X;
+    $colors = Graphics::ColorNames::X::NamesRgbTable();
+} elsif ($0 =~ /-netscape/) {
+    require Graphics::ColorNames::Netscape;
+    $colors = Graphics::ColorNames::Netscape::NamesRgbTable();
+} elsif ($0 =~ /-html/) {
+    require Graphics::ColorNames::HTML;
+    $colors = Graphics::ColorNames::HTML::NamesRgbTable();
+} else {
+    require Graphics::ColorNames::WWW;
+    $colors = Graphics::ColorNames::WWW::NamesRgbTable();
+}
+
+for my $cname (sort keys %$colors) {
+    my $cval = $colors->{$cname};
+    my $rgb = sprintf("%02x%02x%02x",
+                      $cval >> 16, ($cval & 0x00ff00) >> 8, $cval & 0xff);
+    my $text = ($bg ? ansibg($rgb) : ansifg($rgb)) .
+        ($blktext ? ansifg("000000") : "") .
+            sprintf(" %-30s ", $cname) . "\e[0m";
+    $t->add_row([$text, "#$rgb"]);
+}
+binmode(STDOUT, ":utf8");
+print $t->draw;
