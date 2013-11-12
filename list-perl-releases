@@ -51,6 +51,7 @@ my $res = gen_read_table_func(
             $args{include_renamed} //= 0 if $args{new};
 
             my %seen_dists;
+            my %latest_dists;
 
             # read data from releases.txt
             my $archive_dir = $args{archive_dir} //
@@ -64,6 +65,7 @@ my $res = gen_read_table_func(
                 my $dist = $row->{file}; $dist =~ s/-\d.+//;
 
                 $seen_dists{$dist}++;
+                $latest_dists{$dist} = $row;
                 my $is_new = $seen_dists{$dist} == 1;
                 next if $args{new} && !$is_new;
                 next if defined($args{new}) && !$args{new} && $is_new;
@@ -87,6 +89,15 @@ my $res = gen_read_table_func(
                 push @$data, $row;
 
             }
+
+            if ($args{latest}) {
+                splice @$data, 0;
+                for (sort {$latest_dists{$a}{date} cmp $latest_dists{$b}{date}}
+                         keys %latest_dists) {
+                    push @$data, $latest_dists{$_};
+                }
+            }
+
             return;
         },
     },
@@ -109,6 +120,18 @@ $SPEC{list_perl_releases}{args}{new} = {
 
 This also implies --noinclude-renamed, unless --include-renamed has been
 explicitly issued.
+
+_
+    tags => [qw/category:filter/],
+};
+
+$SPEC{list_perl_releases}{args}{latest} = {
+    summary => 'Show only the the latest release of a dist/module',
+    schema => 'bool',
+    description => <<'_',
+
+The releases.txt is assumed to be already sorted. So this option will make the
+program pick the latest entry of each distribution.
 
 _
     tags => [qw/category:filter/],
