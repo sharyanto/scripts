@@ -1,0 +1,12 @@
+#!/usr/bin/env perl
+
+use Data::Dump::Color;
+
+@ARGV == 1 or die "Usage: $0 <metadata-in-perl-code>\n";
+eval "\$meta = $ARGV[0]";
+die $@ if $@;
+
+require Perinci::Sub::Wrapper;
+my $res = Perinci::Sub::Wrapper::wrap_sub(sub=>sub{}, meta=>$meta, compile=>0);
+die "Can't wrap: $res->[0] - $res->[1]" unless $res->[0] == 200;
+dd $res->[2]{meta};
