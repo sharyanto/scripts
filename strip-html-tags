@@ -1,6 +1,11 @@
-#!/usr/bin/env "perl -0777 -p"
+#!/usr/bin/env perl
+
+#BEGIN { undef $/ }
 
 # can't handle nested yet, e.g. <foo bar="hey, > this is not the end">
 
-s{<!--.+?-->}{}sg;
-s{<.+?>}{}sg;
+while (<>) {
+    s{<!--.+?-->}{}sg;
+    s{<.+?>}{}sg;
+    print;
+}
