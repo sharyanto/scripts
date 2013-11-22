@@ -1,0 +1,25 @@
+#!/usr/bin/env perl
+
+use 5.010;
+
+package MyApp;
+use Moo;
+with 'SHARYANTO::Role::TermAttrs';
+use Data::Dump;
+
+sub run {
+    my $self = shift;
+
+    dd {
+        use_utf8      => $self->use_utf8,
+        use_box_chars => $self->use_box_chars,
+        interactive   => $self->interactive,
+        use_color     => $self->use_color,
+        color_depth   => $self->color_depth,
+        term_width    => $self->term_width,
+        term_height   => $self->term_height,
+    };
+}
+
+package main;
+MyApp->new->run;
