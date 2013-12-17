@@ -18,6 +18,7 @@ sub run {
         color_depth   => $self->color_depth,
         term_width    => $self->term_width,
         term_height   => $self->term_height,
+        _term_attrs_debug_info => $self->_term_attrs_debug_info,
     };
 }
 
