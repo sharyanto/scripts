@@ -40,6 +40,10 @@ my $res = gen_read_table_func(
                 schema => 'str',
                 index  => 5,
             },
+            status => {
+                schema => 'str',
+                index  => 6,
+            },
         },
         pk => 'file',
     },
