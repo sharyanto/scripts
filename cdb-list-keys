@@ -1,0 +1,15 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use CDB_File;
+
+if (!@ARGV || $ARGV[0] =~ /^(-h|-\?|--help)$/) {
+    print "$0 - List keys in a CDB file (sorted)\n";
+    print "Usage: $0 <cdb-name>\n";
+    exit 0;
+}
+
+tie my(%h), 'CDB_File', $ARGV[0];
+
+print map {"$_\n"} sort keys %h;

@@ -1,0 +1,28 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use CDB_File;
+
+if (@ARGV != 2 || $ARGV[0] =~ /^(-h|-\?|--help)$/) {
+    print "$0 - Delete a key in a CDB file\n";
+    print "Usage: $0 <cdb-name> <key>\n";
+    exit 0;
+}
+
+tie my(%h) , 'CDB_File', $ARGV[0];
+unless (exists $h{$ARGV[1]}) {
+    warn "Key is not found in CDB file, nothing will be done\n";
+    exit 0;
+}
+
+system "cp", "-a", $ARGV[0], "$ARGV[0].bak";
+die "Can't create $ARGV[0].bak: $!\n" if $?;
+
+my %h2;
+for (keys %h) {
+    $h2{$_} = $h{$_} unless $_ eq $ARGV[1];
+}
+CDB_File::create %h2, "$ARGV[0].new", "$ARGV[0].new.tmp";
+system "mv", "$ARGV[0].new", $ARGV[0]; die "Can't mv: $!\n" if $?;
+system "chown", "--reference", "$ARGV[0].bak", $ARGV[0];
