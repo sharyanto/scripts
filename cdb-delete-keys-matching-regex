@@ -1,0 +1,32 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use CDB_File;
+
+if (@ARGV != 2 || $ARGV[0] =~ /^(-h|-\?|--help)$/) {
+    print "$0 - Delete all keys in a CDB file which match a regex\n";
+    print "Usage: $0 <cdb-name> <regex>\n";
+    exit 0;
+}
+
+my $re;
+eval { $re = qr/$ARGV[1]/ };
+die "Invalid regex: $re: $@\n" if $@;
+
+tie my(%h) , 'CDB_File', $ARGV[0];
+
+system "cp", "-a", $ARGV[0], "$ARGV[0].bak";
+die "Can't create $ARGV[0].bak: $!\n" if $?;
+
+my %h2;
+for (keys %h) {
+    if ($_ =~ $re) {
+        print "Deleting $_\n";
+    } else {
+        $h2{$_} = $h{$_};
+    }
+}
+CDB_File::create %h2, "$ARGV[0].new", "$ARGV[0].new.tmp";
+system "mv", "$ARGV[0].new", $ARGV[0]; die "Can't mv: $!\n" if $?;
+system "chown", "--reference", "$ARGV[0].bak", $ARGV[0];
