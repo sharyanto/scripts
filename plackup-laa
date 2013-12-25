@@ -1,0 +1,162 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+use Log::Any qw($log);
+
+use Module::Load;
+use Perinci::CmdLine;
+
+# VERSION
+
+our %SPEC;
+
+$SPEC{serve} = {
+    v => 1.1,
+    summary => 'Run PSGI application with Plack servers and logging with Log::Any::App',
+    description => <<'_',
+
+This is like the `plackup` utility but allowing you to see log messages produced
+by `Log::Any`, using `Log::Any::App`. Useful mainly for testing/debugging.
+
+Not all `plackup` options are supported yet.
+
+_
+    args => {
+        app => {
+            schema => ['str*' => default => 'app.psgi'],
+            pos => 0,
+            cmdline_aliases => { a => {} },
+        },
+        server => {
+            schema => ['str*'],
+            cmdline_aliases => { s => {} },
+        },
+        port => {
+            schema => ['str*'],
+            default => 5000,
+            summary => 'Will be passed to server',
+            cmdline_aliases => { p => {} },
+        },
+        daemonize => {
+            schema => ['bool*' => default => 0],
+            summary => 'If true, will daemonize into background',
+            cmdline_aliases => { D => {} },
+        },
+        library => {
+            schema => ['array' => of => 'str*'],
+            summary => 'Add directory to library search path, a la Perl\'s -I',
+            description => <<'_',
+
+Note that some modules are already loaded before this option takes effect. To
+make sure some directories are processed, you can use `PERL5OPT` or explicitly
+use `perl` and use its `-I` option.
+
+_
+            cmdline_aliases   => { I => {} },
+            cmdline_on_getopt => sub {
+                my %args = @_;
+                require lib;
+                lib->import($args{value});
+            },
+        },
+        module => {
+            schema => ['array' => of => 'str*'],
+            summary => 'Load module, a la Perl\'s -M',
+            cmdline_aliases   => { M => {} },
+            cmdline_on_getopt => sub {
+                my %args = @_;
+                load($args{value}),
+            },
+        },
+    },
+};
+sub serve {
+    my %args = @_;
+
+    my $server = $args{server} // $ENV{PLACK_SERVER} // "Standalone";
+    $server = "Plack::Handler::$server" unless $server =~ /::/;
+    say "Starting $server on port $args{port} ...";
+    load($server);
+    my $server_obj = $server->new(
+        port => $args{port},
+    ); # XXX feed args
+
+    my $app = $args{app} // "app.psgi";
+    my $app_obj = do $app;
+    die "Can't load $app: $@" unless $app_obj;
+
+    $server_obj->run($app_obj);
+
+    # never reached though
+    [200, "OK"];
+}
+
+Perinci::CmdLine->new(url => '/main/serve')->run;
+
+#ABSTRACT: Serve Perl modules over HTTP(S) using the Riap::HTTP protocol
+#PODNAME: peri-htserve
+
+=head1 SYNOPSIS
+
+ # serve modules over HTTP, using default options (HTTP port 5000)
+ $ peri-htserve Foo::Bar Baz::*
+
+ # you can now do
+ $ curl 'http://localhost:5000/Baz/SubMod/func1?arg1=1&arg2=2'
+ [200,"OK",{"The":"result","...":"..."}]
+
+ # or use the Perl client
+ $ perl -MPerinci::Access -e'
+     my $pa = Perinci::Access->new;
+     my $res = $pa->request(call=>"http://localhost:5000/Foo/Bar/func2");'
+
+
+ ### some other peri-htserve options:
+
+ # change ports/etc (see http_ports, https_ports, and unix_sockets in Gepok doc)
+ $ peri-htserve --http-ports "localhost:5000,*:80" ...
+
+ # see all available options
+ $ peri-htserve --help
+
+
+=head1 DESCRIPTION
+
+For now, please see source code for more details (or --help).
+
+
+=head1 QUICK TIPS
+
+=head2 Complex argument
+
+In raw HTTP, you can send complex argument by encoding it in JSON, e.g.:
+
+ $ curl 'http://localhost:5000/Foo/Bar/func?array:j=[1,2,3]'
+
+Notice the ":j" suffix after parameter name.
+
+
+=head1 TODO
+
+=over 4
+
+=item * Pass more Plackup options.
+
+=item * Pass more PSGI server options.
+
+=back
+
+
+=head1 SEE ALSO
+
+L<Riap::HTTP>
+
+L<Perinci::Access>, L<Perinci::Access::HTTP::Client>
+
+PSGI servers used: L<Gepok>, L<Starman>
+
+L<Plack::Runner>
+
+=cut
