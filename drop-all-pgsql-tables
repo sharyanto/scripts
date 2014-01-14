@@ -1,0 +1,44 @@
+#!/usr/bin/env perl
+
+# created: 2014-01-03
+
+use 5.010;
+use strict;
+use warnings;
+
+use DBI;
+use Getopt::Long;
+
+my %opts;
+GetOptions(
+    '--dbname|d=s' => \$opts{dbname},
+    '--host|h=s' => \$opts{host},
+    '--username|U=s' => \$opts{username},
+    '--password=s' => \$opts{password},
+    '--port|p=i' => \$opts{port},
+    '--dry-run' => \$opts{dry_run},
+);
+
+$opts{dbname} or die "Please specify at least --dbname\n";
+my $dsn = "dbi:Pg:dbname=$opts{dbname}".join(
+    "",
+    ($opts{host} ? ";host=$opts{host}" : ""),
+    ($opts{port} ? ";port=$opts{port}" : ""),
+);
+
+$opts{username} //= $ENV{USER};
+my $dbh = DBI->connect($dsn, $opts{username}, $opts{password}, {RaiseError=>0})
+    or die "Can't connect: $DBI::errstr\n";
+
+my @tables = $dbh->tables('', '', '', '');
+for (@tables) {
+    next if /\A(information_schema|pg_catalog)\./;
+    if ($opts{dry_run}) {
+        say "Dropping table $_ (DRY_RUN)";
+        next;
+    }
+    say "Dropping table $_";
+    $dbh->do("DROP TABLE $_ CASCADE") or do {
+        warn "Failed dropping table $_: " . $dbh->errstr;
+    };
+}
