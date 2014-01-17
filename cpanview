@@ -1,0 +1,13 @@
+#!/usr/bin/perl
+
+# view CPAN module (or dist) documentation in browser
+
+# created: 2014-01-15
+
+exit 0 unless @ARGV;
+
+if ($ARGV[0] =~ /\A\w+(::\w+)*\z/) {
+    system "$ENV{BROWSER} https://metacpan.org/module/$ARGV[0]";
+} else {
+    system "$ENV{BROWSER} https://metacpan.org/release/$ARGV[0]";
+}
