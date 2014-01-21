@@ -3,6 +3,7 @@
 use 5.010;
 use strict;
 use warnings;
+use Log::Any '$log';
 
 use Builtin::Logged qw(system);
 use Cwd;
@@ -49,9 +50,14 @@ _
             summary => 'State',
         },
     },
+    features => {
+        dry_run => 1,
+    },
 };
 sub archive_perl_release {
     my %args = @_;
+
+    my $dry = $args{-dry_run};
 
     my $tarball = $args{tarball};
     (defined $tarball) or return [400, "Please specify tarball"];
@@ -90,8 +96,13 @@ sub archive_perl_release {
         mkdir $dir unless (-d $dir);
     }
 
-    system "cp", "-av", $tarball, $dir;
-    return [500, "Can't copy: $! ($?)"] if $?;
+    my @cmd = ("cp", "-av", $tarball, $dir);
+    if ($dry) {
+        $log->infof("DRY_RUN: system(%s)", \@cmd);
+    } else {
+        system @cmd;
+        return [500, "Can't copy: $! ($?)"] if $?;
+    }
 
     # try out LTSV format
     my $logline = join(
@@ -102,8 +113,15 @@ sub archive_perl_release {
         "ver:$ver",
         "size:".(-s $tarball),
     ) . "\n";
-    append_file("$archive_dir/releases.txt", $logline);
-    append_file("$archive_dir/$repo/releases.txt", $logline);
+    if ($dry) {
+        $log->infof("DRY_RUN: Appending '%s' to %s & %s",
+                    $logline,
+                    "$archive_dir/releases.txt",
+                    "$archive_dir/$repo/releases.txt");
+    } else {
+        append_file("$archive_dir/releases.txt", $logline);
+        append_file("$archive_dir/$repo/releases.txt", $logline);
+    }
 
     [200, "OK"];
 }
