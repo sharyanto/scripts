@@ -42,6 +42,27 @@ Defaults to ~/proj/perl/releases.
 
 _
         },
+        darkpan_dir => {
+            schema => 'str*',
+            summary => 'DarkPAN directory',
+            description => <<'_',
+
+Additionally, this function can inject the tarball into the DarkPAN directory.
+If you specify this, you'll need to specify `pause_id` also. Currently using
+`OrePAN` for this.
+
+_
+        },
+        pause_id => {
+            schema => 'str*',
+            summary => 'PAUSE ID',
+            description => <<'_',
+
+Needed if you specify `darkpan_dir`. It does not have to be a real PAUSE ID. The
+default is taken from PAUSEID or USER environment.
+
+_
+        },
         state => {
             schema => ['str*'=>{
                 in=>[qw/published pending cancelled/],
@@ -102,6 +123,23 @@ sub archive_perl_release {
     } else {
         system @cmd;
         return [500, "Can't copy: $! ($?)"] if $?;
+    }
+
+    # inject to darkpan
+    my $darkpan_dir = $args{darkpan_dir} // "$ENV{HOME}/repos/darkpan-$repo";
+    if (-d $darkpan_dir) {
+        my @cmd = ("orepan.pl", "--dest", $darkpan_dir,
+                   "--pause", ($args{pause_id} // $ENV{PAUSEID} //
+                                   $ENV{USER} // "NONAME"),
+                   $tarball);
+        if ($dry) {
+            $log->infof("DRY_RUN: Injecting to DarkPAN: %s", \@cmd);
+        } else {
+            system @cmd;
+            $log->warnf("Can't inject to DarkPAN '%s': %s", $darkpan_dir, $!);
+        }
+    } else {
+        $log->warnf("DarkPAN dir '%s' does not exist, skipped", $darkpan_dir);
     }
 
     # try out LTSV format
