@@ -1,0 +1,25 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Text::ANSITable;
+
+unless (@ARGV == 2) {
+    print <<_;
+Usage: $0 <columns-in-perl> <rows-in-perl>
+
+Example:
+ $0 '[qw/col1 col2 col3/]' '[[1,1,1], [2,2,2]]'
+_
+    exit 1;
+}
+
+my $cols = eval $ARGV[0];
+die $@ if $@;
+
+my $rows = eval $ARGV[1];
+die $@ if $@;
+
+print Text::ANSITable->new(columns => $cols, rows => $rows)->draw;
