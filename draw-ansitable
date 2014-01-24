@@ -22,4 +22,7 @@ die $@ if $@;
 my $rows = eval $ARGV[1];
 die $@ if $@;
 
+# only binmode if requested
+binmode(STDOUT, ":utf8") if $ENV{UTF8};
+
 print Text::ANSITable->new(columns => $cols, rows => $rows)->draw;
