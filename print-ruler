@@ -1,0 +1,16 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+my $width = $ARGV[0] // $ENV{COLUMNS} // 80;
+
+my $ruler = "";
+while (length($ruler) < $width) {
+    my $twidth = $width-length($ruler); $twidth = 10 if $twidth > 10;
+    my $mark = length($ruler) + $twidth;
+    $ruler .= "-" x ($twidth - length($mark));
+    $ruler .= $mark;
+}
+say $ruler;
