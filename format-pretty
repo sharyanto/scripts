@@ -24,5 +24,8 @@ if ($0 =~ /-json/) {
     $mod = "JSON";
 } elsif ($0 =~ /-yaml/) {
     $mod = "YAML";
+} elsif ($0 =~ /-perl/) {
+    $mod = "Perl";
 }
+
 print format_pretty($data, {module=>$mod});
