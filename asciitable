@@ -1,0 +1,129 @@
+#!/usr/bin/env perl
+
+use 5.010001;
+use strict;
+use warnings;
+
+use Getopt::Long;
+
+our $VERSION = 0.01; # VERSION
+
+my %Opts = (
+    input  => 'json',
+);
+my $Input;
+
+sub parse_cmdline {
+    my $res = GetOptions(
+        'input|i=s'  => \$Opts{input},
+        'version|v'  => sub {
+            say "asciitable version ", ($main::VERSION // '?');
+            exit 0;
+        },
+        'help|h'     => sub {
+            print <<USAGE;
+Usage:
+  asciitable [options] <expr> [input_file]
+  asciitable --version
+  asciitable --help
+Examples:
+  asciitable < table.json
+Options:
+  --input=s, -i   Input format (json, yaml, perl; default is json).
+Consult manpage/documentation for more details.
+USAGE
+            exit 0;
+        },
+    );
+    exit 99 if !$res;
+}
+
+sub get_input {
+    local $/;
+    if ($Opts{input} eq 'json') {
+        require JSON;
+        $Input = JSON->new->allow_nonref->decode(~~<>);
+    } elsif ($Opts{input} eq 'yaml') {
+        require YAML::Syck;
+        $Input = YAML::Syck::Load(~~<>);
+    } elsif ($Opts{input} eq 'perl') {
+        $Input = eval(~~<>);
+    } else {
+        warn "Unknown input format, ".
+            "refer to documentation for available formats\n";
+        exit 99;
+    }
+}
+
+sub show_output {
+    require Text::ASCIITable;
+
+    unless (ref($Input) eq 'ARRAY') {
+        warn "Input is not an array\n";
+        exit 1;
+    }
+    exit 0 unless @$Input;
+    my $r0 = $Input->[0];
+    unless (ref($r0) eq 'HASH') {
+        warn "First row is not a hash\n";
+        exit 1;
+    }
+    my $t = Text::ASCIITable->new;
+    my @cols = sort keys %$r0;
+    $t->setCols(@cols);
+    for my $row (@$Input) {
+        $t->addRow(@{ $row }{@cols});
+    }
+    print $t->draw;
+}
+
+# MAIN
+
+parse_cmdline();
+get_input();
+show_output();
+
+1;
+# ABSTRACT: Print data structure (AoH) with Text::ASCIITable
+# PODNAME: asciitable
+
+=head1 SYNOPSIS
+
+Usage:
+
+ % asciitable [OPTIONS] < table.json
+
+
+=head1 DESCRIPTION
+
+
+=head1 OPTIONS
+
+=over
+
+=item * --input=STR, -i
+
+Pick input format. Available formats: json, yaml (using L<YAML::Syck>), perl.
+Default is json.
+
+=back
+
+
+=head1 EXIT CODES
+
+0 on success.
+
+99 on command-line options error.
+
+
+=head1 TODO
+
+
+=head1 FAQ
+
+
+=head1 SEE ALSO
+
+L<Text::ASCIITable>.
+
+=cut
