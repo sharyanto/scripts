@@ -69,6 +69,7 @@ EOF
 $re_prefix = qr/(?:$re_prefix)/i;
 
 my $re_suffix = join("|", map {quotemeta} sort {length($b)<=>length($a)} grep {/\S/} split "\n", <<'EOF');
+ - www.free-musikdownload.blogspot.com
  [www.descargasweb.net]
 .480p.WEBRip.x264-BTN
 .720p.WEBrip.AAC2.0.x264-NTb
