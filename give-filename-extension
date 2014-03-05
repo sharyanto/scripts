@@ -33,6 +33,7 @@ for (@ARGV) {
   elsif ($mime =~ m#application/vnd\.rn-realmedia#) { $ext = "rm" }
   elsif ($mime =~ m#application/x-rar#) { $ext = "rar" }
   elsif ($mime =~ m#video/mp2p#) { $ext = "mpg" }
+  elsif ($mime =~ m#video/mp4#) { $ext = "mp4" }
 
   if (!$ext) {
     print "INFO: $_: Can't find out content type, skipped\n";
