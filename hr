@@ -1,0 +1,14 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Term::Size;
+
+my ($columns, $rows) = Term::Size::chars *STDOUT{IO};
+
+my $char = !defined($ARGV[0]) || !length($ARGV[0]) ? "=" : $ARGV[0];
+
+my $bar = substr($char x ($columns/length($char) + 1), 0, $columns);
+say $bar;
