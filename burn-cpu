@@ -1,0 +1,5 @@
+#!/usr/bin/env perl
+
+# XXX option to fork N times
+
+$a++ while 1;

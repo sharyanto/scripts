@@ -1,6 +1,12 @@
-#!/usr/bin/perl -n
+#!/usr/bin/env perl
 
 # just like uniq, but can detect non-consecutive duplicates, e.g. 1,
 # 2, 3, 1, 2, 4 becomes 1, 2, 3, 4.
 
-print unless $memory{$_}++;
+# UPDATE 2014-03-14: i've now written nauniq which is a proper application with
+# options like -i (--ignore-case), --check-chars (-w), --skip-chars (-s), --md5,
+# etc.
+
+while (<>) {
+    print unless $memory{$_}++;
+}

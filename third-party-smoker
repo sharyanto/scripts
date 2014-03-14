@@ -1,7 +1,91 @@
 #!/usr/bin/env perl
 
+# given a directory of dists (or the current dir), will look into each dist's
+# t/third-party/ directory and run *.t there. If there is
+
 use 5.010;
 use strict;
 use warnings;
+use Log::Any::App '$log';
 
-# UNFINISHED
+use DBI;
+use File::chdir;
+use File::Write::Rotate;
+use Process::Govern qw(govern_process);
+use SHARYANTO::SQL::Schema qw(create_or_update_db_schema);
+use Sys::RunAlone;
+
+my $prog = "third-party-smoker";
+my $dbh = DBI->connect("dbi:SQLite:dbname=$ENV{HOME}/$prog.db",
+                       { RaiseError => 1});
+
+# should be absolute for now
+my $log_dir = "$ENV{HOME}/$prog-log";
+unless (-d $log_dir) {
+    mkdir $log_dir or die "Can't mkdir $log_dir: $!\n";
+}
+
+my $res = create_or_update_db_schema(
+    dbh => $dbh,
+    spec => {
+        latest_v => 1,
+        install => [
+            q[CREATE TABLE result (
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                ctime TIMESTAMP NOT NULL,
+                is_success BOOL NOT NULL,
+                note TEXT,
+                UNIQUE(name, ctime)
+            )],
+        ],
+    },
+);
+die "Can't create/update DB schema: $res->[0] - $res->[1]\n"
+    unless $res->[0] == 200;
+
+my $dists_dir;
+if (@ARGV) {
+    $CWD = $ARGV[0];
+    $dists_dir = $CWD;
+} else {
+    $dists_dir = ".";
+}
+
+$ENV{THIRD_PARTY_TESTING} = 1;
+
+for my $dist (sort grep {-d} <*>) {
+    # XXX if there is dist.ini, extract dist name from it, otherwise use dir
+    # name.
+
+    $log->debugf("chdir to %s/%s ...", $dists_dir, $dist);
+    local $CWD = $dist;
+
+    my $test_dir = "xt/third-party";
+    unless (-d $test_dir) {
+        $log->debug("No $test_dir found, skipping");
+        next;
+    }
+
+    my $name = $dist; $name =~ s/-/_/g; $name =~ s/_*\W+_*/_/g;
+    my $fwr = File::Write::Rotate->new(dir=>$log_dir, prefix=>$name);
+    for my $test_file (glob "$test_dir/*.t") {
+        $log->debugf("Executing test script %s ...", $test_file);
+        $fwr->write("[${\(scalar localtime)}] Executing test script $test_file ...\n");
+        my $exitcode = govern_process(
+            name        => $name,
+            command     => [$^X, "-I", "lib", $test_file],
+            timeout     => 10*60,
+            show_stdout => 1,
+            log_stdout  => {
+                dir => $log_dir,
+            },
+            show_stderr => 0,
+            log_stderr  => {
+                dir => $log_dir,
+            },
+        );
+        $fwr->write("[${\(scalar localtime)}] Test script $test_file exits with code $exitcode\n");
+    }
+}
+__END__
