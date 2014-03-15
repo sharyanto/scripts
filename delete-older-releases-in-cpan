@@ -15,7 +15,7 @@ $CWD = "$cpan/authors/id";
 
 $log->warn("Protip: You don't have to do this to minicpan BTW");
 
-for my $author (<*/*/**>) {
+for my $author (<*/*/*>) {
     $log->debug("Entering author dir $author ...");
     local $CWD = $author;
     my %dist;
