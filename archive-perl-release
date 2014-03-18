@@ -74,6 +74,11 @@ _
     features => {
         dry_run => 1,
     },
+    deps => {
+        all => [
+            {prog => 'orepan2-inject'},
+        ],
+    },
 };
 sub archive_perl_release {
     my %args = @_;
@@ -128,10 +133,12 @@ sub archive_perl_release {
     # inject to darkpan
     my $darkpan_dir = $args{darkpan_dir} // "$ENV{HOME}/repos/darkpan-$repo";
     if (-d $darkpan_dir) {
-        my @cmd = ("orepan.pl", "--dest", $darkpan_dir,
-                   "--pause", ($args{pause_id} // $ENV{PAUSEID} //
+        my @cmd = ("orepan2-inject",
+                   "--author", ($args{pause_id} // $ENV{PAUSEID} //
                                    $ENV{USER} // "NONAME"),
-                   $tarball);
+                   $tarball,
+                   $darkpan_dir,
+               );
         if ($dry) {
             $log->infof("DRY_RUN: Injecting to DarkPAN: %s", \@cmd);
         } else {
