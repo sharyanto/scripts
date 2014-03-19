@@ -74,6 +74,9 @@ _
     features => {
         dry_run => 1,
     },
+    deps => {
+        prog => 'orepan.pl',
+    },
 };
 sub archive_perl_release {
     my %args = @_;
