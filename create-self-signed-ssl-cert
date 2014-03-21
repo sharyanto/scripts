@@ -81,11 +81,11 @@ sub create_ssl_cert {
     # we can provide options later, but for now let's
     system(join(
         "",
-        "openssl x509 -req -days 3650 -in $h.csr ",
-        ($args{ca} ? "-CA '$args{ca}' " : ""),
-        ($args{ca_key} ? "-CAkey '$args{ca_key}' " : ""),
-        ($args{ca} ? "-CAcreateserial " : ""),
-        "-out $h.crt",
+        "openssl x509 -req -days 3650 -in $h.csr -signkey $h.key",
+        ($args{ca} ? " -CA '$args{ca}'" : ""),
+        ($args{ca_key} ? " -CAkey '$args{ca_key}'" : ""),
+        ($args{ca} ? " -CAcreateserial" : ""),
+        " -out $h.crt",
     ));
     return [500, "Can't generate crt: ".explain_child_error()] if $?;
 
