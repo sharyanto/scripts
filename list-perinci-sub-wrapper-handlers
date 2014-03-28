@@ -1,0 +1,35 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Perinci::CmdLine;
+use Perinci::Sub::Wrapper;
+use SHARYANTO::Package::Util qw(list_package_contents);
+
+our %SPEC;
+
+$SPEC{list_perinci_sub_wrapper_handlers} = {
+    v => 1.1,
+};
+sub list_perinci_sub_wrapper_handlers {
+    my %syms   = list_package_contents('Perinci::Sub::Wrapper');
+    #use DDC; dd \%syms;
+    my %hmetas = map { my $prop = $_; $prop =~ s/^handlemeta_//;
+                       $prop => Perinci::Sub::Wrapper->$_ }
+        grep { /^handlemeta_/ } keys %syms;
+
+    my $res = [];
+    for my $prop (sort {
+        ($hmetas{$a}{prio}//0) <=> ($hmetas{$b}{prio}//0) ||
+        $a cmp $b
+    } keys %hmetas) {
+        my $hmeta = $hmetas{$prop};
+        push @$res, {name=>$prop, %$hmeta};
+    }
+    my $rfo = {table_column_orders=>[[qw/name v prio convert/]]};
+    [200, "OK", $res, {result_format_options=>{text=>$rfo, 'text-pretty'=>$rfo}}];
+}
+
+Perinci::CmdLine->new(url => '/main/list_perinci_sub_wrapper_handlers')->run;

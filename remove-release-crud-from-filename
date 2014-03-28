@@ -69,7 +69,16 @@ EOF
 $re_prefix = qr/(?:$re_prefix)/i;
 
 my $re_suffix = join("|", map {quotemeta} sort {length($b)<=>length($a)} grep {/\S/} split "\n", <<'EOF');
- - www.free-musikdownload.blogspot.com
+.HDTV.XviD.REPACK-LOL
+ HDTV.XviD-PONG
+ CONVERT
+.480p.HDTV.H264
+.WEB-DL.480p.H264
+.720p.HDTV.DLBR
+ - 480p - x264 - 85MB - Shan
+.480p.HDTV.X264-DIMENSION
+.480p.HDTV.x264-mSD
+- www.free-musikdownload.blogspot.com
  [www.descargasweb.net]
 .480p.WEBRip.x264-BTN
 .720p.WEBrip.AAC2.0.x264-NTb

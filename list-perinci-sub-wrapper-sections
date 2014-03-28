@@ -1,0 +1,26 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Perinci::CmdLine;
+use Perinci::Sub::Wrapper;
+
+our %SPEC;
+
+$SPEC{list_perinci_sub_wrapper_sections} = {
+    v => 1.1,
+};
+sub list_perinci_sub_wrapper_sections {
+    my $sects = Perinci::Sub::Wrapper->_known_sections;
+
+    my $res = [];
+    for my $sname (sort {$sects->{$a}{order} <=> $sects->{$b}{order}} keys %$sects) {
+        my $sect = $sects->{$sname};
+        push @$res, {name=>$sname, order=>$sect->{order}};
+    }
+    [200, "OK", $res];
+}
+
+Perinci::CmdLine->new(url => '/main/list_perinci_sub_wrapper_sections')->run;

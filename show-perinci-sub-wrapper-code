@@ -1,0 +1,34 @@
+#!/usr/bin/env perl
+
+BEGIN {
+    our $File_Log_Level = 'off';
+    our $Log_Level = 'trace';
+    $ENV{LOG_PERINCI_WRAPPER_CODE} = 1;
+}
+
+use 5.010;
+use strict;
+use warnings;
+use Log::Any::App;
+
+use Data::Dump::Color;
+use Perinci::Sub::Wrapper qw(wrap_sub);
+
+my $meta;
+if (@ARGV) {
+    $meta = eval shift; die $@ if $@;
+} else {
+    say "Hint: you can specify metadata in first arg, e.g.: $0 '{v=>1.1, args=>{a=>{}, b=>{}}, result_naked=>1}'";
+    $meta = {v=>1.1};
+}
+
+my $wrap_args = {meta=>$meta, sub=>sub{}};
+if (@ARGV) {
+    my $wa = eval shift; die $@ if $@;
+    $wrap_args->{$_} = $wa->{$_} for keys %$wa;
+} else {
+    say "Hint: you can specify wrap options in second arg, e.g.: $0 '{v=>1.1}' '{}'";
+}
+
+my $res = wrap_sub(%$wrap_args);
+if ($0 =~ /-with-result$/) { say "Wrap result:"; dd $res }
