@@ -18,31 +18,31 @@ my $res = gen_read_table_func(
         fields => {
             file => {
                 schema => 'str*',
-                index  => 0,
+                pos    => 0,
             },
             repo => {
                 schema => 'str*',
-                index  => 1,
+                pos    => 1,
             },
             date => {
                 schema => 'str*',
-                index  => 2,
+                pos    => 2,
             },
             ver => {
                 schema => 'str*',
-                index  => 3,
+                pos    => 3,
             },
             size => {
                 schema => 'int*',
-                index  => 4,
+                pos    => 4,
             },
             oldname => {
                 schema => 'str',
-                index  => 5,
+                pos    => 5,
             },
             status => {
                 schema => 'str',
-                index  => 6,
+                pos    => 6,
             },
         },
         pk => 'file',
@@ -176,5 +176,8 @@ $SPEC{list_perl_releases}{args}{day} = {
     schema => 'int*',
     tags => [qw/category:filter/],
 };
+
+# i often find myself typing 'list-perl-releases -l' :)
+$SPEC{list_perl_releases}{args}{detail}{cmdline_aliases} = {l=>{}};
 
 Perinci::CmdLine->new(url => '/main/list_perl_releases')->run;
