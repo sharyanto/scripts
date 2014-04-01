@@ -1,0 +1,43 @@
+#!/usr/bin/env perl
+
+# when using OurPkgVersion dzil plugin, source code in repo will just contain '#
+# VERSION' which will be replaced to something like "our $VERSION = '0.12'; #
+# VERSION" in the built source files. But this means when using source in repo,
+# 'use Module 0.12' will fail because $VERSION is not defined. this script
+# modifies source code and change '# VERSION' lines to 'our $VERSION = '0.12'; #
+# VERSION' lines and is useful during testing. after that, you can 'git checkout
+# .' again if you want.
+
+use 5.010;
+use strict;
+use warnings;
+use Log::Any::App '$log';
+
+use File::Find;
+use File::Slurp;
+
+open my($fh), "<", "dist.ini" or die "Can't open dist.ini: $!\n";
+my $v;
+while (<$fh>) {
+    /^version\s*=\s*(.+)$/ and do { $v = $1; last };
+}
+die "Can't extract version from dist.ini\n" unless defined($v);
+
+find sub {
+    return if $_ eq '.' || $_ eq '..';
+    return unless -f;
+    return unless /\.(pm|pl)$/ ||
+        $File::Find::dir =~ m!\A\./(bin|script)($|/)!;
+    $log->infof("Looking at %s/%s ...", $File::Find::dir, $_);
+    my $f = read_file($_, err_mode=>'quiet');
+    defined($f) or die "Can't open $File::Find::dir/$_: $!\n";
+    my $changed = 0;
+    $f =~ s/^(\s*)
+            (our \s+ \$VERSION \s* = \s* '\d[\d.]*'; \s )?
+            (\# \s VERSION)$/
+                "${1}our \$VERSION = '$v'; # VERSION"/emx
+                    and $changed++;
+    return unless $changed;
+    $log->infof("Writing %s/%s ...", $File::Find::dir, $_);
+    write_file($_, $f);
+}, ".";

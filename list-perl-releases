@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use FileHandle;
-use Perinci::CmdLine;
+use Perinci::CmdLine 1.04;
 use Perinci::Sub::Gen::AccessTable qw(gen_read_table_func);
 
 our %SPEC;
