@@ -1,0 +1,6 @@
+#!/usr/bin/env perl
+use SHARYANTO::Module::Util qw(is_xs);
+for (@ARGV) {
+    $is_xs = is_xs($_, {debug=>$ENV{DEBUG}, warn=>$ENV{DEBUG}});
+    print "$_: ", (defined($is_xs) ? ($is_xs ? "XS" : "PP") : "?"), "\n";
+}

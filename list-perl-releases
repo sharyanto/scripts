@@ -13,6 +13,14 @@ my $data = [];
 
 my $res = gen_read_table_func(
     name => 'list_perl_releases',
+    summary => 'List Perl releases',
+    description => <<'_',
+
+This function is a table interface to the Perl releases file (releases.txt). It
+provides filtering, sorting, and paging to let you easily slice and dice the
+data.
+
+_
     table_data => $data,
     table_spec => {
         fields => {
@@ -37,8 +45,15 @@ my $res = gen_read_table_func(
                 pos    => 4,
             },
             oldname => {
-                schema => 'str',
-                pos    => 5,
+                summary => 'Old name',
+                schema  => 'str',
+                pos     => 5,
+                description => <<'_',
+
+If dist is a rename of old dist, this field will contain the old name. This will
+allow us to count renames.
+
+_
             },
             status => {
                 schema => 'str',
