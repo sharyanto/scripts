@@ -1,15 +1,23 @@
-#!/usr/bin/env perl 
+#!/usr/bin/env perl
 
 use strict;
 use warnings;
+#use Log::Any::App;
+#use Log::Any::For::Builtins qw(system);
 
-sub qot { local $_ = shift; s/'/'"'"'/g; "'$_'" }
+use List::Util qw(first shuffle);
+use SHARYANTO::Array::Util qw(split_array);
 
-if (@ARGV < 2) { die "Usage: $0 <cmd> <arg> [more_args] ...\n" }
+if (@ARGV < 2) { die "Usage: $0 <cmd> [cmd_opts] -- <arg> ...\n" }
 
 my $cmd = shift @ARGV;
-my @RANDARGV;
-push @RANDARGV, $_ while defined($_ = splice @ARGV, rand @ARGV, 1);
+my ($cmd_opts, $args);
+if (first {$_ eq '--'} @ARGV) {
+    ($cmd_opts, $args) = split_array('--', \@ARGV, 2);
+} else {
+    $cmd_opts = [];
+    $args = [@ARGV];
+}
+$args = [shuffle @$args];
 
-#print "DEBUG: Executing: ", $cmd, " ", join(" ", map { qot $_ } @RANDARGV), "\n";
-system $cmd, @RANDARGV;
+system $cmd, @$cmd_opts, @$args;
