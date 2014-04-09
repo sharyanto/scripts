@@ -127,4 +127,6 @@ Default is json.
 
 L<Text::ASCIITable>.
 
+For an actual ASCII table, try C<man ascii>.
+
 =cut
