@@ -1,6 +1,7 @@
 #!/usr/bin/ruby
 
 # 031015
+# 2014-04-09 - deprecated, use 'App-setop' now.
 
 require 'getoptlong'
 

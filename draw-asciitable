@@ -22,6 +22,7 @@ sub parse_cmdline {
         },
         'help|h'     => sub {
             print <<USAGE;
+asciitable - draw a table using Text::ASCIITable
 Usage:
   asciitable [options] <expr> [input_file]
   asciitable --version

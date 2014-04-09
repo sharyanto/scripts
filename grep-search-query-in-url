@@ -96,6 +96,11 @@ while (<>) {
     $site = "amazon";
     $rest =~ /field-keywords=(.+?)(?:&|\z)/ or next;
     $query = unesc($1);
+  # 2014-04-09
+  } elsif ($host =~ /kickass\.to/i) {
+    $site = "kat";
+    $rest =~ m!/usearch/(.+)/! or next;
+    $query = unesc($1);
   }
 
   next unless $site;

@@ -1,2 +1,2 @@
 #!/bin/bash
-rsync --bwlimit 4000 $*
+rsync --bwlimit 4000 "$@"
