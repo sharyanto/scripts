@@ -1,0 +1,18 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use SHARYANTO::Dist::Util qw(list_dist_modules);
+
+# VERSION
+
+my $has_error;
+
+unless (@ARGV == 1) {
+    warn "Usage: list-dist-modules <module>\n";
+    exit 99;
+}
+
+say for list_dist_modules($ARGV[0]);
