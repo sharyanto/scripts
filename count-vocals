@@ -1,0 +1,7 @@
+#!/usr/bin/env perl
+
+while (<>) {
+    $vocals{lc $1}++ while /([AEIOUaeiou])/g;
+}
+
+print "$_\t$vocals{$_}\n" for (sort {$vocals{$b} <=> $vocals{$ab}} keys %vocals);
