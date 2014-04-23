@@ -5,6 +5,7 @@ use strict;
 use warnings;
 
 use FileHandle;
+use Module::Path qw(module_path);
 use Perinci::CmdLine 1.04;
 use Perinci::Sub::Gen::AccessTable qw(gen_read_table_func);
 
@@ -194,5 +195,9 @@ $SPEC{list_perl_releases}{args}{day} = {
 
 # i often find myself typing 'list-perl-releases -l' :)
 $SPEC{list_perl_releases}{args}{detail}{cmdline_aliases} = {l=>{}};
+
+if (module_path('Text::ANSITable::StyleSet::SHARYANTO::PerlReleaseTypes')) {
+    $ENV{ANSITABLE_STYLE_SETS} //= '["SHARYANTO::PerlReleaseTypes"]';
+}
 
 Perinci::CmdLine->new(url => '/main/list_perl_releases')->run;
