@@ -4,4 +4,4 @@
 $year += 1900; $mon++;
 
 system "list-id-holidays", "--fields", "date", "--fields", "ind_name", "--fields", "is_holiday", "--fields", "is_joint_leave", "--with-field-names",
-    '--year', $year, '--month', $mon, @ARGV;
+    "--year", $year-1, @ARGV;
