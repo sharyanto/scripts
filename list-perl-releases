@@ -34,7 +34,7 @@ _
                 pos    => 1,
             },
             date => {
-                schema => 'str*',
+                schema => 'date*',
                 pos    => 2,
             },
             ver => {
