@@ -174,8 +174,9 @@ _
     tags => [qw/category:filter/],
 };
 
-# WORKAROUND until perigen-acctbl has support for dates, e.g. generating filter
-# fields like DATE.day (and DATE.day.{min,max}, etc), DATE.month, etc.
+# WORKAROUND until perigen-acctbl has more advanced support for dates, e.g.
+# generating filter fields like DATE.day (and DATE.day.{min,max}, etc),
+# DATE.month, etc.
 
 $SPEC{list_perl_releases}{args}{year} = {
     summary => 'Filter year',
