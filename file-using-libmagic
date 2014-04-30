@@ -1,0 +1,15 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use File::LibMagic;
+
+die "Usage: $0 <file> ...\n" unless @ARGV;
+
+my $magic = File::LibMagic->new;
+
+for (@ARGV) {
+    say "$_: ", $magic->describe_filename($_), " (", $magic->checktype_filename($_), ")";
+}

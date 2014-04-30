@@ -1,0 +1,3 @@
+#!/bin/bash
+
+list-perl-releases --repo cpan --det --json | fsql --add-json - 'SELECT SUBSTR(date,1,7) month, COUNT(*) FROM stdin GROUP BY month ORDER BY month' -f text

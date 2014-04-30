@@ -1,0 +1,3 @@
+#!/bin/bash
+
+list-perl-releases --repo cpan --det --json | fsql --add-json - 'SELECT SUBSTR(date,1,4) year, COUNT(*) FROM stdin GROUP BY year ORDER BY year' -f text
