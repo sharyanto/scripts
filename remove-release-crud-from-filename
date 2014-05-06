@@ -70,6 +70,9 @@ EOF
 $re_prefix = qr/(?:$re_prefix)/i;
 
 my $re_suffix = join("|", map {quotemeta} sort {length($b)<=>length($a)} grep {/\S/} split "\n", <<'EOF');
+.x264.720p.AC3.MVGroup.org
+.PDTV.XviD.MP3.MVGroup.org
+.-.XviD.-.Gomez
 .HDTV.XviD.REPACK-LOL
  HDTV.XviD-PONG
  CONVERT
