@@ -1,6 +1,23 @@
 #!/usr/bin/env perl
 
-die "Usage: $0 <module-name>\n" unless @ARGV;
-system "perl -Ilib -MDevel::EndStats=verbose,1 ".
-    join(" ", map {"-M$_"} @ARGV)." -e1";
+use Getopt::Long;
 
+my %opts;
+GetOptions(
+    'hide-core' => \$Opts{hide_core},
+    'hide-noncore' => \$Opts{hide_noncore},
+    'help|h' => \$Opts{help},
+);
+
+die "Usage: $0 [--hide-core | --hide-noncore ] <module-name>\n"
+    if !@ARGV || $Opts{help};
+
+system join(
+    '',
+    "perl -Ilib -MDevel::EndStats=verbose,1",
+    (",hide_core,1") x !!$Opts{hide_core},
+    (",hide_noncore,1") x !!$Opts{hide_noncore},
+    " ",
+    (map {"-M$_"} @ARGV),
+    " -e1",
+);
