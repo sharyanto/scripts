@@ -1,0 +1,56 @@
+#!/usr/bin/env perl
+
+# 2014-05-07
+
+use 5.010;
+use Getopt::Long;
+
+#use Parse::CPAN::Packages;
+# unused, gosh the bloat. Parse::CPAN::Packages loads 112k lines and over 300
+# files, the module loads in almost 0.5s on my laptop (including Getopt::Long?
+# Archive::Zip? why???). to parse a single module requires almost 8s!
+
+# still takes 2.5s on my laptop
+#use Parse::CPAN::Packages::Fast;
+
+my %Opts = (
+    repos_path => '/cpan',
+);
+
+my $res = GetOptions(
+    'repos-path|p=s' => \$Opts{repos_path},
+);
+exit 1 unless $res;
+
+die "Usage: $0 <module> ...\n" unless @ARGV;
+
+#my $p = Parse::CPAN::Packages::Fast->new(
+#    "$Opts{repos_path}/modules/02packages.details.txt.gz");
+#
+#for my $mod (@ARGV) {
+#    my $m = $p->package($mod);
+#    my $d = $m->distribution;
+#    say "$Opts{repos_path}/authors/id/" . $d->prefix;
+#}
+
+# this takes 0-0.5s
+
+use autodie;
+use String::ShellQuote;
+
+my $num_found = 0;
+open my($fh), "zcat ".shell_quote("$Opts{repos_path}/modules/02packages.details.txt.gz")."|";
+while (<$fh>) {
+    next unless /\S/;
+    next if /^\S+:\s/;
+    chomp;
+    my ($pkg, $ver, $path) = split /\s+/, $_;
+    for my $mod (@ARGV) {
+        next unless $pkg eq $mod;
+        $num_found++;
+        say "$Opts{repos_path}/authors/id/$path";
+    }
+    last if $num_found >= @ARGV;
+}
+
+exit $num_found >= @ARGV ? 0 : 1;
