@@ -6,7 +6,7 @@ my %opts;
 GetOptions(
     'hide-core' => \$Opts{hide_core},
     'hide-noncore' => \$Opts{hide_noncore},
-    'show_memsize' => \$Opts{show_memsize},
+    'show_memsize|m' => \$Opts{show_memsize},
     'help|h' => \$Opts{help},
 );
 
@@ -27,7 +27,7 @@ system join(
     "perl -Ilib -MDevel::EndStats=verbose,1",
     (",hide_core,1") x !!$Opts{hide_core},
     (",hide_noncore,1") x !!$Opts{hide_noncore},
-    (",show_memsize,1") x !!$Opts{show_memsize},
+    (",show_memsize,1,sort,-memsize") x !!$Opts{show_memsize},
     " ",
     (map {"-M$_"} @ARGV),
     " -e1",
