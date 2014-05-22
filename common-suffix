@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
 use 5.010;
-use SHARYANTO::String::Util 0.27 qw(common_prefix);
+use SHARYANTO::String::Util 0.27 qw(common_suffix);
 die "Usage: $0 <string> ...\n" unless @ARGV;
 
-say common_prefix(@ARGV);
+say common_suffix(@ARGV);
