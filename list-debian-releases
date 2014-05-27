@@ -1,0 +1,15 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Debian::Releases;
+use Version::Util qw(cmp_version);
+
+my $dr = Debian::Releases->new;
+my $rel = $dr->releases;
+#use Data::Dump; dd $rel;
+for (sort {cmp_version($a, $b)} keys $rel) {
+    say "$_\t$rel->{$_}";
+}
