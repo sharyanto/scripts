@@ -1,0 +1,11 @@
+#!/usr/bin/env perl
+
+use DateTime;
+use Log::Any::For::Builtins qw(system);
+
+my $today = DateTime->today(time_zone => $ENV{TZ});
+my $start = $today->clone->subtract(days => $today->day_of_week-1); # start of this week
+my $a = $start->clone->subtract(days => 7); # start of last week
+my $b = $start->clone->subtract(days => 1); # end of last week
+system "list-perl-releases", "--date-min", $a->ymd, "--date-max", $b->ymd,
+    @ARGV;

@@ -1,0 +1,6 @@
+#!/usr/bin/env perl
+
+use DateTime;
+my $yest = DateTime->today(time_zone => $ENV{TZ})->subtract(days => 1);
+
+system "list-perl-releases", "--date", $yest->ymd, @ARGV;
