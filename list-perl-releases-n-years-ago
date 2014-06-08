@@ -1,0 +1,14 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use DateTime;
+use Log::Any::For::Builtins qw(system);
+
+die "Usage: $0 <n> ...\n" unless @ARGV;
+my $n = shift @ARGV;
+
+my $today = DateTime->today(time_zone => $ENV{TZ});
+my $start = $today->clone->set(day=>1, month=>1)->subtract(years => $n); # start of last n years
+my $end   = $start->clone->add(years=>1)->subtract(days=>1); # end of last n years
+#say "D:start=", $start->ymd, ", end=", $end->ymd;
+system "list-perl-releases", "--date-min", $start->ymd, "--date-max", $end->ymd, @ARGV;

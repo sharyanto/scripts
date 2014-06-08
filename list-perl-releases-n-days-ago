@@ -1,0 +1,11 @@
+#!/usr/bin/env perl
+
+use DateTime;
+use Log::Any::For::Builtins qw(system);
+
+die "Usage: $0 <n> ...\n" unless @ARGV;
+my $n = shift @ARGV;
+
+my $today = DateTime->today(time_zone => $ENV{TZ});
+my $day   = $today->clone->subtract(days => $n);
+system "list-perl-releases", "--date", $day->ymd, @ARGV;

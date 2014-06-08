@@ -1,7 +1,3 @@
 #!/usr/bin/env perl
 
-use DateTime;
-my $today = DateTime->today(time_zone => $ENV{TZ});
-my $start = $today->clone;
-$start->set(month => 1, day => 1);
-system "list-perl-releases", "--date-min", $start->ymd, "--date-max", $today->ymd, @ARGV;
+system "list-perl-releases-n-years-ago", 0, @ARGV;
