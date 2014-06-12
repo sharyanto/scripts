@@ -1,0 +1,3 @@
+#!/bin/bash
+# which + less (less a binary, which will be searched using which)
+${PAGER:less} "`which $*`"
