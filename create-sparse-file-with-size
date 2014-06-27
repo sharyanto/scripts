@@ -21,8 +21,15 @@ $SPEC{create} = {
             cmdline_aliases => {
                 s => {},
             },
+            req => 1,
+            pos => 1,
         },
     },
+    examples => [
+        {
+            argv => [qw/file.bin 30G/],
+        },
+    ],
 };
 sub create {
     my %args = @_;
