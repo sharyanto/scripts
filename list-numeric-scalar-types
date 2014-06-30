@@ -1,0 +1,31 @@
+#!/usr/bin/env perl
+
+#use Data::Dump qw(dump);
+use Data::Dumper;
+
+use Scalar::Util qw(looks_like_number);
+use Scalar::Util::Numeric qw(:all);
+
+sub _dump {
+    local $Data::Dumper::Terse = 1;
+    local $Data::Dumper::Indent = 0;
+    Dumper($_[0]);
+}
+
+my @n = ('inf', 'nan', '-inf', 1, '1', 1.2, '1.2', -1, -1.2, '-1', '-1.2',
+         1e100, 1e-100, 'a');
+
+print "looks_like_number (Scalar::Util $Scalar::Util::VERSION):\n";
+for (@n) {
+    printf "  %-10s %s\n", _dump($_), looks_like_number($_);
+}
+print "\n";
+
+print "Scalar::Util::Numeric:\n";
+print "value         isnum isint isuv isbig isfloat isneg isinf isnan\n";
+for (@n) {
+    printf "  %-10s  %2s   %2s    %2s   %2s    %2s      %2s    %2s    %2s\n",
+        _dump($_),
+            isnum($_), isint($_), isuv($_), isbig($_),
+                isfloat($_), isneg($_), isinf($_), isnan($_);
+}
