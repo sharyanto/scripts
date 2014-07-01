@@ -27,6 +27,10 @@ GetOptions(
             or die "Invalid end period $_[1], please use YYYY-MM\n";
         $end_period = $_[1];
     },
+    'verbose' => sub {
+        no warnings;
+        $main::LOG_LEVEL = 'info';
+    },
     'help' => sub {
         print <<_;
 Usage:
@@ -36,7 +40,10 @@ Options:
     Only download from this period.
   --end-period=YYYY-MM
     Only download until this period.
+  --verbose
+    Show progress.
 _
+        exit 0;
     },
 );
 
