@@ -1,0 +1,3 @@
+#!/bin/bash
+
+debtags search implemented-in::perl | perl -ne 'next if /^lib\S+-perl - /; print'

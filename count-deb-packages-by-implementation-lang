@@ -1,0 +1,5 @@
+#!/bin/bash
+
+for tag in `list-deb-tags | grep ^implemented-in::`; do
+  echo -e `debtags search $tag | wc -l` "\t" $tag
+done
