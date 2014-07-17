@@ -1,0 +1,26 @@
+#!/usr/bin/env perl
+
+# like list-modules, but we only want to list modules in a specific dir
+# (current directory).
+
+use 5.010;
+use strict;
+use warnings;
+use lib '.'; # a dummy use just so we load lib.pm
+
+use Module::List qw(list_modules);
+
+#if (!@ARGV) {
+#    die "Usage: $0 [prefix]\n";
+#}
+
+my $prefix = $ARGV[0] // '';
+$prefix .= "::" unless !length($prefix) || $prefix =~ /::$/;
+my $res = do {
+    use lib::none;
+    use lib '.';
+    list_modules($prefix, {list_modules=>1, recurse=>1});
+};
+for my $k (sort keys %$res) {
+    print "$k\n";
+}
