@@ -4,7 +4,7 @@ use 5.010;
 use strict;
 use warnings;
 
-use Perinci::CmdLine;
+use Perinci::CmdLine::Lite;
 
 our %SPEC;
 $SPEC{create} = {
@@ -58,5 +58,5 @@ sub create {
     [200];
 }
 
-Perinci::CmdLine->new(url => '/main/create')->run;
+Perinci::CmdLine::Lite->new(url => '/main/create')->run;
 
