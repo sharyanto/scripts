@@ -6,7 +6,7 @@ use warnings;
 
 use FileHandle;
 use Module::Path qw(module_path);
-use Perinci::CmdLine 1.04;
+use Perinci::CmdLine::Any;
 use Perinci::Sub::Gen::AccessTable qw(gen_read_table_func);
 
 our %SPEC;
@@ -201,4 +201,4 @@ if (module_path('Text::ANSITable::StyleSet::SHARYANTO::PerlReleaseTypes')) {
     $ENV{ANSITABLE_STYLE_SETS} //= '["SHARYANTO::PerlReleaseTypes"]';
 }
 
-Perinci::CmdLine->new(url => '/main/list_perl_releases')->run;
+Perinci::CmdLine::Any->new(url => '/main/list_perl_releases')->run;

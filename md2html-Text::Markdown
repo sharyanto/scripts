@@ -1,0 +1,6 @@
+#!/usr/bin/env perl
+
+# convert Markdown to HTML using Text::Markdown perl module
+
+use Text::Markdown qw(markdown);
+print markdown(join "", <>);

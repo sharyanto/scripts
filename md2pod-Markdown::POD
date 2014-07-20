@@ -1,0 +1,9 @@
+#!/usr/bin/env perl
+
+# convert Markdown to POD using Markdown::Pod perl module
+
+use Markdown::Pod;
+
+my $markdown = join "", <>;
+my $m2p = Markdown::Pod->new;
+print $m2p->markdown_to_pod(markdown=>$markdown);
