@@ -6,7 +6,7 @@
 
 use warnings;
 use strict;
-use Getopt::Long;
+use Getopt::Long::Complete qw(GetOptionsWithCompletion);
 
 my %Opt = (
            find_letters => '',
@@ -19,7 +19,10 @@ my %Opt = (
 
 # --- main
 
-GetOptions(
+GetOptionsWithCompletion(
+           {
+               'length=s' => [1..7],
+           },
            'find-letters=s' => \$Opt{find_letters},
            'found-minimum=s' => \$Opt{found_minimum},
            'avoid-letters=s' => \$Opt{avoid_letters},
