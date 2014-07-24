@@ -1,16 +1,19 @@
 #!/usr/bin/env perl
 
-# created: 2014-07-18
+# created: 2014-07-24
 
-unless (@ARGV >= 2) {
+unless (@ARGV == 1) {
     print <<'_';
-Usage example: testcomp 'cmd --^' somecmd ...
+Usage example: parse-comp-line0 'cmd --^'
 
 This will set COMP_LINE to 'cmd --' and COMP_POINT to 6 (from the position of
 the caret, which will then be stripped from COMP_LINE. After that, it will
-execute somecmd.
+execute somecmd).
 
 So, this script adds convenience compared to counting COMP_POINT manually.
+
+After that, Complete::Bash's parse_cmdline() will be called.
+
 _
     exit 0;
 }
@@ -23,4 +26,6 @@ $comp_line =~ s/\^//;
 
 $ENV{COMP_LINE}  = $comp_line;
 $ENV{COMP_POINT} = $comp_point;
-exec @ARGV;
+require Complete::Bash;
+require Data::Dump::Color;
+Data::Dump::Color::dd(Complete::Bash::parse_cmdline(undef, undef, ':='));

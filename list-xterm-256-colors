@@ -3,15 +3,19 @@
 use 5.010;
 use strict;
 use warnings;
-use Getopt::Long::Complete;
+use Getopt::Long::Complete qw(GetOptionsWithCompletion);
 
 my %opts = (cols => 1, bg=>0);
-GetOptions(
+GetOptionsWithCompletion(
+    {
+        'columns|c=i' => [1, 2, 3, 4],
+        'bg=i' => [0..255],
+    },
     'columns|c=i' => \$opts{cols},
     'bg=i' => \$opts{bg},
     'bold' => \$opts{bold},
     'reverse|r' => \$opts{reverse},
-    'help|h' => sub {
+    'help|h|?' => sub {
         print <<_;
 Usage:
 $0 --help
