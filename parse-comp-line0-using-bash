@@ -1,0 +1,18 @@
+#!/usr/bin/env perl
+
+# created: 2014-07-25
+
+use 5.010;
+use strict;
+use warnings;
+
+say <<'_';
+To see how bash parses command line, first type this:
+
+ % _x() { echo; echo "# COMP_WORDS=["; for el in "${COMP_WORDS[@]}"; do echo "<$el>"; done; echo "]"; echo "# COMP_CWORD=$COMP_CWORD"; }; complete -F _x testcmd
+
+then type and press Tab:
+
+ % testcmd foo bar <Tab>
+
+_
