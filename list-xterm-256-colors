@@ -4,12 +4,20 @@ use 5.010;
 use strict;
 use warnings;
 use Getopt::Long::Complete qw(GetOptionsWithCompletion);
+use Complete::Util qw(complete_array_elem);
 
 my %opts = (cols => 1, bg=>0);
 GetOptionsWithCompletion(
-    {
-        'columns|c=i' => [1, 2, 3, 4],
-        'bg=i' => [0..255],
+    sub {
+        my %args  = @_;
+        my $word  = $args{word};
+        my $ospec = $args{ospec};
+        if ($ospec && $ospec eq 'columns|c=i') {
+            return complete_array_elem(array=>[1, 2, 3, 4], word=>$word);
+        } elsif ($ospec && $ospec eq 'bg=i') {
+            return complete_array_elem(array=>[0..255], word=>$word);
+        }
+        [];
     },
     'columns|c=i' => \$opts{cols},
     'bg=i' => \$opts{bg},
