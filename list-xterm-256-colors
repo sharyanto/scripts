@@ -22,7 +22,7 @@ $0 --help
 $0 [opts]
 
 Options:
-  --cols N
+  --columns N
   --bg N
   --bold
   --reverse
