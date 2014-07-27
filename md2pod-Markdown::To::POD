@@ -2,6 +2,6 @@
 
 # convert Markdown to POD using Markdown::Pod perl module
 
-use Markdown::To::POD qw(markdown);
+use Markdown::To::POD qw(markdown_to_pod);
 
-print markdown(join "", <>);
+print markdown_to_pod(join "", <>);
