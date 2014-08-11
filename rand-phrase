@@ -1,0 +1,27 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Getopt::Long;
+use Module::List qw(list_modules);
+use Module::Load;
+
+my $num = 1;
+GetOptions(
+    'n=i' => \$num,
+);
+
+my $mods = list_modules("Games::Word::Phraselist::",
+                        {list_modules=>1, recurse=>1});
+my @mods = keys %$mods;
+my $mod  = $mods[rand @mods];
+
+say $mod;
+load $mod;
+my $pl = $mod->new;
+
+for (1..$num) {
+    say $pl->random_phrase();
+}

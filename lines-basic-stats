@@ -1,0 +1,17 @@
+#!/usr/bin/env perl
+
+my ($totlen, $min, $max, $avg, $n);
+
+while (<>) {
+    chomp;
+    $n++;
+    my $len = length;
+    $min = $len if !defined($min) || $min > $len;
+    $max = $len if !defined($max) || $max < $len;
+    $totlen += $len;
+}
+
+print "Number of lines: $n\n";
+print "Length of shortest line: $min\n";
+print "Length of longest line: $max\n";
+print "Average line length: ", sprintf("%.1f", $totlen/$n),"\n";
