@@ -1,0 +1,30 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Getopt::Long qw(:config bundling no_ignore_case auto_version auto_help);
+use Module::List qw(list_modules);
+use Module::Load;
+
+my $list;
+GetOptions(
+    'l=s' => \$list,
+);
+
+my @mods;
+if ($list) {
+    @mods = ("Games::Word::Phraselist::$list");
+} else {
+    my $mods = list_modules("Games::Word::Phraselist::",
+                        {list_modules=>1, recurse=>1});
+    @mods = keys %$mods;
+}
+
+for my $mod (@mods) {
+    load $mod;
+    my $pl = $mod->new;
+    say for $pl->phrases_like(qr/./);
+}
+

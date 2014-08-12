@@ -4,19 +4,28 @@ use 5.010;
 use strict;
 use warnings;
 
-use Getopt::Long;
+use Getopt::Long qw(:config bundling no_ignore_case auto_version auto_help);
 use Module::List qw(list_modules);
 use Module::Load;
 
 my $num = 1;
+my $list;
 GetOptions(
     'n=i' => \$num,
+    'l=s' => \$list,
 );
 
 my $mods = list_modules("Games::Word::Phraselist::",
                         {list_modules=>1, recurse=>1});
 my @mods = keys %$mods;
-my $mod  = $mods[rand @mods];
+die "Can't find any Games::Word::Phraselist::* modules, please install some\n"
+    unless @mods;
+my $mod;
+if ($list) {
+    $mod = "Games::Word::Phraselist::$list";
+} else {
+    $mod = $mods[rand @mods];
+}
 
 say $mod;
 load $mod;
