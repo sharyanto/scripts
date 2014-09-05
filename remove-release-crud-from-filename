@@ -70,6 +70,23 @@ EOF
 $re_prefix = qr/(?:$re_prefix)/i;
 
 my $re_suffix = join("|", map {quotemeta} sort {length($b)<=>length($a)} grep {/\S/} split "\n", <<'EOF');
+ 720p hdtv x264
+ Hindi DVDRip XviD E-SuB xRG
+.ORIGINAL.DVDRip.XviD.HORiZON-ArtSubs
+.BDRiP.AC3-5.1.XviD-AXED
+ TVrip [Eng]-JJtorrents
+.DVDSCR.XviD-BiDA
+ 720p DvDRip x264 aac vice (HDScene Release)
+.720p.BluRay.x264.anoXmous
+ 720p HDTv (Complete Movie) Torrent
+ - DVDRip - XviD - 1CDRip - [DDR]
+DVDRIP.XVID-PJRV AND PRG RELEASE
+.CC.XviD.AC3.2CD-WAF
+ 720 BDRip x264 E-SuB xRG
+ 720p DvDRip CharmeLeon Silver RG
+.720p.WEBRiP.x264
+.720p
+.1080p
 .DSR.x264-FQM
 .WEBRip
 .720p.WEBRip.H.264

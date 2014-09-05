@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
-# given a directory of dists (or the current dir), will look into each dist's
-# t/third-party/ directory and run *.t there. If there is
+# given a directory of perl dists (or the current dir), will look into each
+# dist's t/smoke/ directory and run *.t there. If there is failure, will log
 
 use 5.010;
 use strict;
@@ -15,9 +15,7 @@ use Process::Govern qw(govern_process);
 use SHARYANTO::SQL::Schema qw(create_or_update_db_schema);
 use Sys::RunAlone;
 
-my $prog = "third-party-smoker";
-my $dbh = DBI->connect("dbi:SQLite:dbname=$ENV{HOME}/$prog.db",
-                       { RaiseError => 1});
+my $prog = "smoke-dists";
 
 # should be absolute for now
 my $log_dir = "$ENV{HOME}/$prog-log";
@@ -25,24 +23,28 @@ unless (-d $log_dir) {
     mkdir $log_dir or die "Can't mkdir $log_dir: $!\n";
 }
 
-my $res = create_or_update_db_schema(
-    dbh => $dbh,
-    spec => {
-        latest_v => 1,
-        install => [
-            q[CREATE TABLE result (
-                id SERIAL PRIMARY KEY,
-                name VARCHAR(255) NOT NULL,
-                ctime TIMESTAMP NOT NULL,
-                is_success BOOL NOT NULL,
-                note TEXT,
-                UNIQUE(name, ctime)
-            )],
-        ],
-    },
-);
-die "Can't create/update DB schema: $res->[0] - $res->[1]\n"
-    unless $res->[0] == 200;
+# disabled temporarily, unused yet
+#
+#my $dbh = DBI->connect("dbi:SQLite:dbname=$ENV{HOME}/$prog.db",
+#                       { RaiseError => 1});
+#my $res = create_or_update_db_schema(
+#    dbh => $dbh,
+#    spec => {
+#        latest_v => 1,
+#        install => [
+#            q[CREATE TABLE result (
+#                id SERIAL PRIMARY KEY,
+#                name VARCHAR(255) NOT NULL,
+#                ctime TIMESTAMP NOT NULL,
+#                is_success BOOL NOT NULL,
+#                note TEXT,
+#                UNIQUE(name, ctime)
+#            )],
+#        ],
+#    },
+#);
+#die "Can't create/update DB schema: $res->[0] - $res->[1]\n"
+#    unless $res->[0] == 200;
 
 my $dists_dir;
 if (@ARGV) {
@@ -52,7 +54,7 @@ if (@ARGV) {
     $dists_dir = ".";
 }
 
-$ENV{THIRD_PARTY_TESTING} = 1;
+$ENV{AUTOMATED_TESTING} = 1;
 
 for my $dist (sort grep {-d} <*>) {
     # XXX if there is dist.ini, extract dist name from it, otherwise use dir
@@ -61,7 +63,7 @@ for my $dist (sort grep {-d} <*>) {
     $log->debugf("chdir to %s/%s ...", $dists_dir, $dist);
     local $CWD = $dist;
 
-    my $test_dir = "xt/third-party";
+    my $test_dir = "xt/smoke";
     unless (-d $test_dir) {
         $log->debug("No $test_dir found, skipping");
         next;
