@@ -5,14 +5,15 @@
 use 5.010;
 use strict;
 use warnings;
+use experimental 'smartmatch';
 
 use Data::Dump qw(dump);
 use File::Slurp;
-use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
+#use IO::Uncompress::Gunzip qw(gunzip $GunzipError); # causes error: Wide character in syswrite at /path/to/IO/Uncompress/Base.pm line 759.
 use JSON;
 use LWP::Simple;
 
-my $cachef = "allpackages.cache";
+my $cachef = "/tmp/allpackages.cache";
 
 ###
 
@@ -32,8 +33,10 @@ binmode STDOUT, ":utf8";
 my @pkgs;
 unless ((-f $cachef) && (-M _) < 7) {
     say "DBG: Downloading Debian packages list to $cachef ..." if $debug;
-    $res = get "http://packages.debian.org/unstable/allpackages?format=txt.gz";
-    gunzip(\$res => $cachef) or die "gunzip failed: $GunzipError\n";
+    #$res = get "http://packages.debian.org/unstable/allpackages?format=txt.gz";
+    #write_file("$cachef.gz", $res);
+    system "wget -q -O '$cachef.gz' http://packages.debian.org/unstable/allpackages?format=txt.gz && gunzip '$cachef.gz'";
+    $? and die "Can't download/gunzip '$cachef.gz'";
 }
 for (read_file $cachef) {
     next unless /^(lib\S+-perl) \(/;
@@ -52,7 +55,8 @@ for my $hit (@{ $res->{hits}{hits} }) {
     $dist =~ s/-\d.+//;
     push @dists, $dist;
 }
-#say "DBG: Dists: ".dump(\@dists) if $debug;
+say "DBG: Dists: ".dump(\@dists) if $debug;
+say "DBG: Perl packages: ".dump(\@pkgs) if $debug;
 
 for my $dist (@dists) {
     my $pkg = dist2deb($dist);
