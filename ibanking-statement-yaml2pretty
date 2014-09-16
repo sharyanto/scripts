@@ -16,6 +16,8 @@ if (ref($data) eq 'ARRAY' && $data->[0]+0 == 200) {
     $data = $data->[2];
 }
 
+binmode STDOUT, ":utf8";
+
 print format_pretty(
     $data->{transactions},
     {
