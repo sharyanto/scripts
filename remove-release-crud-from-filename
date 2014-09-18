@@ -70,6 +70,9 @@ EOF
 $re_prefix = qr/(?:$re_prefix)/i;
 
 my $re_suffix = join("|", map {quotemeta} sort {length($b)<=>length($a)} grep {/\S/} split "\n", <<'EOF');
+.HDTV.LOL DIM
+.HDTV.FUM LOL DIM
+.720p.WEB-DL.DD5.1.H.264
 .1080p.WEB-DL.AAC2.0.H.264-NTb
  720p hdtv x264
  Hindi DVDRip XviD E-SuB xRG
