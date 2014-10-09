@@ -1,4 +1,4 @@
-#!/usr/bin/env perl 
+#!/usr/bin/env perl
 
 #use warnings;
 use strict;
@@ -13,10 +13,15 @@ for my $file (@ARGV) {
     my $tor = new Net::BitTorrent::File($file);
     #print Dumper($tor);
     my $files = $tor->files;
-    #print Dumper($files);
-    for my $f (@$files) {
-        print "  File: $f->{path}[0] ($f->{length})\n";
-        $totsize += $f->{length};
+    if ($files) {
+        #print Dumper($files);
+        for my $f (@$files) {
+            print "  File: $f->{path}[0] ($f->{length})\n";
+            $totsize += $f->{length};
+        }
+    } else {
+        print "  Length: ", $tor->length, "\n";
+        $totsize += $tor->length;
     }
 }
 printf "Total size: %.1f GB\n", $totsize/1024/1024/1024;
