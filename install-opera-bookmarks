@@ -1,0 +1,3 @@
+#!/bin/bash
+
+org2adr ~/settings/opera-bookmarks.org >~/.opera/bookmarks.adr
