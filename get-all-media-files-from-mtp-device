@@ -1,0 +1,30 @@
+#!/usr/bin/env perl
+
+# 2014-10-21 - damn, mtp sucks
+
+use 5.010;
+use strict;
+use warnings;
+use Log::Any::For::Builtins qw(system my_qx);
+use Log::Any::App qw($log);
+
+my @files;
+
+my $out = my_qx "mtp-files";
+while ($out =~ /^File ID: (\d+)\n\s+Filename: ([^\n]+).*?^\s+Filetype: ([^\n]+)/gms) {
+    my ($id, $name, $type) = ($1, $2, $3);
+    unless ($name =~ /\.(jpe?g|mp[34]|avi)$/i) { # XXX
+        $log->debugf("Skipping %s (not media)", $name);
+        next;
+    }
+    if (-f $name) {
+        $log->debugf("Skipping %s (already exists)", $name);
+        next;
+    }
+    if (-f ".excluded/$name") {
+        $log->debugf("Skipping %s (excluded via .excluded/)", $name);
+        next;
+    }
+    $log->infof("Getting %s ...", $name);
+    system "mtp-getfile", $id, $name;
+}
