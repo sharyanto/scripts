@@ -70,7 +70,7 @@ _
 
             $args{include_renamed} //= 0 if $args{new};
 
-            my %seen_dists;
+            my %seen_dists; # value:row
             my %latest_dists;
 
             # read data from releases.txt
@@ -84,9 +84,9 @@ _
                 my $row = { map {/(\w+):(.*)/;($1,$2)} split /\t/, $line };
                 my $dist = $row->{file}; $dist =~ s/-\d.+//;
 
-                $seen_dists{$dist}++;
+                my $is_new = !$seen_dists{$dist};
+                $seen_dists{$dist} = $row;
                 $latest_dists{$dist} = $row;
-                my $is_new = $seen_dists{$dist} == 1;
                 next if $args{new} && !$is_new;
                 next if defined($args{new}) && !$args{new} && $is_new;
 
@@ -103,8 +103,11 @@ _
                     next unless $d eq $dist;
                 }
 
-                next if defined($args{include_renamed}) &&
-                    !$args{include_renamed} && $row->{oldname};
+                if (defined($args{include_renamed}) &&
+                        !$args{include_renamed} && $row->{oldname}) {
+                    %{ $seen_dists{$row->{oldname}} } = %$row;
+                    next;
+                }
 
                 push @$data, $row;
 
