@@ -1,0 +1,14 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+binmode(STDOUT, ":utf8");
+binmode(STDIN, ":utf8");
+
+while (<>) {
+    while (/([^\0-\x7f])/g) {
+        print $1;
+    }
+}
