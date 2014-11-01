@@ -1,5 +1,7 @@
 #!/usr/bin/env perl
 
+# TAG wrapped=list-perl-releases
+
 use DateTime;
 use Log::Any::For::Builtins qw(system);
 

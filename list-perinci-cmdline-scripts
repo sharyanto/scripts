@@ -1,0 +1,18 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Perinci::CmdLine::Util qw(detect_perinci_cmdline_script);
+
+for my $dir (split /:/, $ENV{PATH}) {
+    (-d $dir) or next;
+    opendir my($dh), $dir or next;
+    for my $file (readdir $dh) {
+        next if $file eq '.' || $file eq '..';
+        my $res = detect_perinci_cmdline_script(script=>"$dir/$file");
+        next if $res->[0] != 200 || !$res->[2];
+        say $file;
+    }
+}

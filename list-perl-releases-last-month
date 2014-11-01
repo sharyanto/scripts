@@ -1,3 +1,5 @@
 #!/usr/bin/env perl
 
+# TAG wrapped=list-perl-releases
+
 system "list-perl-releases-n-months-ago", 1, @ARGV;

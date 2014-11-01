@@ -1,5 +1,7 @@
 #!/usr/bin/env perl
 
+# TAG wrapped=list-perl-releases
+
 use DateTime;
 my $today = DateTime->today(time_zone => $ENV{TZ});
 system "list-perl-releases", "--date", $today->ymd, @ARGV;
