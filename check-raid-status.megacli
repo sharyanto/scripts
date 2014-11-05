@@ -1,0 +1,67 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use autodie;
+use File::Slurp;
+
+my $CACHE_PATH = "/var/cache/.check-raid-status";
+my $MAX_CACHE_AGE = 12*3600;
+my @errors;
+my @lines;
+
+my @output = `megacli -LDinfo -Lall -AALL`;
+
+my %adapters;
+my $cur_adapter;
+my $cur_vdrive;
+
+for (@output) {
+    if (/^Adapter (\d+) -- /) {
+        $cur_adapter = $1;
+        $adapters{$cur_adapter} = {};
+        next;
+    }
+    if (/^Virtual Drive: (\d+)/) {
+        $cur_vdrive = $1;
+        $adapters{$cur_adapter}{vdrives}{$cur_vdrive} = {};
+        next;
+    }
+    if (/^State\s*:\s*(.+)/) {
+        $adapters{$cur_adapter}{vdriver}{$cur_vdrive}{state} = $1;
+        if ($1 ne 'Optimal') {
+            push @errors, "State of virtual drive $cur_vdrive (adapter $cur_adapter) is $1";
+        }
+        next;
+    }
+}
+
+my $content = join "", map { "* $_\n" } @errors;
+my $cache_age = ((-M $CACHE_PATH) || 0)*24*3600;
+my $cache_content = read_file($CACHE_PATH, err_mode=>"quiet") || "";
+
+my $status_changed = ($content =~ /\S/ xor $cache_content =~ /\S/);
+
+my $msg = "";
+
+if (($status_changed && $content =~ /\S/) ||
+    ($cache_age > $MAX_CACHE_AGE && $content =~ /\S/)) {
+    $msg .= "[b][color=red]RAID STATUS WARNING, PLEASE CHECK IMMEDIATELY!!![/color][/b]\n\n";
+    $msg .= "This is $0 and here's my recent check result:\n\n";
+    $msg .= $content;
+    $msg .= "\n\n\nOutput of commands:\n[code]".join("", @output)."[/code]\n";
+} elsif ($status_changed && $content !~ /\S/) {
+    $msg .= "[b][color=green]RAID STATUS BACK TO NORMAL[/color][/b]\n\n";
+}
+
+exit 0 unless $msg;
+
+if ($ENV{DRYRUN}) {
+    print $msg;
+} else {
+    open F, "| phpbb2-post --bbcode -";
+    print F $msg;
+    close F;
+    write_file($CACHE_PATH, $content);
+}
+
