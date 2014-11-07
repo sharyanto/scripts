@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# TAG wrapped=list-perl-releases
+# FRAGMENT id=bash-completion-prog-hints command=list-perl-releases    
 
 use DateTime;
 my $today = DateTime->today(time_zone => $ENV{TZ});

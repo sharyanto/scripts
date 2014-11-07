@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
 
-# TAG wrapped=list-perl-releases
+# FRAGMENT id=bash-completion-prog-hints command=list-perl-releases    
 
 system "list-perl-releases-n-days-ago", 1, @ARGV;
