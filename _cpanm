@@ -1,0 +1,5 @@
+#!/usr/bin/env perl
+
+# placeholder
+
+# FRAGMENT id=bash-completion-prog-hints completer=1 for=cpanm,cpanminus-test
