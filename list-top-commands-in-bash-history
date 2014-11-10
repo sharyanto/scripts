@@ -1,0 +1,16 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+open my($fh), "<", "$ENV{HOME}/.bash_history";
+
+while (<>) {
+    next if /^#\d+$/; # timestamp
+    s/\s.*//;
+    # XXX strip ENV=foo ENV2=bar ...
+    $n{$_}++;
+}
+
+print "$_\t$n{$_}" for (sort {$n{$b}<=>$n{$a}} keys %n);
