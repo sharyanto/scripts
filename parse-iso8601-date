@@ -4,6 +4,13 @@ use 5.010;
 use DateTime::Format::ISO8601;
 
 for (@ARGV) {
+    print "$_: ";
     my $dt = DateTime::Format::ISO8601->parse_datetime($_);
-    say "$dt";
+    if (!$dt) {
+        print "?\n";
+        next;
+    }
+    print "$dt";
+    print " epoch:", $dt->epoch;
+    print "\n";
 }
