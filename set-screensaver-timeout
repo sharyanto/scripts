@@ -21,7 +21,11 @@ if ($detres->{desktop} eq 'kde') {
     $ct =~ s/^(Timeout\s*=\s*)(\S+)/${1}$secs/m
         or die "Can't subtitute Timeout value in $path\n";
     write_file($path, $ct);
-} elsif ($detres->{desktop} eq 'xfce') { # XXX or has xscreensaver process running
+} elsif ($detres->{desktop} eq 'gnome') { # better: has gnome-screensaver process running
+    my $secs = $mins*60;
+    system "gsettings", "set", "org.gnome.desktop.session", "idle-delay", $secs;
+    die "gsettings failed: $!\n" if $?;
+} elsif ($detres->{desktop} eq 'xfce') { # better: has xscreensaver process running
     my $path = "$ENV{HOME}/.xscreensaver";
     my $ct = read_file($path);
     my $hours = int($mins/60);
