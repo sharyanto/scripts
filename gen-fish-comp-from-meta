@@ -1,0 +1,30 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Data::Dump;
+use Perinci::Access;
+use Perinci::Sub::To::FishComplete qw(gen_fish_complete_from_meta);
+
+die "Usage: $0 <url>\n" unless @ARGV == 1;
+
+my $pa = Perinci::Access->new;
+my $res = $pa->request(meta => $ARGV[0]);
+die "Can't get meta: $res->[0] - $res->[1]\n" unless $res->[0] == 200;
+my $meta = $res->[2];
+
+(my $cmdname = $ARGV[0]) =~ s!.+/!!; $cmdname =~ s/_/-/g;
+
+$res = gen_fish_complete_from_meta(
+    meta => $meta, meta_is_normalized => 1,
+    common_opts => {},
+    per_arg_json => 1,
+    per_arg_yaml => 1,
+    cmdname => $cmdname,
+);
+die "Can't gen_fish_complete_from_meta: $res->[0] - $res->[1]\n"
+    unless $res->[0] == 200;
+
+print $res->[2];
