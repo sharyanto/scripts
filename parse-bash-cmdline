@@ -1,0 +1,14 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Complete::Bash qw(parse_cmdline);
+use Data::Dump;
+
+unless (@ARGV==1) {
+    die "Usage: $0 <cmdline>\nEx: $0 'cmd --opt val --opt \"val w/ space\"'\n";
+}
+
+dd( parse_cmdline($ARGV[0], 0, '=') );
