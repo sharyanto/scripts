@@ -1,0 +1,42 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Getopt::Long::Complete qw(GetOptionsWithCompletion);
+BEGIN {
+    GetOptionsWithCompletion(
+        sub {
+            my %args = @_;
+            if ($args{type} eq 'arg') {
+                require Complete::Riap;
+                return Complete::Riap::complete_riap_url(
+                    word=>$args{word}, type=>'function');
+            }
+            undef;
+        },
+    );
+}
+
+use Data::Dump;
+use Perinci::Access;
+use Perinci::Sub::To::CLIDocData qw(gen_cli_doc_data_from_meta);
+
+die "Usage: $0 <url>\n" unless @ARGV == 1;
+
+my $pa = Perinci::Access->new;
+my $res = $pa->request(meta => $ARGV[0]);
+die "Can't get meta: $res->[0] - $res->[1]\n" unless $res->[0] == 200;
+my $meta = $res->[2];
+
+$res = gen_cli_doc_data_from_meta(
+    meta => $meta, meta_is_normalized => 1,
+    common_opts => {'help'=>{getopt=>'help|h|?'}, 'version'=>{getopt=>'version|v'}},
+    per_arg_json => 1,
+    per_arg_yaml => 1,
+);
+die "Can't gen_cli_doc_data_from_meta: $res->[0] - $res->[1]\n"
+    unless $res->[0] == 200;
+
+dd $res->[2];
