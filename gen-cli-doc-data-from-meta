@@ -19,7 +19,7 @@ BEGIN {
     );
 }
 
-use Data::Dump;
+use Data::Dump::Color;
 use Perinci::Access;
 use Perinci::Sub::To::CLIDocData qw(gen_cli_doc_data_from_meta);
 
