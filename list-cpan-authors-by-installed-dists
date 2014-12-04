@@ -1,0 +1,48 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Dist::Util qw(list_dists);
+use Perinci::CmdLine::Lite;
+use XPAN::Query qw(list_xpan_dists);
+
+our %SPEC;
+$SPEC{list} = {
+    v => 1.1,
+    args => {
+        url => {
+            schema  => 'str*',
+            default => 'http://www.cpan.org/',
+        },
+    },
+};
+sub list {
+    my %args = @_;
+
+    # get all installed dists
+    my @dists = list_dists();
+
+    # get all dists info from CPAN, along with their author, etc
+    my %authors = map {$_->{name} => $_->{author}}
+        @{ list_xpan_dists(url => $args{url}, detail => 1) };
+
+    # gather author by dist count
+    my %num_dists; # key=PAUSE ID, val=dist count
+    my %dists; # key=PAUSE ID, val=dists
+    for my $dist (@dists) {
+        $num_dists{ $authors{$dist} // '(unknown)' }++;
+        push @{ $dists{ $authors{$dist} // '(unknown)' } }, $dist;
+    }
+
+    [200, "OK", [map { +{
+        author=>$_,
+        num_dists=>$num_dists{$_},
+        #dists=>join(", ", @{ $dists{$_} }),
+    } }
+                     sort { $num_dists{$b}<=>$num_dists{$a} }
+                         keys %num_dists]];
+}
+
+Perinci::CmdLine::Lite->new(url=>'/main/list')->run;
