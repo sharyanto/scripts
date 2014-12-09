@@ -32,7 +32,11 @@ my $meta = $res->[2];
 
 $res = gen_cli_doc_data_from_meta(
     meta => $meta, meta_is_normalized => 1,
-    common_opts => {'help'=>{getopt=>'help|h|?'}, 'version'=>{getopt=>'version|v'}},
+    common_opts => {
+        'help'=>{getopt=>'help|h|?'},
+        'version'=>{getopt=>'version|v'},
+        'log_level'=>{getopt=>'log-level=s', schema=>['str*', in=>[qw/trace debug info warn warning error fatal/]]},
+    },
     per_arg_json => 1,
     per_arg_yaml => 1,
 );

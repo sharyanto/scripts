@@ -1,0 +1,12 @@
+#!/usr/bin/env perl
+
+# run this on your shell (bash or zsh after 'autoload -U bashcompinit &&
+# bashcompinit'): complete -C testbashcomp testbashcomp. then type testbashcomp
+# and press Tab. you'll get dump file in /tmp/testbashcomp.out
+
+use Data::Dump qw(dump);
+
+open my($fh), ">", "/tmp/testbashcomp.out" or die;
+
+print $fh "=" x 80, "\n", dump(\%ENV), "\n";
+
