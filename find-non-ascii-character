@@ -1,0 +1,17 @@
+#!/usr/bin/env perl
+
+# created: 2014-12-05
+
+# malah jadi ngaco kalo ditambahin binmode?
+#binmode(STDIN, ":utf8");
+#binmode(STDOUT, ":utf8");
+my $linum = 0;
+while (<>) {
+    $linum++;
+    print "\e[32m$linum|\e[0m$_" if s/([[:^ascii:]]+)/\e[31;1m$1\e[0m/g;
+}
+
+# previous version (doesn't output utf8 correctly)
+#!/bin/bash
+#grep --color='auto' -P -n "[\x80-\xFF]" "$@"
+

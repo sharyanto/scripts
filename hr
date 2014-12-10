@@ -1,4 +1,0 @@
-#!/usr/bin/env perl
-
-use SHARYANTO::Term::Util qw(hr);
-hr($ARGV[0]);
