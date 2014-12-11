@@ -4,7 +4,7 @@ use 5.010;
 
 package MyApp;
 use Moo;
-with 'SHARYANTO::Role::TermAttrs';
+with 'Term::App::Role::Attrs';
 use Data::Dump;
 
 sub run {

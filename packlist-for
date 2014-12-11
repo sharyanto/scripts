@@ -1,5 +1,0 @@
-#!/usr/bin/env perl
-use SHARYANTO::Dist::Util qw(packlist_for);
-return unless @ARGV;
-$path = packlist_for($ARGV[0]);
-print $path, "\n" if $path;

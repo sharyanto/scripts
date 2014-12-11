@@ -11,7 +11,7 @@ use Log::Any::App '$log';
 use DBI;
 use File::chdir;
 use File::Write::Rotate;
-use Process::Govern qw(govern_process);
+use Proc::Govern qw(govern_process);
 use SQL::Schema::Versioned qw(create_or_update_db_schema);
 use Sys::RunAlone;
 
