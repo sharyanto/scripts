@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
 
-# FRAGMENT id=bash-completion-prog-hints command=list-perl-releases    
+# FRAGMENT id=shcompgen-hint command=list-perl-releases    
 
 system "list-perl-releases-n-weeks-ago", 0, @ARGV;

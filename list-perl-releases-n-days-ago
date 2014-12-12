@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# FRAGMENT id=bash-completion-prog-hints command=list-perl-releases    
+# FRAGMENT id=shcompgen-hint command=list-perl-releases    
 
 use DateTime;
 use Log::Any::For::Builtins qw(system);
