@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [[ -f "/usr/bin/konsole.orig" ]]; then
+  exec=/usr/bin/konsole.orig
+else
+  exec=/usr/bin/konsole
+fi
+
+$exec -stylesheet ~/settings/konsole.qss $*
