@@ -1,0 +1,21 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Perl::PrereqScanner::Lite;
+
+my $scanner = Perl::PrereqScanner::Lite->new;
+for my $file (@ARGV) {
+    my $res = $scanner->scan_file($file);
+    unless ($res) {
+        warn "Can't scan $file\n";
+        next;
+    }
+    my $reqs = $res->{requirements};
+    for (sort keys %$reqs) {
+        print "$file: " if @ARGV > 1;
+        print "$_=", $reqs->{$_}{minimum}{original}, "\n";
+    }
+}
