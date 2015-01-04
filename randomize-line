@@ -1,4 +1,5 @@
 #!/usr/bin/env perl
+# NOTE: this script is not really needed, there is sort -R
 $|++;
 push @_, $_ while <>;
 print while defined($_ = splice @_, rand @_, 1);
