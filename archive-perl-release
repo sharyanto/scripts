@@ -8,7 +8,7 @@ use Log::Any '$log';
 use Builtin::Logged qw(system);
 use Cwd;
 use File::Slurp qw(append_file);
-use Perinci::CmdLine;
+use Perinci::CmdLine::Any -prefer_lite=>1;
 use POSIX;
 #use String::ShellQuote;
 
@@ -167,4 +167,4 @@ sub archive_perl_release {
     [200, "OK"];
 }
 
-Perinci::CmdLine->new(url=>'/main/archive_perl_release')->run;
+Perinci::CmdLine::Any->new(url=>'/main/archive_perl_release')->run;

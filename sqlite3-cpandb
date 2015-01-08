@@ -1,0 +1,7 @@
+#!/usr/bin/env perl
+
+use CPANDB;
+
+my $dsn = CPANDB->dsn;
+$dsn =~ /^dbi:SQLite:(.+)/ or die "Can't extract path from dsn '<$dsn>'\n";
+exec "sqlite3", $1;
