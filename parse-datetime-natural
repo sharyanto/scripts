@@ -10,5 +10,5 @@ my $parser = DateTime::Format::Natural->new(time_zone=>'Asia/Jakarta');
 
 for my $s (@ARGV) {
     my $dt = $parser->parse_datetime($s);
-    say "$s\t", $parser->success ? "$dt" : "can't parse";
+    say "$s\t", $parser->success ? "$dt\t".($dt->epoch) : "can't parse";
 }
