@@ -97,7 +97,8 @@ while (<>) {
     $rest =~ /field-keywords=(.+?)(?:&|\z)/ or next;
     $query = unesc($1);
   # 2014-04-09
-  } elsif ($host =~ /kickass\.to/i) {
+  # 2015-01-13 - ternyata udah ganti domain jadi kickass.so
+ } elsif ($host =~ /kickass\.[ts]o/i) {
     $site = "kat";
     $rest =~ m!/usearch/(.+)/! or next;
     $query = unesc($1);
