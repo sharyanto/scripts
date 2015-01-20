@@ -70,6 +70,14 @@ EOF
 $re_prefix = qr/(?:$re_prefix)/i;
 
 my $re_suffix = join("|", map {quotemeta} sort {length($b)<=>length($a)} grep {/\S/} split "\n", <<'EOF');
+.720p HDTV.E7
+.DVDRip.FoV
+.HDTV.XOR
+.720p HDTV.YesTV
+.720p HDTV.HDQ
+.HDTV.FoV
+.HDTV.ASAP
+.HDTV.Caph
 .720p.WEB-DL.DD5.1.AAC2.0.H.264-YFN
 .HDTV.x264-EXCELLENCE.[VTV]
 .HDTV.LOL DIM
@@ -929,6 +937,7 @@ EOF
 $re_suffix = qr/(?:$re_suffix)/i;
 #print $re,"\n";
 
+my $OVERWRITE = $ENV{OVERWRITE};
 for (@ARGV) {
   my $old = $_;
 
@@ -945,7 +954,7 @@ for (@ARGV) {
 
   if ($old ne $_) {
     print "$old -> $_\n";
-    if (-e $_) {
+    if ((-e $_) && !$OVERWRITE) {
       warn "ERROR: $_ already exists, skipped\n";
     } else {
       rename $old, $_ or warn "ERROR: Can't rename $old -> $_: $!\n";
