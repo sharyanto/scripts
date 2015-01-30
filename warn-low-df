@@ -9,10 +9,10 @@ use Getopt::Long;
 my %opts = (parts => ["/backup"], all=>0, percent_used=>95);
 
 GetOptions(
-    "part=s"         => $opts{parts},
-    "all"            => \$opts{all},
-    "percent-used=i" => \$opts{percent_used},
-    "help"           => \$opts{help},
+    "part=s"             => $opts{parts},
+    "all|a"              => \$opts{all},
+    "percent-used|pct=i" => \$opts{percent_used},
+    "help|h|?"           => \$opts{help},
 );
 
 if ($opts{help}) {
