@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use JSON;
-use Perinci::CmdLine;
+use Perinci::CmdLine::Any;
 
 our %SPEC;
 
@@ -32,4 +32,4 @@ sub json2pretty {
     [200, "OK", from_json($json)];
 }
 
-Perinci::CmdLine->new(url=>'/main/json2pretty')->run;
+Perinci::CmdLine::Any->new(url=>'/main/json2pretty')->run;

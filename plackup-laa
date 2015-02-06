@@ -6,7 +6,7 @@ use warnings;
 use Log::Any qw($log);
 
 use Module::Load;
-use Perinci::CmdLine;
+use Perinci::CmdLine::Any;
 
 # VERSION
 
@@ -93,7 +93,7 @@ sub serve {
     [200, "OK"];
 }
 
-Perinci::CmdLine->new(url => '/main/serve')->run;
+Perinci::CmdLine::Any->new(url => '/main/serve')->run;
 
 #ABSTRACT: Serve Perl modules over HTTP(S) using the Riap::HTTP protocol
 #PODNAME: peri-htserve

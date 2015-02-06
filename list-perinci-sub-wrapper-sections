@@ -4,7 +4,7 @@ use 5.010;
 use strict;
 use warnings;
 
-use Perinci::CmdLine;
+use Perinci::CmdLine::Any;
 use Perinci::Sub::Wrapper;
 
 our %SPEC;
@@ -23,4 +23,4 @@ sub list_perinci_sub_wrapper_sections {
     [200, "OK", $res];
 }
 
-Perinci::CmdLine->new(url => '/main/list_perinci_sub_wrapper_sections')->run;
+Perinci::CmdLine::Any->new(url => '/main/list_perinci_sub_wrapper_sections')->run;

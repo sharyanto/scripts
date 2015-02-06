@@ -4,7 +4,7 @@ use 5.010;
 use strict;
 use warnings;
 
-use Perinci::CmdLine;
+use Perinci::CmdLine::Any;
 use Perinci::Sub::Wrapper;
 use SHARYANTO::Package::Util qw(list_package_contents);
 
@@ -32,4 +32,4 @@ sub list_perinci_sub_wrapper_handlers {
     [200, "OK", $res, {result_format_options=>{text=>$rfo, 'text-pretty'=>$rfo}}];
 }
 
-Perinci::CmdLine->new(url => '/main/list_perinci_sub_wrapper_handlers')->run;
+Perinci::CmdLine::Any->new(url => '/main/list_perinci_sub_wrapper_handlers')->run;

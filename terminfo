@@ -4,7 +4,7 @@ use 5.010;
 use strict;
 use warnings;
 
-use Perinci::CmdLine;
+use Perinci::CmdLine::Any;
 use String::Escape qw(printable);
 use Term::Terminfo;
 
@@ -45,4 +45,4 @@ sub dump_terminfo {
      {result_format_options=>{text=>\%rfo, "text-pretty"=>\%rfo}}];
 }
 
-Perinci::CmdLine->new(url => '/main/dump_terminfo')->run;
+Perinci::CmdLine::Any->new(url => '/main/dump_terminfo')->run;

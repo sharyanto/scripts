@@ -6,7 +6,7 @@ use warnings;
 use Log::Any::App '$log';
 
 use Log::Any::For::Builtins qw(system);
-use Perinci::CmdLine;
+use Perinci::CmdLine::Any;
 
 our %SPEC;
 
@@ -41,4 +41,4 @@ sub create_root_ca {
     [200];
 }
 
-Perinci::CmdLine->new(url => '/main/create_root_ca')->run;
+Perinci::CmdLine::Any->new(url => '/main/create_root_ca')->run;

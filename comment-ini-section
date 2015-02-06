@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use Config::INIFiles;
-use Perinci::CmdLine;
+use Perinci::CmdLine::Any;
 
 our %SPEC;
 
@@ -36,4 +36,4 @@ sub comment_ini_section {
     #[200, "OK"];
 }
 
-Perinci::CmdLine->new(url=>'/main/comment_ini_section')->run;
+Perinci::CmdLine::Any->new(url=>'/main/comment_ini_section')->run;

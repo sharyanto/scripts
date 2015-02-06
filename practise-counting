@@ -4,7 +4,7 @@ use 5.010;
 use strict;
 use warnings;
 
-use Perinci::CmdLine;
+use Perinci::CmdLine::Any;
 use Log::Any::For::Builtins qw(system);
 
 binmode STDOUT, ":utf8";
@@ -194,4 +194,4 @@ sub gen {
 }
 
 binmode(STDOUT, ":utf8");
-Perinci::CmdLine->new(url=>'/main/gen')->run;
+Perinci::CmdLine::Any->new(url=>'/main/gen')->run;

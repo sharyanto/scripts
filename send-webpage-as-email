@@ -4,7 +4,7 @@ use 5.010;
 use strict;
 use warnings;
 
-use Perinci::CmdLine;
+use Perinci::CmdLine::Any;
 
 our %SPEC;
 $SPEC{send_webpage_as_email} = {
@@ -69,6 +69,6 @@ sub send_webpage_as_email {
     [200];
 }
 
-Perinci::CmdLine->new(
+Perinci::CmdLine::Any->new(
     url => '/main/send_webpage_as_email',
 )->run;

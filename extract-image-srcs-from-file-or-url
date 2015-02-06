@@ -7,5 +7,5 @@
 die "temporarily not working yet, ".
     "please use SHARYANTO::HTML::Extract::ImageLinks\n";
 
-use Perinci::CmdLine;
-Perinci::CmdLine->new(url=>'/SHARYANTO/HTML/Extract/ImageLinks/extract_image_links')->run;
+use Perinci::CmdLine::Any;
+Perinci::CmdLine::Any->new(url=>'/SHARYANTO/HTML/Extract/ImageLinks/extract_image_links')->run;

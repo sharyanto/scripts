@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
 use 5.010;
-use Perinci::CmdLine;
+use Perinci::CmdLine::Any;
 
 our %SPEC;
 
@@ -63,4 +63,4 @@ sub calc_hours_minutes {
     [200, "OK", sprintf "+%02d:%02d", $h, $m];
 }
 
-Perinci::CmdLine->new(url => '/main/calc_hours_minutes')->run;
+Perinci::CmdLine::Any->new(url => '/main/calc_hours_minutes')->run;

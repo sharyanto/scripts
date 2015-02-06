@@ -10,7 +10,7 @@ use warnings;
 
 use File::Slurp qw(edit_file);
 use File::Temp qw(tempfile);
-use Perinci::CmdLine;
+use Perinci::CmdLine::Any;
 use String::ShellQuote;
 use Log::Any::For::Builtins qw(system);
 
@@ -58,4 +58,4 @@ sub tts {
     [200, "OK"];
 }
 
-Perinci::CmdLine->new(url => '/main/tts')->run;
+Perinci::CmdLine::Any->new(url => '/main/tts')->run;
