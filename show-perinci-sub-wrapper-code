@@ -15,11 +15,24 @@ use Data::Dump::Color;
 use Perinci::Sub::Wrapper qw(wrap_sub);
 
 my $meta;
-if (@ARGV) {
-    $meta = eval shift; die $@ if $@;
+if ($0 =~ /-from-riap/) {
+    if (@ARGV) {
+        require Perinci::Access;
+        my $url = shift;
+        my $res = Perinci::Access->new->request(meta => $url);
+        die "Can't meta $url: $res->[0] - $res->[1]" unless $res->[0] == 200;
+        $meta = $res->[2];
+    } else {
+        say "Hint: you can specify function Riap URI in first arg, e.g.: $0 '/WWW/PAUSE/Simple/upload_file'";
+        $meta = {v=>1.1};
+    }
 } else {
-    say "Hint: you can specify metadata in first arg, e.g.: $0 '{v=>1.1, args=>{a=>{}, b=>{}}, result_naked=>1}'";
-    $meta = {v=>1.1};
+    if (@ARGV) {
+        $meta = eval shift; die $@ if $@;
+    } else {
+        say "Hint: you can specify metadata in first arg, e.g.: $0 '{v=>1.1, args=>{a=>{}, b=>{}}, result_naked=>1}'";
+        $meta = {v=>1.1};
+    }
 }
 
 my $wrap_args = {meta=>$meta, sub=>sub{}};
