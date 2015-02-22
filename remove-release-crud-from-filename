@@ -70,6 +70,7 @@ EOF
 $re_prefix = qr/(?:$re_prefix)/i;
 
 my $re_suffix = join("|", map {quotemeta} sort {length($b)<=>length($a)} grep {/\S/} split "\n", <<'EOF');
+.AC3
 .720p HDTV.E7
 .DVDRip.FoV
 .HDTV.XOR
