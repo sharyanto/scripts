@@ -7,6 +7,8 @@ use warnings;
 use Perl::PrereqScanner::Lite;
 
 my $scanner = Perl::PrereqScanner::Lite->new;
+$scanner->add_extra_scanner('Moose');
+$scanner->add_extra_scanner('Version');
 for my $file (@ARGV) {
     my $res = $scanner->scan_file($file);
     unless ($res) {
