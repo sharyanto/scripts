@@ -44,4 +44,4 @@ if (@ARGV) {
 }
 
 my $res = wrap_sub(%$wrap_args);
-if ($0 =~ /-with-result$/) { say "Wrap result:"; dd $res }
+if ($0 =~ /-with-result/) { say "Wrap result:"; dd $res }
