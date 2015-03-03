@@ -25,7 +25,7 @@ while (<>) {
         $x =~ /images/ ? "google images" :
         $x =~ /videosearch/ ? "google video" :
         $x =~ /maps/ ? "google maps" :
-        $x =~ /news/ ? "google video" :
+        $x =~ /news/ ? "google news" :
         $x =~ /blogsearch/ ? "google blogs" :
         $x =~ /groups/ ? "google groups" :
         "google";
@@ -101,6 +101,18 @@ while (<>) {
  } elsif ($host =~ /kickass\.[ts]o/i) {
     $site = "kat";
     $rest =~ m!/usearch/(.+)/! or next;
+    $query = unesc($1);
+  # 2015-03-02
+  } elsif ($host =~ /bing\.com/i) {
+    $rest =~ m!/(images|search|videos|news|maps)!i or next;
+    $x = $1;
+    $site =
+        $x =~ /images/ ? "bing images" :
+        $x =~ /videos/ ? "bing videos" :
+        $x =~ /maps/ ? "bing maps" :
+        $x =~ /news/ ? "bing news" :
+        "bing";
+    $rest =~ /q=(.+?)(?:&|\z)/ or next;
     $query = unesc($1);
   }
 
