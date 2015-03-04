@@ -1,0 +1,28 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use DBI;
+
+# find google-chrome profile directory, probably can be turned into a module as
+# well, we need to parse profiles.ini
+my $profile_dir;
+{
+    my @dirs = grep {(-d) && (-f "$_/History")}
+        glob "$ENV{HOME}/.config/google-chrome/*";
+    $profile_dir = $dirs[0];
+    die "Can't find any google chrome profile dir" unless $profile_dir;
+}
+
+my $path = "$profile_dir/History";
+die "Can't find $path" unless -f $path;
+
+my $dbh = DBI->connect("dbi:SQLite:dbname=$path", "", "", {RaiseError=>1});
+my $sth = $dbh->prepare("SELECT url FROM urls ORDER BY last_visit_time");
+$sth->execute;
+while (my $row = $sth->fetchrow_hashref) {
+    say $row->{url};
+}
+
