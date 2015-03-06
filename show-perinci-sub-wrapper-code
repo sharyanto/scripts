@@ -3,6 +3,7 @@
 BEGIN {
     our $File_Log_Level = 'off';
     our $Log_Level = 'trace';
+    $ENV{LOG} = 1;
     $ENV{LOG_PERINCI_WRAPPER_CODE} = 1;
 }
 
