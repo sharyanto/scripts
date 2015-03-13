@@ -1,0 +1,14 @@
+#!/usr/bin/env perl
+
+die "Usage: $0 <old> <new>\n" unless @ARGV==2;
+my ($old, $new) = @ARGV;
+
+if ($old == $new) {
+    printf "Old is the same as new\n";
+} elsif ($old > $new) {
+    printf "New is %.2f%% lower than old\n", ($old-$new)/$old*100.0;
+    printf "New is %.2fx slower than old\n", $old/$new;
+} elsif ($old < $new) {
+    printf "New is %.2f%% higher than old\n", ($new-$old)/$old*100.0;
+    printf "New is %.2fx faster than old\n" , $new/$old;
+}
