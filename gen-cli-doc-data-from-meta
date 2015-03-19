@@ -36,6 +36,13 @@ $res = gen_cli_doc_data_from_meta(
         'help'=>{getopt=>'help|h|?'},
         'version'=>{getopt=>'version|v'},
         'log_level'=>{getopt=>'log-level=s', schema=>['str*', in=>[qw/trace debug info warn warning error fatal/]]},
+        'naked_res'=>{
+            getopt=>'naked-res!',
+            default=>1,
+            summary => 'When outputing as JSON, strip result envelope',
+            'summary.alt.bool.not' => 'When outputing as JSON, add result envelope',
+        }, # testing
+        'format'=>{getopt=>'format=s'},
     },
     per_arg_json => 1,
     per_arg_yaml => 1,

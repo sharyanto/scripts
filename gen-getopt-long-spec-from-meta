@@ -4,7 +4,7 @@ use 5.010;
 use strict;
 use warnings;
 
-use Data::Dump;
+use Data::Dump::Color;
 use Perinci::Access;
 use Perinci::Sub::GetArgs::Argv qw(gen_getopt_long_spec_from_meta);
 
@@ -17,11 +17,21 @@ my $meta = $res->[2];
 
 $res = gen_getopt_long_spec_from_meta(
     meta => $meta, meta_is_normalized => 1,
-    common_opts => {},
+    common_opts => {
+        format => {
+            getopt => 'format=s',
+        },
+        naked_res => {
+            getopt => 'naked-res!',
+        },
+        help => {
+            getopt => 'help|h|?',
+        },
+    },
     per_arg_json => 1,
     per_arg_yaml => 1,
 );
 die "Can't gen_getopt_long_spec_from_meta: $res->[0] - $res->[1]\n"
     unless $res->[0] == 200;
 
-dd $res->[2];
+dd $res;
