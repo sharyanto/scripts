@@ -1,0 +1,13 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+my @rels = @ARGV ? @ARGV : (map {chomp; $_} <STDIN>);
+
+for (@rels) {
+    s/-\d.+//;
+    s/-/::/g;
+    say;
+}
