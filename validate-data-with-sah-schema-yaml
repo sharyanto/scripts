@@ -1,0 +1,33 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Perinci::CmdLine::Any;
+
+our %SPEC;
+
+$SPEC{validate} = {
+    v => 1.1,
+    args => {
+        schema => {schema=>'str*', req=>1, pos=>0, cmdline_src=>'file'},
+        data => {schema=>'any', req=>1, pos=>1},
+    },
+    result_naked => 1,
+};
+sub validate {
+    require Data::Sah;
+    require YAML::XS;
+
+    my %args = @_;
+
+    my $v = Data::Sah::gen_validator(
+        YAML::XS::Load($args{schema}),
+        {return_type=>'str'},
+    );
+
+    $v->($args{data});
+}
+
+Perinci::CmdLine::Any->new(url => '/main/validate')->run;
