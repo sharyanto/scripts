@@ -1,0 +1,90 @@
+#!/usr/bin/env perl
+
+# to see info messages, run with VERBOSE=1. there are also DEBUG=1 or TRACE=1 if
+# you want to see more stuffs.
+
+use 5.010;
+use strict;
+use warnings;
+use experimental 'smartmatch';
+
+use File::Which;
+use Getopt::Long;
+use Log::Any::App '$log';
+use Log::Any::For::Builtins 'system';
+use LWP::UserAgent;
+
+my $limit_page;
+GetOptions(
+    'verbose' => sub {
+        no warnings;
+        $main::LOG_LEVEL = 'info';
+    },
+    'max-page=i' => \$limit_page,
+    'help' => sub {
+        print <<_;
+Usage:
+  $0 [options] <username>
+Options:
+  --max-page=i    Only go until this page.
+  --verbose       Show progress.
+_
+        exit 0;
+    },
+);
+
+sub get {
+    state $ua = LWP::UserAgent->new;
+    $log->infof("Getting %s ...", $_[0]);
+    my $res = $ua->get($_[0]);
+    die "Can't get $_[0]: " . $res->code . " - " . $res->message . "\n"
+        unless $res->is_success;
+    $res->content;
+}
+
+die "wget is needed to download the articles (+images +convert links)\n"
+    unless which("wget");
+
+die "Usage: $0 [options] <username>\n" unless @ARGV == 1;
+my $user = $ARGV[0];
+
+my $domain = "$user.wordpress.com";
+my $site_url = "https://$domain";
+
+my @article_rel_urls;
+{
+    my $max_page = 1;
+    my $page = 1;
+    while (1) {
+        last if defined($limit_page) && $page > $limit_page;
+        my $url = "$site_url/page/$page/";
+        my $content = get($url);
+
+        # grab next page link
+        while ($content =~ m!href="\Q$site_url\E/page/(\d+)/!g) {
+            next unless $max_page < $1;
+            $max_page = $1;
+            $log->infof("Found that there is page number %d", $max_page);
+        }
+
+        # grab article links
+        while ($content =~ m!href="\Q$site_url\E(/\d+/\d+/\d+/[^/]+)/!g) {
+            next if $1 ~~ @article_rel_urls;
+            push @article_rel_urls, $1;
+            $log->infof("Found article: %s", $1);
+        }
+
+        $page++;
+        last if $max_page < $page;
+    }
+}
+
+for my $rel_url (sort @article_rel_urls) {
+    if (-d "$domain$rel_url") {
+        $log->infof('Skipped article (already downloaded): %s', $rel_url);
+        next;
+    }
+    $log->infof("Downloading article: %s ...", $rel_url);
+    system "wget", "-k", "-p", "-nc",
+        (("-q") x !$log->is_debug), "$site_url$rel_url/";
+}
