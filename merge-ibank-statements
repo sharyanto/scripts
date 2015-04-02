@@ -1,0 +1,176 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Data::Dmp;
+use Perinci::CmdLine::Any;
+use Log::Any::IfLOG '$log';
+
+our %SPEC;
+
+# normalize date
+sub _nd {
+    my $date = shift;
+    $date =~ s/ /T/;
+    $date;
+}
+
+sub _cmp_tx {
+    my ($tx1, $tx2) = @_;
+    return 0 if !$tx1 && !$tx2;
+    return 1 if  $tx1 && !$tx2;
+    return 1 if !$tx1 &&  $tx2;
+
+    # sometimes there's a chagne in description e.g. "TARIKAN ATM 22/01" becomes
+    # "TARIKAN ATM\nTARIKAN ATM 22/01"
+
+    my $str1 = join("|", _nd($tx1->{date}),substr($tx1->{description},0,5), $tx1->{amount});
+    my $str2 = join("|", _nd($tx2->{date}),substr($tx2->{description},0,5), $tx2->{amount});
+    $log->tracef("Comparing tx1 <%s> with tx2 <%s>", $str1, $str2);
+    $str1 cmp $str2;
+}
+
+$SPEC{merge_ibank_statements} = {
+    v => 1.1,
+    summary => 'Merge several ibank statements to form a large one',
+    description => <<'_',
+
+Since internet banking sites (in Indonesia at least) usually only allow
+downloading at most one-month worth of bank statement, this script can be used
+to merge them together into larger (e.g. yearly) one.
+
+Note that you have to specify the input
+
+_
+    args => {
+        output_file => {
+            summary => 'YAML file which will contain the merged statements',
+            schema => 'str*',
+            req => 1,
+            pos => 0,
+            'x.schema.entity' => 'filename',
+            'x.completion' => [filename => {file_regex_filter => qr/\.(yml|yaml)$/i}],
+            description => <<'_',
+
+If the file exists its data will be appended to.
+
+_
+            cmdline_aliases => {o=>{}},
+        },
+        input_files => {
+            summary => 'One or more input files',
+            'x.name.is_plural' => 1,
+            schema => ['array*', of=>'str*', min_len=>1],
+            'x.element_completion' => [filename => {file_regex_filter => qr/\.(yml|yaml)$/i}],
+            req => 1,
+            pos => 1,
+            greedy => 1,
+            cmdline_aliases => {i=>{}},
+        },
+    },
+};
+sub merge_ibank_statements {
+    require YAML::XS;
+
+    my %args = @_;
+
+    my $output;
+    my $changed;
+    if (-f $args{output_file}) {
+        $output = YAML::XS::LoadFile($args{output_file});
+    } else {
+        $output = {transactions=>[]};
+    }
+
+    for my $input_file (@{ $args{input_files} }) {
+        return [500, "Input file '$input_file' doesn't exist"]
+            unless -f $input_file;
+        my $input = YAML::XS::LoadFile($input_file);
+        if (!$output->{account}) {
+            # this is the first file to add to output
+            $output = $input;
+            delete $output->{_total_credit_in_stmt};
+            delete $output->{_total_debit_in_stmt};
+            $changed++;
+            next;
+        }
+        if ($input->{account} ne $output->{account}) {
+            return
+                [412, "Input $input_file: statement does not belong to ".
+                     "the same account as existing output ($output->{account} ".
+                         "expected, but got $input->{account} instead)"];
+        }
+        if (_nd($input->{start_date}) lt _nd($output->{start_date})) {
+            return
+                [412, "Input $input_file: start_date ($input->{start_date} is ".
+                     "less than output's ($output->{start_date})"];
+        }
+        if (_nd($input->{end_date}) lt _nd($output->{end_date})) {
+            return
+                [412, "Input $input_file: end_date ($input->{end_date} is ".
+                     "less than output's ($output->{end_date})"];
+        }
+
+        my $last_tx_date = _nd($output->{transactions}[-1]{date});
+
+        my $otxs = $output->{transactions};
+
+        my @txs_with_last_tx_date = grep {
+            _nd($_->{date}) eq $last_tx_date
+        } @$otxs;
+
+        my $i = 0;
+        my $j;
+        for my $tx (@{ $input->{transactions} }) {
+            $i++;
+            my $tx_date = _nd($tx->{date});
+            next if $tx_date lt $last_tx_date;
+            # for the transaction in the same date, we require that all
+            # @txs_with_last_tx_date exist
+            if ($tx_date eq $last_tx_date) {
+                if (!defined($j)) { $j = 0 } else { $j++ }
+                if ($j >= @txs_with_last_tx_date) {
+                    # it's a new transaction, append it
+                    $log->tracef("Adding tx: %s", $tx);
+                    push @$otxs, $tx;
+                    $changed++;
+                } else {
+                    # already in output, compare it to make sure
+                    my $otx = $txs_with_last_tx_date[$j];
+                    if (_cmp_tx($otx, $tx)) {
+                        return [
+                            412, "Input $input_file: Transaction #$i: ".
+                                "Missing in input: " .
+                                    dmp($txs_with_last_tx_date[$j])];
+                    }
+                    if ($otx->{is_pending} != $tx->{is_pending}) {
+                        $otx->{is_pending} = $tx->{is_pending};
+                        $changed++;
+                    }
+                }
+                next;
+            } else {
+                undef $j;
+                $log->tracef("Adding tx: %s", $tx);
+                push @$otxs, $tx;
+                $changed++;
+            }
+        } # for tx
+        $output->{end_date} = $input->{end_date};
+    } # for input_file
+
+    # write file
+    if ($changed) {
+        $log->infof("Writing output file '%s'", $args{output_file});
+        YAML::XS::DumpFile($args{output_file}, $output);
+    }
+
+    [200, "OK"];
+}
+
+Perinci::CmdLine::Any->new(
+    log => 1,
+    url => '/main/merge_ibank_statements',
+)->run;
