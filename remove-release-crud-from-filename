@@ -70,6 +70,16 @@ EOF
 $re_prefix = qr/(?:$re_prefix)/i;
 
 my $re_suffix = join("|", map {quotemeta} sort {length($b)<=>length($a)} grep {/\S/} split "\n", <<'EOF');
+ HDTV x264
+.720p.HDTV.x264-KILLERS [PublicHD]
+.DSR.x264-NoGRP
+.HDTV.x264-KILLERS [GloTV]
+ 720P HDTV x264 AHMED
+ HDTV x264 AHMED
+.WEB-DL.x264.4yEo
+ HDTV x264-AHMED
+.HDTV.x264-LTBS.mp4
+.HDTV.x264-LTBS
 _720p_bluray_x264-sujaidr
 .720p.bluray.sujaidr
 .720p.bluray.x264-sujaidr
