@@ -1,0 +1,16 @@
+#!/bin/bash
+
+echo "This week:"
+list-perl-releases-this-week --new --detail
+
+echo
+echo "Last week:"
+list-perl-releases-last-week --new --detail
+
+echo
+echo "2 weeks ago:"
+list-perl-releases-n-weeks-ago 2 --new --detail
+
+echo
+echo "3 weeks ago:"
+list-perl-releases-n-weeks-ago 3 --new --detail
