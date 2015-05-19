@@ -1,0 +1,15 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+$^X =~ m!(.+/perlbrew/perls/[^/]+)/bin/perl! or
+    die "current perl doesn't seem to be from perlbrew\n";
+
+my $libdir = "$1/lib/site_perl";
+
+(-d "$libdir.0") or die "$libdir.0 doesn't exist\n";
+(-d $libdir) and die "$libdir already exists\n";
+
+rename "$libdir.0", $libdir;
