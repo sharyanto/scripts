@@ -1,0 +1,11 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Module::CoreList::More;
+
+my %modules = Module::CoreList::More->list_still_core_modules;
+
+say for sort keys %modules;
