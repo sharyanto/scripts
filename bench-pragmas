@@ -1,0 +1,18 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Benchmark::Command;
+
+Benchmark::Command::run(60, {
+    none                => ['perl', '-e1'],
+    strict              => ['perl', '-e', 'use strict'],
+    '-w'                => ['perl', '-we1'],
+    warnings            => ['perl', '-e', 'use warnings'],
+    'strict+warnings'   => ['perl', '-e', 'use strict;use warnings'],
+    'use5.010'          => ['perl', '-e', 'use 5.010'],
+    'use5.010+strict+w' => ['perl', '-e', 'use 5.010;use strict;use warnings'],
+    Carp                => ['perl', '-e', 'use Carp'],
+});
