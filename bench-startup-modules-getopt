@@ -1,0 +1,20 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Benchmark::Command;
+
+# common core modules usually used at the top of modules/scripts
+
+Benchmark::Command::run(
+    undef,
+    {
+        'none'                      => [$^X, "-e1"],
+        'Getopt::Long'              => [$^X, "-e", "use Getopt::Long"],
+        'Getopt::Long::Complete'    => [$^X, "-e", "use Getopt::Long::Complete"],
+        'Getopt::Long::Descriptive' => [$^X, "-e", "use Getopt::Long::Descriptive"],
+        'Getopt::Long::Subcommand'  => [$^X, "-e", "use Getopt::Long::Subcommand"],
+    },
+);
