@@ -1,0 +1,15 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Benchmark::Command;
+
+# for testing only per-cmd option: env
+
+Benchmark::Command::run(50, {
+    'none'      => [{}, $^X, "-e1"],
+    'SDL'       => [{env=>{PERL_UNICODE=>""}}, $^X, "-e1"],
+    'SDL'       => [{env=>{PERL_UNICODE=>""}}, $^X, "-e1"],
+});
