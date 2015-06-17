@@ -1,0 +1,8 @@
+#!/usr/bin/env perl
+
+while (<>) {
+    m!\s*<li id="(page\d+)">(http://epaper.pikiran-rakyat.com/[^<]+)</li>!
+        and push @links, qq(<img src="$2" alt="$1" />\n);
+}
+
+print for @links;
