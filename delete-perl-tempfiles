@@ -1,0 +1,11 @@
+#!/usr/bin/env perl
+
+# delete files that look like it's created by tempfile() using its default
+# template
+
+for (<*>) {
+    next unless -f;
+    next unless /\A[A-Za-z0-9_]{10}\z/;
+    print "$_\n";
+    unlink($_) unless $ENV{DRY_RUN};
+}
