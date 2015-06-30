@@ -1,16 +1,21 @@
-#!/bin/bash
+#!/usr/bin/env perl
 
-echo "This week:"
-list-perl-releases-this-week --new --detail
+use 5.010;
+use strict;
+use warnings;
 
-echo
-echo "Last week:"
-list-perl-releases-last-week --new --detail
+say "This week:";
+system "list-perl-releases-this-week", "--new", "--detail";
 
-echo
-echo "2 weeks ago:"
-list-perl-releases-n-weeks-ago 2 --new --detail
+say "";
+say "Last week:";
+system "list-perl-releases-last-week", "--new", "--detail";
 
-echo
-echo "3 weeks ago:"
-list-perl-releases-n-weeks-ago 3 --new --detail
+my $i = 2;
+my $limit = $ARGV[0] // 3;
+while ($i <= $limit) {
+    say "";
+    say "$i weeks ago:";
+    system "list-perl-releases-n-weeks-ago", $i, "--new", "--detail";
+    $i++;
+}
