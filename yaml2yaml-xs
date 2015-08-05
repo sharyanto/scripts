@@ -1,8 +1,0 @@
-#!/usr/bin/env perl
-
-use YAML::XS;
-
-undef $/;
-
-print Dump(Load(scalar <>));
-

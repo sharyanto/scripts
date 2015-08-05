@@ -1,9 +1,0 @@
-#!/usr/bin/ruby
-
-require 'yaml'
-require 'pp'
-
-$/ = nil
-$_ = gets
-
-pp YAML::load($_)
