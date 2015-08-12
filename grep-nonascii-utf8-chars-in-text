@@ -1,0 +1,12 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+binmode(STDOUT, ":utf8");
+binmode(STDIN, ":utf8");
+
+while (<>) {
+    s/([^\0-\x7f]+)/\e[31m$1\e[0m/g and print;
+}
