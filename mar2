@@ -1,10 +1,2 @@
 #!/bin/bash
-#declare files
-#if [[ $# == 0 ]]; then
-#    files=("*")
-#else
-#    files=("$*")
-#fi
-#cmd-rand-args mplayer ${files[@]} # mplayer sering crash di pc rumah gw yg mmg agak buggy
-#cmd-rand-args smplayer */*        # ditto
-cmd-rand-args padsp mpg123 -C -- */*
+mpv --shuffle "$@" -- */*
