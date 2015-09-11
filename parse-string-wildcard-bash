@@ -1,0 +1,15 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Data::Dump;
+use String::Wildcard::Bash qw($RE_WILDCARD_BASH);
+
+if (@ARGV != 1) { die "Usage: $0 <string>\n" }
+
+while ($ARGV[0] =~ /$RE_WILDCARD_BASH/g) {
+    my %m = %+;
+    dd \%m;
+}
