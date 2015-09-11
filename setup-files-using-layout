@@ -1,0 +1,14 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Perinci::CmdLine::Classic;
+
+BEGIN { no warnings; $main::Log_Level = 'info' }
+
+Perinci::CmdLine::Classic->new(
+    url=>'/Setup/File/Layout/setup_files_using_layout',
+    undo=>1,
+)->run;
