@@ -1,0 +1,12 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Devel::Platform::Info;
+my $info = Devel::Platform::Info->new();
+my $data = $info->get_info();
+
+use Data::Dump;
+dd $data;
