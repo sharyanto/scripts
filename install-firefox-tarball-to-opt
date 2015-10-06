@@ -1,0 +1,29 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use File::chdir;
+use IPC::System::Options qw(system);
+
+die "Usage: $0 <tarball>\n" unless @ARGV == 1;
+die "No such file or directory: $!\n" unless -f $ARGV[0];
+die "Unknown tarball name pattern: $ARGV[0]\n" unless $ARGV[0] =~ m!(?:.+/)?firefox-(\d+(?:\.\d+)*)(?:-amd64|-x86)?\.tar(?:\.bz2|\.gz\.xz)\z!;
+
+my $ver = $1;
+die "Version $ver already installed\n" if -d "/opt/firefox-$ver";
+
+mkdir "/opt/firefox-$ver" or die "Can't mkdir /opt/firefox-$ver: $!\n";
+$CWD = "/opt/firefox-$ver";
+system({die=>1, shell=>0}, "tar", "xf", $ARGV[0]);
+system({die=>1, shell=>1}, "mv firefox firefox.dir && mv firefox.dir/* .");
+rmdir "firefox.dir" or die "Can't rmdir 'firefox.dir': $!\n";
+
+$CWD = "/opt";
+if ((-l "firefox") || !(-e "firefox")) {
+    if (-l "firefox") {
+        unlink "firefox" or die "Can't rm 'firefox': $!\n";
+    }
+    symlink "firefox-$ver", "firefox" or die "Can't symlink: $!\n";
+}
