@@ -1,0 +1,50 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use IPC::System::Options qw(system);
+use Perinci::CmdLine::Any;
+
+our %SPEC;
+
+$SPEC{downsize} = {
+    v => 1.1,
+    summary => 'Downsize videos',
+    args => {
+        files => {
+            schema => ['array*', of=>'str*', min_len=>1],
+            'x.name.is_plural' => 1,
+            pos => 0,
+            req => 1,
+            greedy => 1,
+        },
+    },
+};
+sub downsize {
+    my %args = @_;
+
+    for my $file (@{ $args{files} }) {
+        my $output_file = $file;
+        $output_file =~ s/(\.\w+)$/.480p.1400kbit.mp4/
+            or $output_file .= ".480p.1400kbit.mp4";
+
+        system(
+            {log=>1},
+            "ffmpeg",
+            "-i", $file,
+            "-r", 30,
+            "-s", "hd480",
+            "-minrate", 1400000,
+            "-strict", "experimental",
+            $output_file,
+        );
+    }
+    [200];
+}
+
+Perinci::CmdLine::Any->new(
+    url => '/main/downsize',
+    log => 1,
+)->run;
