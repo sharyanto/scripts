@@ -75,7 +75,7 @@ _
 
             # read data from releases.txt
             my $archive_dir = $args{archive_dir} //
-                "$ENV{HOME}/proj/perl/releases";
+                "$ENV{HOME}/repos/priv-releases-perl";
             splice @$data, 0;
             my $fh = FileHandle->new("$archive_dir/releases.txt", "r") or
                 return [400, "Can't open releases.txt in $archive_dir: $!"];

@@ -23,7 +23,7 @@ Copy tarball to perl release archive directory. The perl release archive
 directory is structured into REPO/STATE/ (or REPO/STATE/YEAR for published
 state).
 
-REPO is determined as follows: if
+REPO is determined as follows: XXX
 
 _
     args => {
@@ -35,15 +35,19 @@ _
         },
         archive_dir => {
             schema => 'str*',
+            req => 1,
             summary => 'Archive directory',
             description => <<'_',
 
-Defaults to ~/proj/perl/releases.
-
 _
+        },
+        log_files => {
+            schema => ['array*', of=>'str*'],
+            'x.name.is_plural' => 1,
         },
         darkpan_dir => {
             schema => 'str*',
+            req => 1,
             summary => 'DarkPAN directory',
             description => <<'_',
 
@@ -52,6 +56,9 @@ If you specify this, you'll need to specify `pause_id` also. Currently using
 `OrePAN` for this.
 
 _
+        },
+        repo => {
+            schema => 'str*',
         },
         pause_id => {
             schema => 'str*',
@@ -91,24 +98,13 @@ sub archive_perl_release {
     my ($ver) = $tarball =~ /.+-(\d.*)\.(?:tar(?:\.\w+)?|zip)$/
         or return [400, "Can't parse version from tarball name"];
 
-    my $archive_dir = $args{archive_dir} // "$ENV{HOME}/proj/perl/releases";
+    my $archive_dir = $args{archive_dir}
+        or return [400, "Please specify archive_dir"];
     (-d $archive_dir)
         or return [412, "Archive directory does not exist: $archive_dir"];
 
-    my $cwd = getcwd;
-    my $repo_name = $cwd; $repo_name =~ s!.+/!!;
-    my @relchs = glob ".tag-release-channel-*";
-    my $relch = "";
-    if (@relchs) { $relch = $relchs[0]; $relch =~ s/^\.tag-release-channel-// }
-    my @projs = glob ".tag-proj-*";
-    for (@projs) { s/^\.tag-proj-// }
-    my $repo = @projs ? ($relch ? "$projs[0]-$relch" : $projs[0]) : "cpan";
-    (-d "$archive_dir/$repo")
-        or return [412, "Repo directory does not exist under archive: ".
-                       "$archive_dir/$repo"];
-
     my $state = $args{state} // 'published';
-    my $dir = "$archive_dir/$repo/$state";
+    my $dir = "$archive_dir/$state";
     (-d $dir)
         or return [412, "State directory does not exist under archive/repo: ".
                        "$dir"];
@@ -129,7 +125,8 @@ sub archive_perl_release {
     }
 
     # inject to darkpan
-    my $darkpan_dir = $args{darkpan_dir} // "$ENV{HOME}/repos/darkpan-$repo";
+    my $darkpan_dir = $args{darkpan_dir}
+        or return [400, "Please specify darkpan_dir"];
     if (-d $darkpan_dir) {
         my @cmd = ("orepan.pl", "--dest", $darkpan_dir,
                    "--pause", ($args{pause_id} // $ENV{PAUSEID} //
@@ -149,19 +146,16 @@ sub archive_perl_release {
     my $logline = join(
         "\t",
         sprintf("date:%04d-%02d-%02d", $cur_year, $cur_mon, $cur_day),
-        "repo:$repo",
+        "repo:".($args{repo} // ''),
         "file:$tarball",
         "ver:$ver",
         "size:".(-s $tarball),
     ) . "\n";
-    if ($dry) {
-        $log->infof("DRY_RUN: Appending '%s' to %s & %s",
-                    $logline,
-                    "$archive_dir/releases.txt",
-                    "$archive_dir/$repo/releases.txt");
-    } else {
-        append_file("$archive_dir/releases.txt", $logline);
-        append_file("$archive_dir/$repo/releases.txt", $logline);
+    for my $logfile (@{ $args{log_files} // ["$archive_dir/releases.txt"] }) {
+        $log->infof("Appending to log to %s", $logfile);
+        unless ($dry) {
+            append_file($logfile, $logline);
+        }
     }
 
     [200, "OK"];
