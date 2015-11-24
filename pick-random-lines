@@ -1,6 +1,0 @@
-#!/bin/bash
-
-# 031210
-# 2012-08-08 - use Data::Unixish::pick instead, implementation moved there
-
-dux pick "$@"

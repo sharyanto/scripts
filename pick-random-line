@@ -1,3 +1,0 @@
-#!/usr/bin/env perl
-rand($.) < 1 && ($line = $_) while <>;
-print $line;
