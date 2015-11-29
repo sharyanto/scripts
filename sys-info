@@ -1,0 +1,16 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Sys::Info;
+my $info = Sys::Info->new;
+my $os   = $info->os;
+my $cpu  = $info->device('CPU');
+
+use Data::Dump;
+dd +{
+    os => $os,
+    cpu => [$cpu->identify],
+};

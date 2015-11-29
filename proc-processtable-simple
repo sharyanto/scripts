@@ -1,0 +1,12 @@
+#!/usr/bin/env perl
+
+# ingin mengukur overhead Proc::ProcessTable, tanpa embel2x Data::Dump
+
+#use 5.010;
+#use strict;
+#use warnings;
+
+use Proc::ProcessTable;
+
+my $proc = Proc::ProcessTable->new->table;
+print scalar @$proc, "\n";
