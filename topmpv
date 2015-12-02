@@ -1,0 +1,3 @@
+#!/bin/bash
+( sleep 1; wmctrl -r mpv -b add,sticky,above )&
+exec mpv "$@"
