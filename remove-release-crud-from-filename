@@ -6,6 +6,7 @@ use strict;
 my $VERSION = 20070526;
 
 my $re_prefix = join("|", map {quotemeta} sort {length($b)<=>length($a)} grep {/\S/} split "\n", <<'EOF');
+[720pMkv.Com]_
 playnow-
 [ www.usabit.com ] -
 [www.Cpasbien.me]
@@ -72,6 +73,8 @@ EOF
 $re_prefix = qr/(?:$re_prefix)/i;
 
 my $re_suffix = join("|", map {quotemeta} sort {length($b)<=>length($a)} grep {/\S/} split "\n", <<'EOF');
+.720p.BRRip
+.480p.Bluray.x264-GAnGSteR
 .DVDRip.XViD-MRC
  HDTV x264
 .720p.HDTV.x264-KILLERS [PublicHD]
