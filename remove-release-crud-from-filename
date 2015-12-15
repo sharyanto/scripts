@@ -73,6 +73,7 @@ EOF
 $re_prefix = qr/(?:$re_prefix)/i;
 
 my $re_suffix = join("|", map {quotemeta} sort {length($b)<=>length($a)} grep {/\S/} split "\n", <<'EOF');
+  ~~R@JU~~ [WBRG]
 .720p.BRRip
 .480p.Bluray.x264-GAnGSteR
 .DVDRip.XViD-MRC
