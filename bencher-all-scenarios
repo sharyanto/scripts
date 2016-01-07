@@ -22,6 +22,18 @@ $SPEC{app} = {
             schema => 'str*',
             req => 1,
         },
+        no_lib => {
+            summary => 'Remove entries from @INC',
+            schema => ['bool*', is=>1],
+        },
+        libs => {
+            'x.name.is_plural' => 1,
+            summary => 'Add to the start of @INC',
+            schema => ['array*', of=>'str*'],
+            cmdline_aliases => {
+                I => {code=>sub { $_[0]{libs} //= []; push @{ $_[0]{libs} }, $_[1] }},
+            },
+        },
     },
 };
 sub app {
@@ -29,7 +41,10 @@ sub app {
 
     my @scenarios;
     {
-        local @INC = ("lib");
+        local @INC = @INC;
+        @INC = () if $args{no_lib};
+        unshift @INC, reverse(@{$args{libs}}) if $args{libs};
+        $log->tracef("\@INC is %s", \@INC);
         my $res = PERLANCAR::Module::List::list_modules(
             'Bencher::Scenario::', {list_modules=>1, recurse=>1});
         @scenarios = map {s/\ABencher::Scenario:://; $_} sort keys %$res;

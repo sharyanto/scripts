@@ -1,0 +1,3 @@
+#!/bin/bash
+
+bencher-all-scenarios --no-lib --lib lib "$@"
