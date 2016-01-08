@@ -1,0 +1,17 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Getopt::Long;
+#use Getopt::Long::Complete; # see sample-getopt-long-complete-script
+
+my $width = 0;
+
+GetOptions(
+    'help' => sub { say "Help message"; exit 0 },
+    'version' => sub { say "Version 1.23"; exit 0 },
+    'width=i' => \$width,
+    '<>' => sub { say "Got argument <$_[0]>, width=<$width>" },
+);

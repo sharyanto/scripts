@@ -1,0 +1,30 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Getopt::Long::Complete qw(GetOptionsWithCompletion);
+
+my $width = 0;
+
+GetOptionsWithCompletion(
+    sub {
+        require Complete::Util;
+
+        my %args = @_;
+        my $word = $args{word};
+        my $type = $args{type};
+        my $opt  = $args{opt};
+
+        if ($type eq 'optval' && $opt eq '--width') {
+            return Complete::Util::complete_array_elem(
+                word=>$word, array=>[1..80]);
+        }
+        [];
+    },
+    'help' => sub { say "Help message"; exit 0 },
+    'version' => sub { say "Version 1.23"; exit 0 },
+    'width=i' => \$width,
+    '<>' => sub { say "Got argument <$_[0]>, width=<$width>" },
+);
