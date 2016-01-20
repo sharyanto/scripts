@@ -3,4 +3,4 @@
 # doesn't work
 #list-perl-releases --det --json | fsql --add-json - -F YEAR -F WEEKOFYEAR 'SELECT YEAR(date) || "w" || WEEKOFYEAR(date) week, COUNT(*) FROM stdin GROUP BY week ORDER BY week' -f text
 
-list-perl-releases --det --json | fsql --add-json - -F YEAR -F WEEKOFYEAR 'SELECT YEAR(date) year, WEEKOFYEAR(date) week, COUNT(*) FROM stdin GROUP BY year,week ORDER BY year,week' -f text
+list-perl-releases --det --json | fsql --add-json - -F YEAR -F ISO_YEARWEEK 'SELECT ISO_YEARWEEK(date) week, COUNT(*) FROM stdin GROUP BY week ORDER BY week' -f text
