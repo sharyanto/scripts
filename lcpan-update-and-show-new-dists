@@ -1,0 +1,14 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use App::lcpan::Call qw(call_lcpan_script);
+
+my $res = call_lcpan_script(argv => ["stats-last-index-time"]);
+die "Can't stat last index time of mirror: $res->[0] - $res->[1]\n" unless $res->[0] == 200;
+
+my $time = $res->[2]{raw_last_index_time};
+system "lcpan", "update", @ARGV;
+system "lcpan dists -l --rel-mtime-newer-than $time --sort -rel_mtime --format text-pretty | less -S";
