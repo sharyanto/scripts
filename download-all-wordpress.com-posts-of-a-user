@@ -85,6 +85,6 @@ for my $rel_url (sort @article_rel_urls) {
         next;
     }
     $log->infof("Downloading article: %s ...", $rel_url);
-    system "wget", "-k", "-p", "-nc",
+    system "wget", "-k", "-p",
         (("-q") x !$log->is_debug), "$site_url$rel_url/";
 }
