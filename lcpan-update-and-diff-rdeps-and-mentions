@@ -1,0 +1,41 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use App::lcpan::Call qw(call_lcpan_script);
+use File::Temp qw(tempfile);
+use File::Util::Tempdir qw(get_tempdir);
+use POSIX qw(strftime);
+use Term::ANSIColor;
+
+my $cpanid = shift @ARGV or die "Usage: $0 <CPANID> [other lcpan update options]\n";
+$cpanid =~ /\A\w+\z/ or die "Invalid CPANID, please use letters/numbers only\n";
+
+my $rdeps_cmd    = "lcpan author-rdeps $cpanid --user-author-isnt $cpanid";
+my $mentions_cmd = "lcpan mentions --mentioned-author $cpanid --mentioner-author-isnt $cpanid";
+
+my $tempdir = get_tempdir();
+my @localtime = localtime();
+my $timestamp = strftime("%Y-%m-%dT%H%M%S", @localtime);
+my (undef, $rdeps_file   ) = tempfile("rdeps.$timestamp.XXXXXXX",    DIR=>$tempdir);
+my (undef, $mentions_file) = tempfile("mentions.$timestamp.XXXXXXX", DIR=>$tempdir);
+
+system "$rdeps_cmd    > $rdeps_file";
+system "$mentions_cmd > $mentions_file";
+
+system "lcpan", "update", @ARGV;
+
+system "$rdeps_cmd    > $rdeps_file.after";
+system "$mentions_cmd > $mentions_file.after";
+
+my $rdeps_diff    = `diff -u $rdeps_file    $rdeps_file.after`;
+my $mentions_diff = `diff -u $mentions_file $mentions_file.after`;
+
+if ($rdeps_diff =~ /\S/) {
+    print colored(["bright_red"], "Changed rdeps:\n");    print $rdeps_diff, "\n";
+}
+if ($mentions_diff =~ /\S/) {
+    print colored(["bright_red"], "Changed mentions:\n"); print $mentions_diff, "\n";
+}
