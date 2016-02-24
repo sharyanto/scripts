@@ -1,0 +1,5 @@
+#!/bin/bash
+
+#echo "D:\$1=<$1>"
+if [[ "$1" == "commit" ]]; then gu pre-commit; fi
+exec /usr/bin/git "$@"
