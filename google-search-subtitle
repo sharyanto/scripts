@@ -1,0 +1,51 @@
+#!/usr/bin/env perl
+
+use 5.010001;
+use strict;
+use warnings;
+use Log::Any::IfLOG '$log';
+
+use Perinci::CmdLine::Any;
+
+our %SPEC;
+
+$SPEC{google_search_subtitle} = {
+    v => 1.1,
+    summary => 'Search Google for subtitles',
+    args => {
+        query => {
+            schema => ['array*', of => 'str*'],
+            req => 1,
+            pos => 0,
+            greedy => 1,
+        },
+    },
+};
+sub google_search_subtitle {
+    require Browser::Open;
+    require URI::Escape;
+
+    my %args = @_;
+
+    my $query = join(
+        " ",
+        @{$args{query}},
+        ((grep {/subtitle/} @{$args{query}}) ? () : ("subtitle")),
+
+        # skip trashy sites
+        "-site:subtitles.to",
+        "-site:*.win", # downloaddvd.win, moviebooks.win, ...
+        "-site:downloaddvd.win",
+    );
+
+    my $url = "https://www.google.com/search?num=100&q=".
+        URI::Escape::uri_escape($query);
+
+    my $res = Browser::Open::open_browser($url);
+
+    $res ? [500, "Failed"] : [200, "OK"];
+}
+
+Perinci::CmdLine::Any->new(
+    url => '/main/google_search_subtitle',
+)->run;
