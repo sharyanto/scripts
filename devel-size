@@ -1,0 +1,14 @@
+#!/usr/bin/env perl
+
+use Devel::Size qw(total_size);
+
+unless (@ARGV) {
+    print "Usage: $0 <data-def-in-perl> ...\n";
+    print "Example: $0 '[1,2,3]' '{foo=>1}'\n";
+    exit 1;
+}
+
+for (@ARGV) {
+    print "$_: ";
+    eval qq[print total_size($_), "\n"];
+}
