@@ -1,6 +1,0 @@
-#!/usr/bin/env perl
-
-use Data::Dumper;
-use Devel::Platform::Info;
-
-print Dumper(Devel::Platform::Info->new->get_info);
