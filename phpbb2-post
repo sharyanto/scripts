@@ -82,6 +82,7 @@ if (defined $App::options{http_proxy}) {
 #eval to trap Mech exceptions
 eval {
 
+TRACE "TMP: logging in to $App::options{base_url}/login.php ...";
 $mech->get("$App::options{base_url}/login.php");
 $mech->submit_form(
     form_number => 1,
