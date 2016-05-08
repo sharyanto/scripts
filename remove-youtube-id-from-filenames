@@ -1,0 +1,12 @@
+#!/usr/bin/env perl
+
+use 5.010001;
+use strict;
+use warnings;
+
+for my $name (@ARGV) {
+    my $new = $name;
+    $new =~ s/(?<=.)-[A-Za-z0-9_-]{11}(?=\.\w+$)// or next;
+    say "$name -> $new";
+    rename $name, $new;
+}
