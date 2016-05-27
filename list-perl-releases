@@ -8,6 +8,7 @@ use FileHandle;
 use Module::Path qw(module_path);
 use Perinci::CmdLine::Any;
 use Perinci::Sub::Gen::AccessTable qw(gen_read_table_func);
+use Time::Moment;
 
 our %SPEC;
 my $data = [];
@@ -34,7 +35,8 @@ _
                 pos    => 1,
             },
             date => {
-                schema => 'date*',
+                schema => 'str*', # XXX perisgen belum plays nice with dsah & coercion
+                #schema => ['date*', 'x.perl.coerce_to' => 'Time::Moment'],
                 pos    => 2,
             },
             ver => {
@@ -122,6 +124,19 @@ _
             }
 
             return;
+        },
+        before_return => sub {
+            my %args = @_;
+            my $fres = $args{_func_res};
+            # convert dates back to YMD for display
+            if (0) {
+                last unless $fres->[0] == 200;
+                for my $row (@{$fres->[2]}) {
+                    if (ref($row) eq 'HASH') {
+                        $row->{date} = $row->{date}->strftime("%Y-%m-%d");
+                    }
+                }
+            }
         },
     },
 );
