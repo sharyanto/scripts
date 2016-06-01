@@ -73,6 +73,7 @@ EOF
 $re_prefix = qr/(?:$re_prefix)/i;
 
 my $re_suffix = join("|", map {quotemeta} sort {length($b)<=>length($a)} grep {/\S/} split "\n", <<'EOF');
+.DVDRip.XviD-SAiNTS.[tvu.org.ru]
  [TVfreak83]
 .WEBRip.x264-ChameE
 .1080p.WEBRip.x264-SRS
