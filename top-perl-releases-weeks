@@ -1,0 +1,3 @@
+#!/bin/bash
+
+list-perl-releases --det --json | fsql --add-json - -F YEAR -F ISO_YEARWEEK 'SELECT ISO_YEARWEEK(date) week, COUNT(*) cnt FROM stdin GROUP BY week ORDER BY cnt DESC LIMIT 25' -f text
