@@ -1,0 +1,37 @@
+#!/usr/bin/env perl
+
+use 5.010001;
+use strict;
+use warnings;
+
+my @test_dates = (
+    {str=>'23 jun'      , natural=>1, alami_en=>1},
+    {str=>'23jun'       , natural=>0, alami_en=>1}, #A#
+    {str=>'23-jun'      , natural=>0, alami_en=>0}, #A#
+    {str=>'jun 23'      , natural=>1, alami_en=>1},
+    {str=>'jun23'       , natural=>0, alami_en=>1}, #A#
+    {str=>'23 of jun'   , natural=>0, alami_en=>0},
+    {str=>'23rd jun'    , natural=>1, alami_en=>1},
+    {str=>'jun 23rd'    , natural=>1, alami_en=>1},
+    {str=>'jun 23th'    , natural=>0, alami_en=>1}, #A#
+    {str=>'this monday' , natural=>1, alami_en=>1},
+    {str=>'next monday' , natural=>1, alami_en=>1},
+    {str=>'last monday' , natural=>1, alami_en=>1},
+
+    # not yet supported by DF:Alami
+
+    # * (this|next|last|final) (month|year)
+    # * (month) = tanggal 1
+    # * (year) = tanggal 1 bulan 1
+    # * 2nd monday
+    # * (first|last|final) (day) of (month|year)
+    # * (first|last|final) (dow) of (month|year)
+
+    # i decide to not (yet) support these patterns
+
+    # * -(dur) e.g. -5 minute
+    # * (this|next|last) (morning|afternoon|evening|midnight)
+);
+
+my @test_durs = (
+);
