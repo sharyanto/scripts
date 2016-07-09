@@ -73,6 +73,7 @@ EOF
 $re_prefix = qr/(?:$re_prefix)/i;
 
 my $re_suffix = join("|", map {quotemeta} sort {length($b)<=>length($a)} grep {/\S/} split "\n", <<'EOF');
+.BDMux.H264.SD.by.Fratposa
 .hdtv.x264-w4f
 .HDTV.x264-W4F
 .720p.hdtv.x264-w4f
