@@ -1,6 +1,0 @@
-#!/usr/bin/env perl
-
-use DD;
-use Desktop::Detect qw(detect_desktop);
-
-dd detect_desktop;
