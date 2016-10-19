@@ -1,0 +1,10 @@
+#!/usr/bin/env perl
+use Shell::Completer;
+declare_completer(
+    options => {
+        'help|h'     => undef,               # no completion, no option value
+        'verbose!'   => undef,               #
+        'on-fail=s'  => ['skip', 'die'],     # complete from a list of words
+        '<>'         => _user(),             # complete from list of users
+    },
+);
