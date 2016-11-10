@@ -84,7 +84,7 @@ _
             while (my $line = $fh->getline) {
 
                 my $row = { map {/(\w+):(.*)/;($1,$2)} split /\t/, $line };
-                my $dist = $row->{file}; $dist =~ s/-\d.+//;
+                my $dist = $row->{file}; $dist =~ s/(.+)-v?\d.+/$1/;
 
                 my $is_new = !$seen_dists{$dist};
                 $seen_dists{$dist} = $row;
