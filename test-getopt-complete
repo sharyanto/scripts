@@ -1,0 +1,14 @@
+#!/usr/bin/env perl
+
+use Getopt::Complete (
+    'frog'        => ['ribbit','urp','ugh'],
+    'fraggle'     => sub { return ['rock','roll'] },
+    'quiet!'      => undef,
+    'name'        => undef,
+    'age=n'       => undef,
+    'outfile=s@'  => 'files',
+    'outdir'      => 'directories',
+    'runthis'     => 'commands',
+    'username'    => 'users',
+    '<>'          => 'directories',
+);
