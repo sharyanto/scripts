@@ -1,0 +1,51 @@
+#!/usr/bin/env perl
+
+# NO_PWP_RINCI
+
+# DATE
+# VERSION
+
+use 5.010;
+use strict;
+use warnings;
+
+our %SPEC;
+
+$SPEC{hashdatearg} = {
+    v => 1.1,
+    summary => 'A function that accepts a hash of date argument',
+    description => <<'_',
+
+Just a dummy description. Just a dummy description. Yup, just a dummy
+description. Just a dummy description. Just a dummy description. Yeah, just a
+dummy description. Just a dummy description.
+
+_
+    args => {
+        dates => {
+            'x.name.is_plural' => 1,
+            'x.name.singular' => 'date',
+            schema => ['hash*', of=>'date*'],
+            req => 1,
+            pos => 0,
+            greedy => 1,
+        },
+    },
+};
+sub hashdatearg {
+    my %args = @_;
+
+    [200, "OK", \%args];
+}
+
+use Perinci::CmdLine::Any;
+Perinci::CmdLine::Any->new(
+    url=>'/main/hashdatearg',
+)->run;
+
+# ABSTRACT:
+# PODNAME:
+
+=head1 SYNOPSIS
+
+=cut
