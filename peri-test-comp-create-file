@@ -1,0 +1,65 @@
+#!/usr/bin/env perl
+
+use 5.010001;
+use strict;
+use warnings;
+use Perinci::CmdLine::Any;
+
+our %SPEC;
+
+$SPEC{create_file} = {
+    v => 1.1,
+    args => {
+        filename => {
+            schema => 'str*',
+            req => 1,
+            pos => 0,
+        },
+        content => {
+            schema => 'buf*',
+            req => 1,
+            pos => 1,
+        },
+        mode => {
+            summary => 'Permission mode',
+            schema => 'posint*',
+        },
+        extra_attrs => {
+            'x.name.is_plural' => 1,
+            'x.name.singular' => 'extra_attr',
+            schema     => ['hash*' => of => 'str*'],
+            index_completion => sub {
+                # complete with list of known attributes
+                my %args = @_;
+                require Complete::Util;
+                Complete::Util::complete_array_elem(
+                    word => $args{word},
+                    array => [qw/mtime ctime owner group/],
+                );
+            },
+            element_completion => sub {
+                my %args = @_;
+                my $word  = $args{word} // "";
+                my $index = $args{index};
+
+                if ($index eq 'owner') {
+                    require Complete::Unix;
+                    return Complete::Unix::complete_user(word=>$word);
+                } elsif ($index eq 'group') {
+                    require Complete::Unix;
+                    return Complete::Unix::complete_group(word=>$word);
+                } else {
+                    return undef;
+                }
+            },
+        },
+    },
+};
+sub create_file {
+    my %args = @_;
+    [200, "OK", \%args];
+}
+
+Perinci::CmdLine::Any->new(
+    url => "/main/create_file",
+)->run;
