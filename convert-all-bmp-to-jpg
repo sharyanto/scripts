@@ -1,0 +1,39 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Getopt::Long;
+use String::ShellQuote;
+
+my %Opt = (
+        quality => 75,
+       );
+my %DefOpt = %Opt;
+
+GetOptions(
+    'help' => sub {
+        print <<EOF;
+$0 [options]
+
+Options:
+ --help       Show this message and exit.
+ --quality=i  Set JPEG quality (default: $Opt{quality}).
+EOF
+        exit 0;
+    },
+    'quality=f' => \$Opt{quality},
+);
+
+my @files;
+if (@ARGV) { @files = @ARGV } else { @files = (<*.bmp>, <*.BMP>) }
+
+for my $file (@files) {
+    if (-f "$file.jpg") {
+        print "WARNING: $file.jpg exists, skipped\n";
+    }
+    my $cmd = "bmptoppm ".shell_quote($file)." | ppmtojpeg --quality $Opt{quality} - > ".shell_quote("$file.jpg");
+    say $cmd;
+    system $cmd;
+}

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+perlmv -e's/^sm(\d+)_(.+)/sprintf("sm%03d-%s", $1, $2)/e' "$@"
