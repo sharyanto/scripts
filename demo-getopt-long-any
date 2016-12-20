@@ -1,0 +1,46 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+use Getopt::Long::Any;
+
+my %opts = (cols => 1, bg=>0, module=>[], array=>[]);
+my $res = GetOptions(
+    'flag1|1' => \$opts{flag1},
+    'flag2|f' => \$opts{flag2},
+    'bool|b!' => \$opts{bool},
+    'int=i' => \$opts{int},
+    'module|M=s' => $opts{module},
+    'float|F=f' => \$opts{float},
+    'str|text|S=s' => \$opts{str},
+    'array=s@' => $opts{array},
+    'version|v' => sub {
+        no warnings;
+        say "demo-getopt-long-any version $main::VERSION";
+        exit 0;
+    },
+    'help|h|?' => sub {
+        print <<_;
+Usage:
+  $0 --help (or -h, -?)
+  $0 [opts]
+
+Options:
+  --flag1, -1
+  --flag2, -f
+  --(no)bool, -b
+  --int=i
+  --float=f, -F
+  --str=s, --text, -S
+  --array=s@
+_
+        exit 0;
+    },
+);
+
+say $res ? "Getopt failed" : "Getopt succeeded";
+use Data::Dump; dd \%opts;
+
+# ABSTRACT: Script to demonstrate Getopt::Long::Any
+# PODNAME: demo-getopt-long-any
