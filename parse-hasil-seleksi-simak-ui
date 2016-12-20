@@ -1,0 +1,38 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+use File::Slurper qw(read_text);
+
+my @rows;
+push @rows, ["nama", "no_ujian", "status", "npm", "prodi"];
+
+for my $file (<result*>) {
+    my $content = read_text($file);
+
+    my ($nama) = $content =~ m!<dt>Nama</dt>\s+<dd><strong>(.+?)</strong></dd>!s;
+    my ($no_ujian) = $content =~ m!<dt>Nomor Ujian</dt>\s+<dd>(\d+)</dd>!s;
+
+    my $status;
+    if ($content =~ /Maaf, Anda belum lulus/) {
+        $status = 'ditolak';
+    } elsif ($content =~ /Selamat, Anda diterima/) {
+        $status = 'diterima';
+    } else {
+        $status = 'UNKNOWN';
+        next;
+    }
+
+    my ($npm, $prodi);
+    if ($status eq 'diterima') {
+        ($prodi) = $content =~ m!<dt>Program Studi</dt>\s*<dd>(.+?)</dd>!s;
+        ($npm) = $content =~ m!Nomor Pokok Mahasiswa[^\n]+>(\d{10})<!;
+    }
+
+    push @rows, [$nama, $no_ujian, $status, $npm, $prodi];
+}
+
+use Text::Table::Any;
+print Text::Table::Any::table(
+    rows=>\@rows, header_row=>1, backend=>'Text::Table::CSV');
