@@ -1,0 +1,48 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Perinci::CmdLine::Any;
+
+our %SPEC;
+
+$SPEC{app} = {
+    v => 1.1,
+    args => {
+        dists => {
+            schema => ['array*', of=>'perl::distname*'],
+            req => 1,
+            pos => 0,
+            greedy => 1,
+            cmdline_src => 'stdin_or_args',
+        },
+    },
+};
+sub app {
+    require MetaCPAN::Client;
+
+    my %args = @_;
+
+    my $mc = MetaCPAN::Client->new(version => 'v1');
+
+    my $res = [];
+    my $resmeta = { 'table.fields' => [qw/dist version date/] };
+    for my $dist (@{ $args{dists} }) {
+        my $mcres = $mc->release({ distribution => $dist });
+        my $rel = $mcres->next;
+        my $rec = {dist => $dist};
+        if ($rel) {
+            $rec->{version} = $rel->version;
+            $rec->{date} = $rel->date;
+        }
+        push @$res, $rec;
+    }
+
+    [200, "OK", $res, $resmeta];
+}
+
+Perinci::CmdLine::Any->new(
+    url => '/main/app',
+)->run;
