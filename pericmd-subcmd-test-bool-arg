@@ -1,0 +1,33 @@
+#!/usr/bin/env perl
+
+use 5.010001;
+use strict;
+use warnings;
+
+use Perinci::CmdLine::Any;
+
+our %SPEC;
+
+$SPEC{':package'} = {
+    v => 1.1,
+};
+
+$SPEC{app} = {
+    v => 1.1,
+    args => {
+        bool => {
+            schema => 'bool',
+        },
+    },
+};
+sub app {
+    my %args = @_;
+    [200, "OK", \%args];
+}
+
+Perinci::CmdLine::Any->new(
+    url => '/main/',
+    subcommands => {
+        sc1 => {url => '/main/app'},
+    },
+)->run;
