@@ -4,11 +4,12 @@ use 5.010;
 use strict;
 use warnings;
 use experimental 'smartmatch';
+use Log::ger::App;
+BEGIN { $ENV{LOG_LEVEL} //= 'info' }
+use Log::ger;
 
 use File::Find;
 use File::Path qw(remove_tree);
-use Log::Any::App '$log';
-BEGIN { no warnings; $::Log_Level = 'info' }
 
 my @uselessn = qw(
                      desktop.ini
@@ -20,7 +21,7 @@ my @uselessn = qw(
 my @args = @ARGV ? @ARGV : (".");
 
 finddepth sub {
-    $log->tracef("%s/%s", $File::Find::dir, $_);
+    log_trace("%s/%s", $File::Find::dir, $_);
     return if /^(\.\.?)$/;
 
     my $delete;
@@ -42,6 +43,6 @@ finddepth sub {
     }
     return unless $delete;
 
-    $log->infof("Deleting %s/%s ...", $File::Find::dir, $_);
+    log_info("Deleting %s/%s ...", $File::Find::dir, $_);
     remove_tree $_;
 }, @args;
