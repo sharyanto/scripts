@@ -1,0 +1,64 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use Log::ger;
+
+use Perinci::CmdLine::Any;
+
+our %SPEC;
+
+my @Tlds = qw(com net org info biz ws us cc tv bz nu mobi eu ca asia);
+
+$SPEC{whois_enom} = {
+    v => 1.1,
+    args => {
+        username => { schema=>'str*', req=>1 },
+        password => { schema=>'str*', req=>1 },
+        domain   => { schema=>'str*', req=>1, pos=>0 },
+    },
+};
+sub whois_enom {
+    require HTTP::Tiny;
+
+    my %args = @_;
+
+    my $domain = $args{domain};
+    $domain =~ s/\.(.+)$//
+        or return [400, "Please include extension in domain"];
+    my $ext = $1;
+
+    my $resp = HTTP::Tiny->new->post_form(
+        "http://reseller.enom.com/interface.asp",
+        {
+            command => "check",
+            UID => $args{username},
+            PW => $args{password},
+            TLD => $ext,
+            SLD => $domain,
+        },
+    );
+    log_trace("Response content: <<%s>", $resp->{content});
+
+    $resp->{success}
+        or return [500, "Can't send API request: ".
+                   "$resp->{status} - $resp->{reason}"];
+
+    unless ($resp->{content} =~ /^ErrCount=0/m) {
+        $resp->{content} =~ /ResponseString1=(.+)/;
+        return [500, "Enom API sent fail response: $1"];
+    }
+    if ($resp->{content} =~ /^RRPCode=210/m) {
+        return [200, "OK", "available"];
+    }
+    if ($resp->{content} =~ /^RRPCode=211/m) {
+        return [200, "OK", "UNAVAILABLE"];
+    }
+
+    return [500, "Unknown status for this domain"];
+}
+
+Perinci::CmdLine::Any->new(
+    url => '/main/whois_enom',
+    log => 1,
+)->run;
