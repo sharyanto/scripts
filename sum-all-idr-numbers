@@ -7,11 +7,13 @@ use 5.010;
 use strict;
 use warnings;
 
+use Parse::Number::EN qw(parse_number_en $Pat);
+
 my $tot = 0;
 while (<>) {
-    while (/(-?\d+) \s*IDR/g) {
+    while (/($Pat) \s*IDR/g) {
         say "# detected $1" if $ENV{DEBUG};
-        $tot += $1;
+        $tot += parse_number_en(text => $1);
     }
 }
 
