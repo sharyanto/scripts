@@ -1,0 +1,22 @@
+#!/usr/bin/env perl
+
+# 2017-09-28 - maybe like once a week or sometimes more often, zfs-fuse
+# would die and df would output something like this:
+#
+# df: '/zfs-kstat': Transport endpoint is not connected
+# df: '/zpool_host_mnt': Transport endpoint is not connected
+# ...
+#
+# to fix this, we `umount -l` all those partitions and then restart
+# zfs-fuse.
+
+use strict;
+use warnings;
+
+for (`df 2>&1`) {
+    next unless m!^df: '/(.+?)': Transport endpoint is not connected!;
+    system "umount -l $1";
+}
+
+unlink "/var/run/zfs-fuse.pid" or die "Can't remove PID /var/run/zfs-fuse.pid: $!";
+system "/etc/init.d/zfs-fuse restart";
