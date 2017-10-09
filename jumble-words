@@ -1,0 +1,9 @@
+#!/usr/bin/perl -lp
+
+use List::Util qw(shuffle);
+
+s/\b(\w+)\b/jumble($1)/eg;
+
+sub jumble {
+    join("", shuffle(split //, $_[0]));
+}
