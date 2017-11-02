@@ -114,6 +114,28 @@ while (<>) {
         "bing";
     $rest =~ /q=(.+?)(?:&|\z)/ or next;
     $query = unesc($1);
+  # 2017-11-01
+  } elsif ($host =~ /tokopedia\.com/i) {
+    $site = "tokopedia";
+    $rest =~ m!q=(.+?)(?:&|\z)! or next;
+    $query = unesc($1);
+  } elsif ($host =~ /shopee\.co\.id/i) {
+    $site = "shopee";
+    $rest =~ m!keyword=(.+?)(?:&|\z)! or next;
+    $query = unesc($1);
+  } elsif ($host =~ /jd\.id/i) {
+    $site = "jd.id";
+    $rest =~ m!keywords=(.+?)(?:&|\z)! or next;
+    $query = unesc($1);
+  } elsif ($host =~ /lazada\.co\,id/i) {
+    $site = "lazada";
+    $rest =~ m!q=(.+?)(?:&|\z)! or next;
+    $query = unesc($1);
+  } elsif ($host =~ /blibli\.com/i) {
+    $site = "blibli";
+    $rest =~ m!/q-(.+?)! or next;
+    $query = unesc($1);
+    $query =~ s/-/ /g;
   }
 
   next unless $site;
