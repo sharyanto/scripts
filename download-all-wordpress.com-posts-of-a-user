@@ -6,19 +6,20 @@
 use 5.010;
 use strict;
 use warnings;
-use experimental 'smartmatch';
+use Log::ger;
+use Log::ger::App;
+use Log::ger::Util;
 
 use File::Which;
 use Getopt::Long;
-use Log::Any::App '$log';
-use Log::Any::For::Builtins 'system';
+use IPC::System::Options 'system', -log=>1;
 use LWP::UserAgent;
 
 my $limit_page;
 GetOptions(
     'verbose' => sub {
         no warnings;
-        $main::LOG_LEVEL = 'info';
+        Log::ger::Util::set_level('info');
     },
     'max-page=i' => \$limit_page,
     'help' => sub {
@@ -35,7 +36,7 @@ _
 
 sub get {
     state $ua = LWP::UserAgent->new;
-    $log->infof("Getting %s ...", $_[0]);
+    log_info("Getting %s ...", $_[0]);
     my $res = $ua->get($_[0]);
     die "Can't get $_[0]: " . $res->code . " - " . $res->message . "\n"
         unless $res->is_success;
@@ -64,14 +65,14 @@ my @article_rel_urls;
         while ($content =~ m!href="\Q$site_url\E/page/(\d+)/!g) {
             next unless $max_page < $1;
             $max_page = $1;
-            $log->infof("Found that there is page number %d", $max_page);
+            log_info("Found that there is page number %d", $max_page);
         }
 
         # grab article links
         while ($content =~ m!href="\Q$site_url\E(/\d+/\d+/\d+/[^/]+)/!g) {
-            next if $1 ~~ @article_rel_urls;
+            next if grep { $1 eq $_ } @article_rel_urls;
             push @article_rel_urls, $1;
-            $log->infof("Found article: %s", $1);
+            log_info("Found article: %s", $1);
         }
 
         $page++;
@@ -81,10 +82,10 @@ my @article_rel_urls;
 
 for my $rel_url (sort @article_rel_urls) {
     if (-d "$domain$rel_url") {
-        $log->infof('Skipped article (already downloaded): %s', $rel_url);
+        log_info('Skipped article (already downloaded): %s', $rel_url);
         next;
     }
-    $log->infof("Downloading article: %s ...", $rel_url);
+    log_info("Downloading article: %s ...", $rel_url);
     system "wget", "-k", "-p",
-        (("-q") x !$log->is_debug), "$site_url$rel_url/";
+        (("-q") x !log_is_debug()), "$site_url$rel_url/";
 }
