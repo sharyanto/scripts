@@ -1,9 +1,9 @@
 #!/usr/bin/env perl
 
-# FRAGMENT id=shcompgen-hint command=list-perl-releases    
+# FRAGMENT id=shcompgen-hint command=list-perl-releases
 
 use DateTime;
-use Log::Any::For::Builtins qw(system);
+use IPC::System::Options qw(system);
 
 die "Usage: $0 <n> ...\n" unless @ARGV;
 my $n = shift @ARGV;

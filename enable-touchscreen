@@ -1,0 +1,7 @@
+#!/usr/bin/env perl
+
+use IPC::System::Options -die=>1;
+
+my ($id) = `xinput | grep -i touchscreen | head -n1` =~ /id=(\d+)/ or die "Can't grep id of touchscreen from xinput";
+my $which = $0 =~ /enable/ ? 1 : 0;
+system "xinput set-prop $id 'Device Enabled' $which";
