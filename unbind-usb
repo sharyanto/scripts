@@ -1,0 +1,17 @@
+#!/usr/bin/perl
+
+# kalau laptop disuruh suspend langsung idup lagi idup lagi, coba skrip ini.
+
+use strict;
+use warnings;
+
+for my $dir (glob("/sys/bus/pci/drivers/*hci_hcd")) {
+    warn "Checking $dir ...\n" if $ENV{DEBUG};
+    chdir $dir or die "Can't chdir to $dir: $!\n";
+    my @id = glob("*:*");
+    next unless @id;
+    for my $id (@id) {
+        warn "Unbinding $dir/$id ...\n" if $ENV{DEBUG};
+        system "echo '$id' >$dir/unbind"   unless $ENV{DRY_RUN};
+    }
+}

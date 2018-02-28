@@ -19,7 +19,7 @@ while (<>) {
   my $x;
 
   if ($host =~ /google/i) {
-    $rest =~ m!/(images|search|videosearch|news|maps|blogsearch|books|groups)!i or next;
+    $rest =~ m!/(images|search|videosearch|news|maps|blogsearch|books|groups|scholar)!i or next;
     $x = $1;
     $site =
         $x =~ /images/ ? "google images" :
@@ -28,6 +28,7 @@ while (<>) {
         $x =~ /news/ ? "google news" :
         $x =~ /blogsearch/ ? "google blogs" :
         $x =~ /groups/ ? "google groups" :
+        $x =~ /scholar/ ? "google scholar" :
         "google";
     $rest =~ /q=(.+?)(?:&|\z)/ or next;
     $query = unesc($1);
