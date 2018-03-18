@@ -1,0 +1,101 @@
+#!/usr/bin/env perl
+
+use 5.010001;
+use strict;
+use warnings;
+use Log::ger;
+
+use Perinci::CmdLine::Any;
+
+our %SPEC;
+
+$SPEC{app} = {
+    v => 1.1,
+    args => {
+        data_csv => {
+            summary => 'Filename containing CSV',
+            description => <<'_',
+
+First column of the CSV file must contain xdata, second column must contain
+ydata.
+
+_
+            schema => 'filename*',
+            tags => ['category:input'],
+        },
+        xdata => {
+            summary => 'Data for X',
+            schema =>['array*', of=>'num*'],
+            tags => ['category:input'],
+        },
+        ydata => {
+            summary => 'Data for Y',
+            schema =>['array*', of=>'num*'],
+            tags => ['category:input'],
+        },
+    },
+    args_rels => {
+        req_one => [qw/data_csv xdata/],
+        'choose_all&' => [
+            [qw/xdata ydata/],
+        ],
+    },
+    deps => {
+        prog => 'gnuplot',
+    },
+};
+sub app {
+    my %args = @_;
+
+    my (@x, @y);
+
+    if ($args{xdata}) {
+        @x = @{ $args{xdata} };
+        @y = @{ $args{ydata} };
+        return [400, "xdata and ydta must contain the same number of points"]
+            unless @x == @y;
+        return [400, "xdata/ydata must contain at least one point"]
+            unless @x;
+    } elsif ($args{data_csv}) {
+        open my $fh, "<", $args{data_csv}
+            or return [500, "Can't open CSV data file '$args{data_csv}': $!"];
+        my $linum = 0;
+        while (defined(my $line = <$fh>)) {
+            $linum++;
+            next if $linum == 1; # skip header
+            chomp($line);
+            my @cols = split /,/, $line;
+            for (@cols) { s/\A"//; s/"\z// }
+            push @x, $cols[0];
+            push @y, $cols[1];
+        }
+    }
+
+    require Chart::Gnuplot;
+    require File::Temp;
+    my ($fh, $filename) = File::Temp::tempfile();
+    $filename .= ".png";
+    log_trace "Output filename: %s", $filename;
+    my $chart = Chart::Gnuplot->new(
+        output => $filename,
+        title => "(No title)",
+        xlabel => "x",
+        ylabel => "y",
+    );
+    my $dataset = Chart::Gnuplot::DataSet->new(
+        xdata => \@x,
+        ydata => \@y,
+        title => "(Untitled dataset)",
+        style => "points", # "linespoints",
+    );
+    $chart->plot2d($dataset);
+
+    require Browser::Open;
+    Browser::Open::open_browser("file:$filename");
+    [200];
+}
+
+Perinci::CmdLine::Any->new(
+    url => '/main/app',
+    log => 1,
+)->run;
