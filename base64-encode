@@ -1,8 +1,0 @@
-#!/usr/bin/env perl
-
-use MIME::Base64;
-
-while (<>) {
-  chomp;
-  print encode_base64($_),"\n";
-}
