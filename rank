@@ -1,0 +1,51 @@
+#!/usr/bin/env perl
+
+use 5.010001;
+use strict;
+use warnings;
+
+our %SPEC;
+
+$SPEC{app} = {
+    v => 1.1,
+    args => {
+        data => {
+            schema => ['array*', of=>'str*'],
+            req => 1,
+            cmdline_src => 'stdin_or_files',
+        },
+        # XXX option to do string comparison instead of numeric
+    },
+};
+sub app {
+    my %args = @_;
+
+    my $data = $args{data};
+
+    # we need to sort it first descendingly
+    $data = [sort {$b <=> $a} @$data];
+
+    my @res;
+    my $row_num = 0;
+    my $rank;
+    my $prev_item;
+    for my $row_num (0..$#{$data}) {
+        chomp(my $item = $data->[$row_num]);
+        if (!defined($prev_item) || $item < $prev_item) {
+            $rank = $row_num+1;
+        }
+        push @res, {
+            item => $item,
+            rank => $rank,
+            percentile => (@$data - $rank + 1)/@$data * 100,
+        };
+        $prev_item = $item;
+    }
+
+    [200, "OK", \@res];
+}
+
+use Perinci::CmdLine::Any;
+Perinci::CmdLine::Any->new(
+    url => '/main/app',
+)->run;
