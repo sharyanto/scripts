@@ -20,6 +20,9 @@ $SPEC{downsize} = {
             req => 1,
             greedy => 1,
         },
+        portrait => {
+            schema => ['bool*', is=>1],
+        },
     },
 };
 sub downsize {
@@ -35,7 +38,7 @@ sub downsize {
             "ffmpeg",
             "-i", $file,
             "-r", 30,
-            "-s", "hd480",
+            "-s", ($args{portrait} ? "480x720" : "hd480"),
             "-minrate", 1400000,
             "-strict", "experimental",
             $output_file,
