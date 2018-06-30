@@ -5,17 +5,17 @@ use strict;
 use warnings;
 
 say "This week:";
-system "list-perl-releases-this-week", "--new", "--detail";
+system "list-my-perl-releases-this-week", "--new", "--detail";
 
 say "";
 say "Last week:";
-system "list-perl-releases-last-week", "--new", "--detail";
+system "list-my-perl-releases-last-week", "--new", "--detail";
 
 my $i = 2;
 my $limit = $ARGV[0] // 3;
 while ($i <= $limit) {
     say "";
     say "$i weeks ago:";
-    system "list-perl-releases-n-weeks-ago", $i, "--new", "--detail";
+    system "list-my-perl-releases-n-weeks-ago", $i, "--new", "--detail";
     $i++;
 }
