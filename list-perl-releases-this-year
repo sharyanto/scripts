@@ -1,5 +1,0 @@
-#!/usr/bin/env perl
-
-# FRAGMENT id=shcompgen-hint command=list-perl-releases    
-
-system "list-perl-releases-n-years-ago", 0, @ARGV;

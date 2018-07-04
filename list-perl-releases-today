@@ -1,7 +1,0 @@
-#!/usr/bin/env perl
-
-# FRAGMENT id=shcompgen-hint command=list-perl-releases
-
-use Time::Moment;
-my $today = Time::Moment->now;
-system "list-perl-releases", "--date", $today->strftime("%Y-%m-%d"), @ARGV;
