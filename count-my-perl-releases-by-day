@@ -1,0 +1,3 @@
+#!/bin/bash
+
+list-my-perl-releases --det --json | fsql --add-json - 'SELECT date, COUNT(*) FROM stdin GROUP BY date ORDER BY date' -f text
