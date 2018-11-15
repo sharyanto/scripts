@@ -1,0 +1,2 @@
+#!/bin/bash
+killall kwin_x11 && sleep 3 && kwin_x11&
