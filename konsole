@@ -6,4 +6,4 @@ else
   exec=/usr/bin/konsole
 fi
 
-$exec -stylesheet $HOME/settings/konsole.qss $*
+$exec -stylesheet $HOME/repos/settings/konsole-red.qss $*
