@@ -1,0 +1,26 @@
+#!/usr/bin/env perl
+
+use 5.010001;
+use strict;
+use warnings;
+
+use App::ShellCompleter::mpv;
+use Getopt::Long;
+use IPC::System::Options 'system', -die=>1;
+
+my @files;
+{
+    no warnings 'once';
+    local @ARGV = @ARGV;
+    GetOptions(
+        (map {
+            $_ => sub {},
+        } keys %App::ShellCompleter::mpv::scargs),
+        '<>' => sub {
+            push @files, $_[0];
+        },
+    );
+}
+
+system "index-files-watched", @files;
+exec "mpv", @ARGV;
