@@ -1,2 +1,7 @@
 #!/bin/bash
+
+# kadang2x kwin setelah beberapa lama jadi aneh, kayak gak repaint window
+# kecuali kalo windownya diresize. atau saat pindah fokus antarwindow sampe 3x
+# switch dengan cepat menyebabkan titlebar blink2x.
+
 killall kwin_x11 && sleep 3 && kwin_x11&

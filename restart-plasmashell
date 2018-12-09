@@ -1,0 +1,4 @@
+#!/bin/bash
+# kadang2x plasmashell stuck nampilin animasi progress copy/move terus di
+# notification padahal tasknya udah kelar
+killall plasmashell && sleep 3 && plasmashell&
