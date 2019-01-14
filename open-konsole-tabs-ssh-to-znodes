@@ -1,0 +1,29 @@
+#!/usr/bin/env perl
+
+use 5.010001;
+use autodie qw(open);
+use strict;
+use warnings;
+
+use File::Slurper::Temp qw(write_text_to_tempfile);
+use Regexp::Pattern qw(Net::ipv4);
+
+my @mns;
+open my $fh, "<", "$ENV{HOME}/.zcoin/znode.conf";
+while (<$fh>) {
+    next unless /\S/;
+    next if /^#/;
+    /(\w+)\s+($RE{ipv4}):\d+\s+/ or die "Line $.: invalid: $_";
+    push @mns, {name=>$1, ip=>$2};
+}
+
+#use DD; dd \%mns;
+my $filename = write_text_to_tempfile(do {
+    my $content = "";
+    for (@mns) {
+        $content .= "title:$_->{name} ;; command: ssh root\@$_->{ip}\n";
+    }
+    $content;
+});
+
+system "konsole", "--tabs-from-file", $filename;
