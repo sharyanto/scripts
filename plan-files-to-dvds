@@ -1,4 +1,7 @@
-#!/usr/bin/env perl 
+#!/usr/bin/env perl
+
+# 20xx-xx-xx: created
+# 2019-01-16: deprecated in favor of bin-files-into-dvds from App::BinPackUtils
 
 use strict;
 use warnings;
