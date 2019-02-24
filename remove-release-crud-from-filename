@@ -73,6 +73,13 @@ EOF
 $re_prefix = qr/(?:$re_prefix)/i;
 
 my $re_suffix = join("|", map {quotemeta} sort {length($b)<=>length($a)} grep {/\S/} split "\n", <<'EOF');
+.repack.webrip.x264-tbs
+.WEBRip.x264-eSc
+.720p.webrip.x264-tbs
+.webrip.x264-tbs
+.HDTV.x264-aAF
+.HDTV.x264-aAF.[tvu.org.ru]
+.HDTV.x264-aAF.[sharethefiles.com]
 .WEB-DL.x264-FUM
 .HDTV.x264-SVA
 .WEB-DL.x264-FUM
