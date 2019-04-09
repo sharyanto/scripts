@@ -1,0 +1,48 @@
+#!/usr/bin/env perl
+
+use 5.010001;
+use strict;
+use warnings;
+
+use File::Temp qw(tempdir);
+use File::Which;
+use IPC::System::Options 'system', -log=>1, -die=>1;
+use String::ShellQuote;
+#use Term::Prompt;
+use Term::ReadPassword;
+
+my $debug = $ENV{DEBUG};
+
+# check argument
+@ARGV == 1 or die "git-resolve-conflict-gpg: Usage: $0 <gpg-file>\n";
+my $file = $ARGV[0];
+(-f $file) or die "git-resolve-conflict-gpg: No such file: $file\n";
+
+# check binaries first
+which("diff") or die "git-resolve-conflict-gpg: diff is not in PATH\n";
+which("git" ) or die "git-resolve-conflict-gpg: git is not in PATH\n";
+which("gpg" ) or die "git-resolve-conflict-gpg: gpg is not in PATH\n";
+
+# prepare tempdir
+my $tempdir = tempdir(CLEANUP => !$debug);
+
+# prompt for password
+#my $passphrase = prompt('p', "Passphrase:", "", undef); # Term::Prompt unconditionally strips leading/trailing whitespace
+my $passphrase = read_password("Passphrase: ");
+
+# put password in passphrase file
+open my $fh_pass, ">", "$tempdir/passphrase.txt";
+print $fh_pass "$passphrase\n";
+
+# decrypt both versions
+system "git", "checkout", "--ours"  , $file;
+system "gpg", "-d", "--yes", "--passphrase-file", "$tempdir/passphrase.txt", "-o", "$tempdir/ours.txt"  , $file;
+system "git", "checkout", "--theirs", $file;
+system "gpg", "-d", "--yes", "--passphrase-file", "$tempdir/passphrase.txt", "-o", "$tempdir/theirs.txt", $file;
+system "git", "checkout", "--ours"  , $file;
+
+# diff
+system({die=>0}, "diff -u ".shell_quote("$tempdir/ours.txt")." ".shell_quote("$tempdir/theirs.txt")." > ".shell_quote("$tempdir/ours-theirs.diff"));
+
+# invoke editor
+system join(" ", map {shell_quote($_)} split(/\s+/, ($ENV{EDITOR} // "emacs"))) . " ".shell_quote($file)." ".shell_quote("$tempdir/ours-theirs.diff");
