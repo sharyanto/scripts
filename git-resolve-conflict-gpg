@@ -45,4 +45,6 @@ system "git", "checkout", "--ours"  , $file;
 system({die=>0}, "diff -u ".shell_quote("$tempdir/ours.txt")." ".shell_quote("$tempdir/theirs.txt")." > ".shell_quote("$tempdir/ours-theirs.diff"));
 
 # invoke editor
-system join(" ", map {shell_quote($_)} split(/\s+/, ($ENV{EDITOR} // "emacs"))) . " ".shell_quote($file)." ".shell_quote("$tempdir/ours-theirs.diff");
+my $editor = $ENV{EDITOR} // "emacs";
+$editor = "emacs" if $editor =~ /^emacsclient\b/; # emacsclient does not support opening two files
+system join(" ", map {shell_quote($_)} split(/\s+/, $editor)) . " ".shell_quote($file)." ".shell_quote("$tempdir/ours-theirs.diff");
