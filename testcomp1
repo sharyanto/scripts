@@ -1,0 +1,4 @@
+#!/usr/bin/env perl
+print "foo/\n";
+print "foo/\\ \n";
+ 
