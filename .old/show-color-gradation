@@ -1,0 +1,25 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Color::ANSI::Util qw(ansifg ansibg);
+use Color::RGB::Util qw(mix_2_rgb_colors);
+use Getopt::Long;
+use Term::Size;
+
+my $len = $ENV{COLUMNS} // (Term::Size::chars(*STDOUT{IO}))[0] // 80;
+my $color1 = "ff0000";
+my $color2 = "0000ff";
+#my $color3 = "0000ff";
+GetOptions(
+    'len=s' => \$len,
+    'color1=s' => \$color1,
+    'color2=s' => \$color2,
+);
+
+for my $i (0..$len-1) {
+    print ansifg(mix_2_rgb_colors($color1, $color2, $i/($len-1))), "X";
+}
+print "\e[0m\n";
