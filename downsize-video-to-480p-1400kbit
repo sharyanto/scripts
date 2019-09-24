@@ -21,7 +21,7 @@ $SPEC{downsize} = {
             greedy => 1,
         },
         portrait => {
-            schema => ['bool*', is=>1],
+            schema => ['true*'],
         },
     },
 };
@@ -33,12 +33,23 @@ sub downsize {
         $output_file =~ s/(\.\w+)$/.480p.1400kbit.mp4/
             or $output_file .= ".480p.1400kbit.mp4";
 
+        my $is_portrait = $args{portrait} // do {
+            require App::MediaInfo;
+            my $res = App::MediaInfo::media_is_portrait(media=>$file);
+            if ($res->[0] != 200) {
+                warn "Cannot check the orientation of $file: $res->[0] - $res->[1], assuming landscape";
+                0;
+            } else {
+                $res->[2];
+            }
+        };
+
         system(
             {log=>1},
             "ffmpeg",
             "-i", $file,
             "-r", 30,
-            "-s", ($args{portrait} ? "480x720" : "hd480"),
+            "-s", ($is_portrait ? "480x720" : "hd480"),
             "-minrate", 1400000,
             "-strict", "experimental",
             $output_file,
