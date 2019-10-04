@@ -1,0 +1,2 @@
+#!/bin/bash
+killall -CONT firefox-bin "Web Content"
