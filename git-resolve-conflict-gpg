@@ -6,12 +6,30 @@ use warnings;
 
 use File::Temp qw(tempdir);
 use File::Which;
+use Getopt::Long::Modern;
 use IPC::System::Options 'system', -log=>1, -die=>1;
 use String::ShellQuote;
 #use Term::Prompt;
 use Term::ReadPassword;
 
 my $debug = $ENV{DEBUG};
+my $edit_theirs = 0;
+
+# get options
+GetOptions(
+    '--edit-theirs' => \$edit_theirs,
+    '--help|h' => sub {
+        print <<_;
+Usage:
+  $0 [options] <filename.gpg>
+  $0 --help
+Options:
+  --edit-theirs   Edit theirs version instead of the default ours.
+_
+exit 0;
+
+    },
+);
 
 # check argument
 @ARGV == 1 or die "git-resolve-conflict-gpg: Usage: $0 <gpg-file>\n";
@@ -39,7 +57,9 @@ system "git", "checkout", "--ours"  , $file;
 system "gpg", "-d", "--yes", "--passphrase-file", "$tempdir/passphrase.txt", "-o", "$tempdir/ours.txt"  , $file;
 system "git", "checkout", "--theirs", $file;
 system "gpg", "-d", "--yes", "--passphrase-file", "$tempdir/passphrase.txt", "-o", "$tempdir/theirs.txt", $file;
-system "git", "checkout", "--ours"  , $file;
+unless ($edit_theirs) {
+    system "git", "checkout", "--ours"  , $file;
+}
 
 # diff
 system({die=>0}, "diff -u ".shell_quote("$tempdir/ours.txt")." ".shell_quote("$tempdir/theirs.txt")." > ".shell_quote("$tempdir/ours-theirs.diff"));
