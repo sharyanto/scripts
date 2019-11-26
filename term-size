@@ -1,6 +1,0 @@
-#!/usr/bin/env perl
-
-use Term::Size;
-
-($columns, $rows) = Term::Size::chars *STDOUT{IO};
-print "$columns x $rows\n";
