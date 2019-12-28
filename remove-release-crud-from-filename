@@ -73,6 +73,7 @@ EOF
 $re_prefix = qr/(?:$re_prefix)/i;
 
 my $re_suffix = join("|", map {quotemeta} sort {length($b)<=>length($a)} grep {/\S/} split "\n", <<'EOF');
+.hdtv.x264-lucidtv
 .repack.webrip.x264-tbs
 .WEBRip.x264-eSc
 .720p.webrip.x264-tbs
