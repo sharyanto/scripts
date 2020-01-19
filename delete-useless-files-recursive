@@ -16,6 +16,12 @@ my @uselessn = qw(
                      thumbs.db
                      .mediaartlocal
                      .directory
+                     www.yify-torrents.com.jpg
+                     www.yts.am.jpg
+                     www.yts.re.jpg
+                     rarbg.com.mp4
+                     rarbg.com.txt
+                     rarbg.txt
              );
 
 my @args = @ARGV ? @ARGV : (".");
@@ -32,7 +38,7 @@ finddepth sub {
         }
 
         # filename pattern
-        if (/(?:torrent downloaded|demonoid).*\.txt$/i) {
+        if (/(?:torrent[ -]downloaded|demonoid|ahashare).*\.txt$/i) {
             $delete++; last;
         }
 
