@@ -1,0 +1,64 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use IPC::System::Options qw(system);
+use Perinci::CmdLine::Any;
+
+our %SPEC;
+
+$SPEC{downsize} = {
+    v => 1.1,
+    summary => 'Downsize videos',
+    args => {
+        files => {
+            schema => ['array*', of=>'str*', min_len=>1],
+            'x.name.is_plural' => 1,
+            pos => 0,
+            req => 1,
+            greedy => 1,
+        },
+        portrait => {
+            schema => ['true*'],
+        },
+    },
+};
+sub downsize {
+    my %args = @_;
+
+    for my $file (@{ $args{files} }) {
+        my $output_file = $file;
+        $output_file =~ s/(\.\w+)$/.720p.3200kbit.mp4/
+            or $output_file .= ".720p.3200kbit.mp4";
+
+        my $is_portrait = $args{portrait} // do {
+            require App::MediaInfo;
+            my $res = App::MediaInfo::media_is_portrait(media=>$file);
+            if ($res->[0] != 200) {
+                warn "Cannot check the orientation of $file: $res->[0] - $res->[1], assuming landscape";
+                0;
+            } else {
+                $res->[2];
+            }
+        };
+
+        system(
+            {log=>1},
+            "ffmpeg",
+            "-i", $file,
+            "-r", 30,
+            "-s", ($is_portrait ? "720x1280" : "hd720"),
+            "-minrate", 3200000,
+            "-strict", "experimental",
+            $output_file,
+        );
+    }
+    [200];
+}
+
+Perinci::CmdLine::Any->new(
+    url => '/main/downsize',
+    log => 1,
+)->run;
