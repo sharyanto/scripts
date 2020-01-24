@@ -1,0 +1,71 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use Log::ger;
+
+use List::Util qw(max);
+use Perinci::CmdLine::Any;
+use POSIX qw(floor);
+
+our %SPEC;
+
+my $re_dim3 = qr/\A
+                 (\d+(?:\.\d+)?) \s*x\s*
+                 (\d+(?:\.\d+)?) \s*x\s*
+                 (\d+(?:\.\d+)?)
+                 \z/ix;
+
+$SPEC{app} = {
+    v => 1.1,
+    summary => 'Calculate how many small boxes fit inside a larger box',
+    args => {
+        smaller_dimension => {
+            summary => 'Dimension (LxWxH) of the smaller box',
+            schema => [str => {req=>1, match=>$re_dim3}],
+            req => 1,
+            pos => 0,
+        },
+        larger_dimension => {
+            summary => 'Dimension (LxWxH) of the smaller box',
+            schema => [str => {req=>1, match=>$re_dim3}],
+            req => 1,
+            pos => 1,
+        },
+    },
+    examples => [
+        {argv=>["5x3x2", "35x19x18"]},
+    ],
+    result_naked => 1,
+    result => {
+        #schema => 'int*',
+    },
+};
+sub app {
+    my %args = @_;
+
+    my ($l1, $w1, $h1) = $args{smaller_dimension} =~ $re_dim3 or die;
+    my ($l2, $w2, $h2) = $args{larger_dimension}  =~ $re_dim3 or die;
+
+    my @res;
+
+    push @res, floor($l2/$l1) * floor($w2/$w1) * floor($h2/$h1);
+    push @res, floor($l2/$l1) * floor($w2/$h1) * floor($h2/$w1);
+
+    push @res, floor($l2/$w1) * floor($w2/$l1) * floor($h2/$h1);
+    push @res, floor($l2/$w1) * floor($w2/$h1) * floor($h2/$l1);
+
+    push @res, floor($l2/$h1) * floor($w2/$l1) * floor($h2/$w1);
+    push @res, floor($l2/$h1) * floor($w2/$w1) * floor($h2/$l1);
+
+    log_trace "Results of all possible combinations: %s", \@res;
+
+    my $num = max(@res);
+
+    sprintf "%d (%.2f%% full)", $num, ($num*$l1*$w1*$h1 / ($l2*$w2*$h2))*100;
+}
+
+Perinci::CmdLine::Any->new(
+    url=>"/main/app",
+    log=>1,
+)->run;
