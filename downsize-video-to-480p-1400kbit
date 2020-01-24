@@ -20,9 +20,6 @@ $SPEC{downsize} = {
             req => 1,
             greedy => 1,
         },
-        portrait => {
-            schema => ['true*'],
-        },
     },
 };
 sub downsize {
@@ -33,7 +30,7 @@ sub downsize {
         $output_file =~ s/(\.\w+)$/.480p.1400kbit.mp4/
             or $output_file .= ".480p.1400kbit.mp4";
 
-        my $is_portrait = $args{portrait} // do {
+        my $is_portrait = do {
             require App::MediaInfo;
             my $res = App::MediaInfo::media_is_portrait(media=>$file);
             if ($res->[0] != 200) {
