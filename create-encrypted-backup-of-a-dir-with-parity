@@ -45,3 +45,9 @@ Perinci::CmdLine::Any->new(
     url => '/main/app',
     log => 1,
 )->run;
+
+1;
+
+=head1 SEE ALSO
+
+L<create-encrypted-backup-of-a-dir-for-github>
