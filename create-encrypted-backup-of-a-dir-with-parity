@@ -1,0 +1,53 @@
+#!/usr/bin/env perl
+
+use 5.010001;
+use strict;
+use warnings;
+use Log::ger;
+
+use Perinci::CmdLine::Any;
+use POSIX;
+use IPC::System::Options 'system', -log=>1, -die=>1;
+
+our %SPEC;
+
+$SPEC{app} = {
+    v => 1.1,
+    args => {
+        dir => {
+            schema => 'str*',
+            req => 1,
+            pos => 0,
+        },
+    },
+    deps => {
+        all => [
+            {prog => 'tar'},
+            {prog => 'gpg'},
+            {prog => 'par2'},
+        ],
+    },
+};
+sub app {
+    my %args = @_;
+
+    my $dir = $args{dir};
+    my $timestamp = POSIX::strftime("%Y%m%d", gmtime);
+
+    system "tar", "cf", "$dir.$timestamp.tar", $dir;
+    system "gpg", "-e", "$dir.$timestamp.tar";
+    system "par2", "c", "$dir.$timestamp.tar.gpg";
+    system "rm", "$dir.$timestamp.tar";
+    [200];
+}
+
+Perinci::CmdLine::Any->new(
+    url => '/main/app',
+    log => 1,
+)->run;
+
+1;
+
+=head1 SEE ALSO
+
+L<create-encrypted-backup-of-a-dir-for-github>
