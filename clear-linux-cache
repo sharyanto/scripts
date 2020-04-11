@@ -1,0 +1,11 @@
+#!/bin/bash
+if [[ "$UID" > 0 ]]; then echo "Please run me as root"; exit ; fi
+
+## this only clears PageCache only
+# sync; echo 1 > /proc/sys/vm/drop_caches
+
+## this clears dentries and inodes.
+# sync; echo 2 > /proc/sys/vm/drop_caches
+
+## this clears PageCache, dentries and inodes.
+sync; echo 3 > /proc/sys/vm/drop_caches
