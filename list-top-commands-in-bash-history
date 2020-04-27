@@ -6,11 +6,12 @@ use warnings;
 
 open my($fh), "<", "$ENV{HOME}/.bash_history";
 
-while (<>) {
+my %n;
+while (<$fh>) {
     next if /^#\d+$/; # timestamp
-    s/\s.*//;
+    s/\s.*//s;
     # XXX strip ENV=foo ENV2=bar ...
     $n{$_}++;
 }
 
-print "$_\t$n{$_}" for (sort {$n{$b}<=>$n{$a}} keys %n);
+print "$_\t$n{$_}\n" for (sort {$n{$b}<=>$n{$a}} keys %n);
