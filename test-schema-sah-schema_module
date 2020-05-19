@@ -1,0 +1,25 @@
+#!/usr/bin/env perl
+
+use Perinci::CmdLine::Any;
+
+$SPEC{app} = {
+    v => 1.1,
+    args => {
+        s => {
+            schema => 'sah::schema_module*',
+            req => 1,
+            pos => 0,
+        },
+        test => {
+            schema => 'bool*',
+        },
+    },
+};
+sub app {
+    my %args = @_;
+    [200];
+}
+
+Perinci::CmdLine::Any->new(
+    url => '/main/app',
+)->run;
