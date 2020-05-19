@@ -47,8 +47,9 @@ sub downsize {
             "-i", $file,
             "-r", 30,
             "-s", ($is_portrait ? "480x720" : "hd480"),
-            "-minrate", 1400000,
-            "-strict", "experimental",
+            #"-minrate", 1400000,
+            "-vb", 1400000,
+            #"-strict", "experimental",
             $output_file,
         );
     }
