@@ -31,8 +31,8 @@ sub downsize {
             or $output_file .= ".480p.1400kbit.mp4";
 
         my $is_portrait = do {
-            require App::MediaInfo;
-            my $res = App::MediaInfo::media_is_portrait(media=>$file);
+            require App::MediaInfoUtils;
+            my $res = App::MediaInfoUtils::media_is_portrait(media=>$file);
             if ($res->[0] != 200) {
                 warn "Cannot check the orientation of $file: $res->[0] - $res->[1], assuming landscape";
                 0;
