@@ -1,0 +1,25 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Perinci::CmdLine::Any;
+
+our %SPEC;
+
+$SPEC{app} = {
+    v => 1.1,
+    args => {
+        mod => {
+            schema => ['perl::modname*', 'x.completion' => [perl_modname => {ns_prefix=>"WordList"}]],
+            req => 1,
+            pos => 0,
+        },
+    },
+};
+sub app {
+    my $args = {@_};
+    [200, "OK", $args->{mod}];
+}
+
+Perinci::CmdLine::Any->new(url => '/main/app')->run;
