@@ -1,0 +1,2 @@
+#!/bin/bash
+pdrutil add-prereq --phase develop --rel x_spec ColorTheme 2.1.0
