@@ -1,0 +1,2 @@
+#!/bin/bash
+pdrutil add-prereq --phase develop --rel x_spec BorderStyle 2.0.1
