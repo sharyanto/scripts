@@ -61,8 +61,11 @@ while (<>) {
   # 2008-10-16 - sekarang gw mulai sering pake btjunkie & TPB, abis isohunt gak lengkap sih
   } elsif ($host =~ /thepiratebay/i) {
     $site = "thepiratebay";
-    $rest =~ m!/search/(.+?)/! or next;
-    $query = unesc($1);
+    if ($rest =~ m!/search/(.+?)/!) {
+        $query = unesc($1);
+    } elsif ($rest =~ m!search\.php\?q=(.+?)(?:&|\z)!) {
+        $query = unesc($1);
+    }
   } elsif ($host =~ /btjunkie/i) {
     $site = "btjunkie";
     $rest =~ /q=(.+?)(?:&|\z)/ or next;
