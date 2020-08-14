@@ -1,3 +1,0 @@
-#!/bin/bash
-#youtube-dl -o "%(playlist)s/%(playlist_index)s-%(title)s.%(ext)s" "$@"
-youtube-dl -o "%(playlist_index)s-%(title)s-%(id)s.%(ext)s" "$@"
