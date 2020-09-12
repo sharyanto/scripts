@@ -1,0 +1,49 @@
+#!/usr/bin/env perl
+
+use 5.010001;
+use strict;
+use warnings;
+use Log::ger;
+
+our %SPEC;
+
+$SPEC{app} = {
+    v => 1.1,
+    args => {
+        pattern => {
+            schema => 're*',
+            req => 1,
+            pos => 0,
+        },
+    },
+};
+sub app {
+    my %args = @_;
+    my $pattern = $args{pattern};
+
+    my %created_by_us;
+    while (1) {
+        my @entries;
+        opendir my $dh, "." or die "Can't opendir .: $!";
+        @entries = grep { $_ ne '.' && $_ ne '..' } readdir $dh;
+        closedir $dh;
+
+        for my $entry (@entries) {
+            next unless $entry =~ $pattern;
+            next if -d $entry;
+            next if $created_by_us{$entry};
+            my $entryln = "$entry.ln";
+            next if -e $entryln;
+            log_trace "Hardlinking $entry -> $entryln ...";
+            link $entry, $entryln;
+            $created_by_us{$entryln}++;
+        }
+    }
+    [200]; # shouldn't be reached
+}
+
+use Perinci::CmdLine::Any;
+Perinci::CmdLine::Any->new(
+    url => '/main/app',
+    log => 1,
+)->run;
