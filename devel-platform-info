@@ -1,12 +1,4 @@
-#!/usr/bin/env perl
+#!/bin/bash
 
-use 5.010;
-use strict;
-use warnings;
-
-use Devel::Platform::Info;
-my $info = Devel::Platform::Info->new();
-my $data = $info->get_info();
-
-use Data::Dump;
-dd $data;
+echo "Use platform-info script from CPAN"
+exit 1
