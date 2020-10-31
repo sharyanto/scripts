@@ -1,4 +1,0 @@
-#!/bin/bash
-
-echo "Use platform-info script from CPAN"
-exit 1
