@@ -1,0 +1,24 @@
+#!/bin/bash
+
+set -e -u
+
+cd ~/tmp
+
+echo "Checking repos in ~/tmp ..."
+gitbunch check . || ( echo "ERROR: There are unclean repos, please commit/clean it first"; exit 1 )
+
+echo "Pushing master branches of repos to ~/repos ..."
+for repo in *; do
+  cd "$repo"
+  git push ~/repos/$repo.git master || ( echo "ERROR: Cannot push repo $repo to ~/repos/$repo.git"; exit 1 )
+  cd ..
+done
+
+echo "Tarballing all repos in ~/repos ..."
+cd ~/repos
+for repo in *; do
+  tar cfz ~/repos-tar/"$repo.tar.gz" "$repo"
+done
+
+echo "Copying to Google Drive ..."
+rclone copy ~/repos-tar gdrive-h:/backup/repos -vv
