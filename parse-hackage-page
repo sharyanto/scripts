@@ -1,0 +1,44 @@
+#!/usr/bin/env perl
+
+use 5.010001;
+use strict;
+use warnings;
+
+our %SPEC;
+
+$SPEC{app} = {
+    v => 1.1,
+    args => {
+        page => {
+            schema => 'str*',
+            req => 1,
+            pos => 0,
+            cmdline_src => 'stdin_or_file',
+        },
+    },
+};
+sub app {
+    my %args = @_;
+
+    my @rows;
+    while ($args{page} =~ m!<tr>
+                            <td[^>]*><span[^>]+>(\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ)</span>
+                            &nbsp;&nbsp;
+                            </td><td[^>]*>([^<]+)</td>
+                            <td[^>]*>&nbsp;&nbsp;<a\shref="[^"]+">([^<]+)-(\d[^<]*)</a></td>
+                            </tr>
+                           !gsx) {
+        push @rows, {
+            date => $1,
+            author => $2,
+            package => $3,
+            version => $4,
+        };
+    }
+    [200, "OK", \@rows];
+}
+
+require Perinci::CmdLine::Any;
+Perinci::CmdLine::Any->new(
+    url => '/main/app',
+)->run;
