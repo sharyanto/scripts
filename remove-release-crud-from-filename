@@ -74,6 +74,8 @@ EOF
 $re_prefix = qr/(?:$re_prefix)/i;
 
 my $re_suffix = join("|", map {quotemeta} sort {length($b)<=>length($a)} grep {/\S/} split "\n", <<'EOF');
+.720p.BluRay.x264-GalaxyTV
+.720p.WEB-DL.x264-[MULVAcoded]
 .720p.WEBRip.x265-MiNX
 .WEBRip.x264-CAFFEiNE[eztv]
 .web.h264-tbs
