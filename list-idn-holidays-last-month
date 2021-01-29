@@ -5,5 +5,5 @@ $year += 1900; $mon++;
 
 $mon--; if ($mon == 0) { $mon = 12; $year-- }
 
-system "list-id-holidays", "--fields", "date", "--fields", "ind_name", "--fields", "is_holiday", "--fields", "is_joint_leave", "--with-field-names",
+system "list-idn-holidays", "--fields", "date", "--fields", "ind_name", "--fields", "is_holiday", "--fields", "is_joint_leave", "--with-field-names",
     '--year', $year, '--month', $mon, @ARGV;

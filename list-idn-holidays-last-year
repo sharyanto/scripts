@@ -1,0 +1,7 @@
+#!/usr/bin/env perl
+
+($year, $mon) = (localtime)[5, 4];
+$year += 1900; $mon++;
+
+system "list-idn-holidays", "--fields", "date", "--fields", "ind_name", "--fields", "is_holiday", "--fields", "is_joint_leave", "--with-field-names",
+    "--year", $year-1, @ARGV;
