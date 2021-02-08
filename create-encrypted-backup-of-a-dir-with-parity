@@ -5,6 +5,7 @@ use strict;
 use warnings;
 use Log::ger;
 
+use Path::Tiny;
 use Perinci::CmdLine::Any;
 use POSIX;
 use IPC::System::Options 'system', -log=>1, -die=>1;
@@ -19,6 +20,10 @@ $SPEC{app} = {
             req => 1,
             pos => 0,
         },
+        recipient => {
+            schema => 'str*',
+            req => 1,
+        },
     },
     deps => {
         all => [
@@ -32,12 +37,13 @@ sub app {
     my %args = @_;
 
     my $dir = $args{dir};
+    my $dirname = path($dir)->basename;
     my $timestamp = POSIX::strftime("%Y%m%d", gmtime);
 
-    system "tar", "cf", "$dir.$timestamp.tar", $dir;
-    system "gpg", "-e", "$dir.$timestamp.tar";
-    system "par2", "c", "$dir.$timestamp.tar.gpg";
-    system "rm", "$dir.$timestamp.tar";
+    system "tar", "cf", "$dirname.$timestamp.tar", $dir;
+    system "gpg", "-e", "--recipient", $args{recipient}, "$dirname.$timestamp.tar";
+    system "par2", "c", "$dirname.$timestamp.tar.gpg";
+    system "rm", "$dirname.$timestamp.tar";
     [200];
 }
 
