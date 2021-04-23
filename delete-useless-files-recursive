@@ -22,6 +22,8 @@ my @uselessn = qw(
                      rarbg.com.mp4
                      rarbg.com.txt
                      rarbg.txt
+                     Thumbs.db
+                     Thumbs.db:encryptable
              );
 
 my @args = @ARGV ? @ARGV : (".");
