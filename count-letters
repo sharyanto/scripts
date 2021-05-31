@@ -1,0 +1,12 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+my %letters;
+while (<>) {
+    chomp;
+    while (/([a-z])/g) { $letters{$1}++ }
+}
+
+use DD; dd \%letters;
