@@ -1,0 +1,6 @@
+#!/bin/bash
+for p in "$@"; do
+  t=`tempfile`
+  iconv -f UTF-16 -t 'UTF-8//IGNORE' "$p" >"$t" && cat "$t"
+  rm -f "$t"
+done
