@@ -1,0 +1,29 @@
+#!/usr/bin/env perl
+
+# AUTHORITY
+# DATE
+# DIST
+# VERSION
+
+use strict;
+use warnings;
+
+unless (@ARGV > 1) {
+    print "increment-mtime - Make file2's mtime 1 minute after file1's, file3's 2 minutes, and so on.\n";
+    print "Usage: increment-mtime <FILE1> <FILE2> ...\n";
+    exit 0;
+}
+
+my @st = stat(shift @ARGV);
+for (0 .. $#ARGV) {
+    utime
+        $st[9]+($_+1)*60,
+        $st[9]+($_+1)*60,
+        $ARGV[$_];
+}
+
+=head1 HISTORY
+
+Created 2021-07-15. The Gallery app on my decade-old Samsung Galaxy S wide MP3
+player won't order images by their names, only by modification times,
+necessitating me to making this workaround.

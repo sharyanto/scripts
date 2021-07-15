@@ -14,6 +14,16 @@ our %SPEC;
 
 $SPEC{app} = {
     v => 1.1,
+    description => <<'_',
+
+Will create these files:
+
+    $dir.tar.gpg
+    $dir.tar.gpg.par2
+    $dir.tar.gpg.vol*.par2 (a few of them)
+
+
+_
     args => {
         dir => {
             schema => 'str*',
@@ -23,6 +33,7 @@ $SPEC{app} = {
         recipient => {
             schema => 'str*',
             req => 1,
+            pos => 1,
         },
     },
     deps => {
@@ -32,6 +43,13 @@ $SPEC{app} = {
             {prog => 'par2'},
         ],
     },
+    examples => [
+        {
+            argv => ['somedir', 'recipient-name'],
+            test => 0,
+            'x.doc.show_result' => 0,
+        },
+    ],
 };
 sub app {
     my %args = @_;
@@ -56,4 +74,4 @@ Perinci::CmdLine::Any->new(
 
 =head1 SEE ALSO
 
-L<create-encrypted-backup-of-a-dir-for-github>
+L<create-encrypted-backup-of-a-dir-with-parity-for-github>

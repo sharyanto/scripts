@@ -1,0 +1,101 @@
+#!/usr/bin/env perl
+
+use 5.010001;
+use strict;
+use warnings;
+use Log::ger;
+
+use File::chdir;
+use IPC::System::Options 'system', -log=>1, -die=>1;
+use Path::Tiny;
+use Perinci::CmdLine::Any;
+use POSIX;
+
+our %SPEC;
+
+$SPEC{app} = {
+    v => 1.1,
+    description => <<'_',
+
+Like <prog:create-encrypted-backup-of-a-dir-with-parity> except will perform a
+`git clone --bare $repo` first to another directory (specified by
+`--target-dir`, and $repo must not already exist). Note that this means
+uncommitted work in the repo is not included.
+
+Will create these files:
+
+    $target_dir/$repo_name.tar.gpg       (which is encrypted of the bare cloned repo)
+    $target_dir/$repo_name.tar.gpg.par2
+    $target_dir/$repo_name.tar.gpg.vol*.par2 (a few of them)
+
+_
+    args => {
+        repo => {
+            schema => 'dirname*',
+            req => 1,
+            pos => 0,
+        },
+        target_dir => {
+            schema => 'dirname*',
+            req => 1,
+            pos => 1,
+        },
+        recipient => {
+            schema => 'str*',
+            req => 1,
+            pos => 2,
+        },
+    },
+    deps => {
+        all => [
+            {prog => 'tar'},
+            {prog => 'gpg'},
+            {prog => 'par2'},
+        ],
+    },
+    examples => [
+        {
+            argv => ['somerepo', '/tmp', 'recipient-name'],
+            test => 0,
+            'x.doc.show_result' => 0,
+        },
+    ],
+};
+sub app {
+    require App::GitUtils;
+
+    my %args = @_;
+
+    my $repo = $args{repo} or return [400, "Please specify repo"];
+    my $repo_name = path($repo)->absolute->basename;
+    return [500, "Can't get basename of '$repo'"] unless length $repo_name;
+
+    my $target_dir = $args{target_dir} or return [400, "Please specify target_dir"];
+    (-d $target_dir) or return [412, "Target directory '$target_dir' doesn't exist or not a directory"];
+    my $dir = "$target_dir/$repo_name";
+    (-e $dir) and return [412, "$dir already exists"];
+
+    my $res = App::GitUtils::clone_to_bare(dir => $repo, target_dir => $dir);
+    return [500, "Can't git clone: $res->[0] - $res->[1]"] unless $res->[0] == 200;
+
+    {
+        local $CWD = $target_dir;
+        my $timestamp = POSIX::strftime("%Y%m%d", gmtime);
+        system "tar", "cf", "$repo_name.$timestamp.tar", $repo_name;
+        system "gpg", "-e", "--recipient", $args{recipient}, "$repo_name.$timestamp.tar";
+        system "par2", "c", "$repo_name.$timestamp.tar.gpg";
+        system "rm", "-rf", "$repo_name.$timestamp.tar", $repo_name;
+    }
+    [200];
+}
+
+Perinci::CmdLine::Any->new(
+    url => '/main/app',
+    log => 1,
+)->run;
+
+1;
+
+=head1 SEE ALSO
+
+L<create-encrypted-backup-of-a-dir-with-parity>
