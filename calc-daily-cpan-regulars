@@ -1,0 +1,76 @@
+#!/usr/bin/env perl
+
+use 5.010001;
+use strict;
+use warnings;
+use Log::ger;
+use Log::ger::Screen;
+
+use DateTime;
+use DateTime::Format::ISO8601;
+use TableData::CPAN::Release::Static::FromNewest;
+
+my $td = TableData::CPAN::Release::Static::FromNewest->new;
+
+my $rel = $td->get_next_row_hashref;
+my $dt  = DateTime::Format::ISO8601->parse_datetime($rel->{date});
+my $start_period = $dt->clone->set(hour=>0, minute=>0, second=>0);
+my $end_period   = $dt->clone->add(days => 1)->set(hour=>0, minute=>0, second=>0)->add(seconds => -1);
+
+my %chains; # key=author, value=len
+my %broken; # key=author
+my @period_rels;
+my %period_rels; # key=author, value=1
+my @prev_period_rels;
+my %prev_period_rels; # key=author, value=1
+my $i = 0;
+while (1) {
+    $i++;
+  GET_PERIOD_RELEASES: {
+        @period_rels = @prev_period_rels;
+        %period_rels = %prev_period_rels;
+        log_debug "Getting releases from %s to %s ...", "$start_period", "$end_period";
+        while (1) {
+            $rel = $td->get_next_row_hashref;
+            log_trace "Got release: %s", $rel;
+            $dt = DateTime::Format::ISO8601->parse_datetime($rel->{date});
+            if (DateTime->compare($dt, $start_period) < 0) {
+                @prev_period_rels = ($rel);
+                %prev_period_rels = ($rel->{author} => 1);
+                last;
+            }
+            $period_rels{ $rel->{author} } = 1;
+            push @period_rels, $rel;
+        }
+    }
+
+    # calculate previous period
+    $start_period->add(days => -1);
+    $end_period  ->add(days => -1);
+
+    if ($i == 1) {
+        %chains = %period_rels;
+        next;
+    } elsif ($i == 2) {
+        for (keys %period_rels) { $chains{$_} //= 1 }
+        next;
+    }
+
+    # whose chain has been broken
+    for my $author (keys %chains) {
+        if ($period_rels{$author}) {
+            $chains{$author}++ unless $broken{$author};
+        } else {
+            $broken{$author} = 1;
+        }
+    }
+
+    # everyone has been broken, finished
+    if (keys(%broken) == keys(%chains)) {
+        log_info "In period %s to %s, all chains have been broken", "$start_period", "$end_period";
+        use Data::Format::Pretty::Console; print Data::Format::Pretty::Console::format_pretty(\@period_rels);
+        last;
+    }
+}
+
+use DD; dd \%chains;
