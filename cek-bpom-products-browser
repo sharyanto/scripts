@@ -1,3 +1,0 @@
-#!/bin/bash
-# FRAGMENT id=shcompgen-hint command=cek-bpom-products
-cek-bpom-products --format html+datatables --trace "$@"
