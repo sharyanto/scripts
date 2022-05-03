@@ -1,0 +1,22 @@
+#!/usr/bin/env perl
+
+use 5.014;
+use strict;
+use warnings;
+use Log::ger;
+use Log::ger::Screen;
+
+for my $file (glob "*") {
+    unless ($file =~ /^IMG_(\d\d\d\d)(\d\d)(\d\d)/) {
+        log_trace "Filename '$file' is not IMG_yyyymmdd, skipped";
+        next;
+    }
+    my $ymd = "$1$2$3";
+    my ($dir) = grep {-d} glob "$ymd-*";
+    unless ($dir) {
+        $dir = "$ymd-untitled";
+        log_info "Creating directory for $ymd: $dir ...";
+        mkdir $dir or die "Can't mkdir $dir: $!";
+    }
+    rename $file, "$dir/$file" or die "Can't move $file -> $dir/: $!";
+}
