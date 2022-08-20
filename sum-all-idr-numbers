@@ -7,14 +7,18 @@ use 5.010;
 use strict;
 use warnings;
 
+use Number::Format;
 use Parse::Number::EN qw(parse_number_en $Pat);
 
+my $occurrences = 0;
 my $tot = 0;
+my $output = '';
 while (<>) {
-    while (/($Pat) \s*IDR/g) {
-        say "# detected $1" if $ENV{DEBUG};
-        $tot += parse_number_en(text => $1);
-    }
+    s/($Pat)( \s*IDR)/$occurrences++; $tot += parse_number_en(text=>$1); "\e[32m$1\e[0m$2"/eg;
+    $output .= $_;
 }
 
-say $tot;
+print $output;
+say "===============";
+say "Number of IDR numbers found: $occurrences";
+say "Total: ", Number::Format->new->format_number($tot), " IDR";
