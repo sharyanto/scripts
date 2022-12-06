@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# 2022-12-01 - mouse logitech b100 yang gw pake buat laptop sehari2 kok hari ini
+# suka ngetrigger sendiri middle clicknya.
+
+
+xinput set-button-map 9 1 0 3
+xinput set-button-map 10 1 0 3
