@@ -1,2 +1,2 @@
 #!/bin/bash
-pdrutil add-prereq --phase develop --rel x_spec Rinci 1.1.90
+pdrutil add-prereq --phase develop --rel x_spec Rinci 1.1.102
