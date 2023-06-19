@@ -1,0 +1,37 @@
+#!/usr/bin/env perl
+
+use 5.010001;
+use strict;
+use warnings;
+use Log::ger;
+use Log::ger::Screen;
+
+use File::chdir;
+use Parse::Date::Month::ID qw(parse_date_month_id);
+
+my @files = @ARGV;
+unless (@files) { @files = <*.pdf> }
+
+for my $file (@files) {
+    log_info "Processing $file ...";
+    $file =~ /\A(\d+)(\w{3})(2\d\d\d)\.pdf\z/ or do {
+        log_warn "Filename not like BCA e-statement, skipped";
+        next;
+    };
+    my ($accnum, $monthname, $year) = ($1, $2, $3);
+    my $monthnum = parse_date_month_id(text => $monthname) or do {
+        log_warn "Can't parse month number from '$monthname', skipped";
+        next;
+    };
+    my $symlink = sprintf("estatement-%s-%04d%02d.pdf", $accnum, $year, $monthnum);
+    unless (-d ".sorted") {
+        mkdir ".sorted", 0755 or die "Can't mkdir .sorted: $!";
+    }
+
+    {
+        local $CWD = ".sorted";
+        symlink "../$file", $symlink or do {
+            log_warn "Can't create symlink $file -> .sorted/$symlink: $!, skipped";
+        };
+    }
+}
