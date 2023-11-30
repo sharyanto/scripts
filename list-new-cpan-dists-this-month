@@ -1,0 +1,2 @@
+#!/bin/bash
+list-new-cpan-dists --this-month --format csv | csv-freqtable -f author --with-data-rows | csv2texttable | less -S

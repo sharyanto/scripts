@@ -1,0 +1,2 @@
+#!/bin/bash
+mv-newest-download-here --dir $HOME/Pictures "$@"
