@@ -1,0 +1,14 @@
+#!/usr/bin/env perl
+
+use 5.010001;
+use strict;
+use warnings;
+use Log::ger::Screen;
+use Log::ger;
+
+use IPC::System::Options -log=>1, 'system';
+
+for my $file (glob "*.pdf") {
+    (my $pattern = $file) =~ s/\.pdf$/-%d.pdf/;
+    system "pdftk", $file, "burst", "output", $pattern;
+}
