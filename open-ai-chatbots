@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# 2023-12-15 - tidak dipakai lagi, hari ini takeout
+#FIREFOX_CONTAINER=reminotait  firefox-container https://photos.google.com/?pli=1; # hp xiaomi redmi note 8 pro (ii)
+
+FIREFOX_CONTAINER=budiman firefox-container https://chatgpt.com/
+FIREFOX_CONTAINER=budiman firefox-container https://perplexity.ai/
+FIREFOX_CONTAINER=budiman firefox-container https://gemini.google.com/
+FIREFOX_CONTAINER=budiman firefox-container https://claude.ai/
