@@ -6,9 +6,14 @@ use warnings;
 use Log::ger::Screen;
 use Log::ger;
 
-use IPC::System::Options -log=>1, 'system';
+use IPC::System::Options -log=>1, -die=>1, 'system';
+
+my $delete = $0 =~ /delete/;
 
 for my $file (glob "*.pdf") {
     (my $pattern = $file) =~ s/\.pdf$/-%d.pdf/;
     system "pdftk", $file, "burst", "output", $pattern;
+    if ($delete) { system "trash-put", "--", $file }
 }
+
+if ($delete && -f "doc_data.txt") { system "trash-put", "doc_data.txt" }
