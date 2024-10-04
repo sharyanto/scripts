@@ -1,0 +1,35 @@
+#!/usr/bin/env perl
+
+use v5.14;
+use strict;
+use warnings;
+
+use List::Util::Uniq qw(pushuniq);
+use Perinci::CmdLine::Any;
+
+our %SPEC;
+
+$SPEC{extract_tokopedia_order_no_from_order_page} = {
+    v => 1.1,
+    args => {
+        text => {
+            schema => 'str*',
+            cmdline_src => 'stdin_or_files',
+        },
+    },
+};
+sub extract_tokopedia_order_no_from_order_page {
+    my %args = @_;
+
+    my @order_ids;
+    for (split /^/m, $args{text}) {
+        next unless m!/MPL/(\d+)!;
+        pushuniq @order_ids, $1;
+    }
+
+    [200, "OK", \@order_ids];
+}
+
+Perinci::CmdLine::Any->new(
+    url => '/main/extract_tokopedia_order_no_from_order_page',
+)->run;
