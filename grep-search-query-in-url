@@ -140,6 +140,15 @@ while (<>) {
     $rest =~ m!/q-(.+?)! or next;
     $query = unesc($1);
     $query =~ s/-/ /g;
+  } elsif ($host =~ /^\Qpdki-indonesia.dgip.go.id\E$/i) {
+    $site = "pdki-indonesia";
+    $rest =~ m!/search! or next;
+
+    if ($rest =~ /type=trademark/) { $site .= " merek" }
+
+    $query = "";
+    $query .= unesc($1) if $rest =~ /keyword=(.+?)(?:&|\z)/;
+    $query .= "[pemilik=".unesc($1)."]" if $rest =~ /nama_pemilik=(.+?)(?:&|\z)/;
   }
 
   next unless $site;
