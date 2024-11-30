@@ -33,3 +33,6 @@ sub extract_shopee_order_no_from_order_page {
 Perinci::CmdLine::Any->new(
     url => '/main/extract_shopee_order_no_from_order_page',
 )->run;
+
+# log
+# - [2024-11-29] it seems now that Nomor Reservasi is different from Nomor Pesanan
