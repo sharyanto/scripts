@@ -14,7 +14,7 @@ unless (@files) { @files = <*.pdf> }
 
 for my $file (@files) {
     log_info "Processing $file ...";
-    $file =~ /\A(\d+)(\w{3})(2\d\d\d)\.pdf\z/ or do {
+    $file =~ /\A(\d+)_?(\w{3})_?(2\d\d\d)\.pdf\z/ or do {
         log_warn "Filename not like BCA e-statement, skipped";
         next;
     };
