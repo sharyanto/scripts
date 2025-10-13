@@ -1,0 +1,2 @@
+#!/bin/bash
+clipadd -c safer --tee
