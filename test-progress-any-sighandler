@@ -1,0 +1,11 @@
+#!/usr/bin/env perl
+
+use Progress::Any '$progress';
+use Progress::Any::SIGHandler;
+
+$progress->target(100);
+for (1..100) {
+    $progress->update;
+    sleep (rand()*3 + 1);
+}
+$progress->finish;
