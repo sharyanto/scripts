@@ -1,0 +1,2 @@
+#!/bin/bash
+git-grouper configure-repo --verbose "$@"
