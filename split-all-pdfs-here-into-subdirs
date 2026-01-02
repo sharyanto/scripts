@@ -1,0 +1,16 @@
+#!/usr/bin/env perl
+
+use 5.014;
+use strict;
+use warnings;
+use Log::ger::Screen;
+
+use File::chdir;
+use IPC::System::Options 'system', -log=>1, -die=>1;
+
+for my $pdffile (glob "*.pdf") {
+    (my $pdfdir = $pdffile) =~ s/\.pdf$//i;
+    mkdir $pdfdir or die "Can't mkdir $pdfdir: $!";
+    local $CWD = $pdfdir;
+    system "pdftk", "../$pdffile", "burst";
+}
